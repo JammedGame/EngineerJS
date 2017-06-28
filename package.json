@@ -1,0 +1,23 @@
+{
+  "name": "engineer-js",
+  "version": "0.0.1",
+  "description": "Web renderer for engineer game engine.",
+  "main": "app.js",
+  "scripts": {
+    "test": "cd tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShadySolutions/EngineerJS.git"
+  },
+  "keywords": [
+    "engineer",
+    "engineerjs"
+  ],
+  "author": "Miloš Manojlović",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShadySolutions/EngineerJS/issues"
+  },
+  "homepage": "https://github.com/ShadySolutions/EngineerJS#readme"
+}
