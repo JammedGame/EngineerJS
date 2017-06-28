@@ -1,0 +1,6 @@
+export  { Color };
+
+class Color
+{
+
+}
