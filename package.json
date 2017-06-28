@@ -2,8 +2,10 @@
   "name": "engineer-js",
   "version": "0.0.1",
   "description": "Web renderer for engineer game engine.",
-  "main": "app.js",
+  "main": "app/app.js",
   "scripts": {
+    "start": "tsc && webpack-dev-server --hot",
+    "build": "tsc && webpack app/app.js public/bundle.js",
     "test": "cd tests"
   },
   "repository": {
@@ -19,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/ShadySolutions/EngineerJS/issues"
   },
-  "homepage": "https://github.com/ShadySolutions/EngineerJS#readme"
+  "homepage": "https://github.com/ShadySolutions/EngineerJS#readme",
+  "devDependencies": {
+    "typescript": "^2.4.1",
+    "webpack": "^3.0.0",
+    "webpack-dev-server": "^2.5.0"
+  }
 }
