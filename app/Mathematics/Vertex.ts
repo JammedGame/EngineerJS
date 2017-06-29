@@ -15,11 +15,10 @@ class Vertex
         this.Y = Y;
         this.Z = Z;
     }
-    public Copy(V:Vertex) : void
+    public Copy() : Vertex
     {
-        this.X = V.X;
-        this.Y = V.Y;
-        this.Z = V.Z;
+        let New:Vertex = new Vertex(this.X, this.Y, this.Z);
+        return New;
     }
     public Translate(V:Vertex) : Vertex
     {
