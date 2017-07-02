@@ -10,12 +10,12 @@ class ShaderAttributePackage
     protected _VertexArrayIndexer:number;
     protected _VertexBufferIndexer:number;
     protected _ManualBufferLines:number;
-    protected _ManualDataArray:any;
+    protected _ManualDataArray:ArrayBuffer;
     protected _Size:number[];
     protected _DataSize:number[];
     protected _ID:string[];
     protected _Type:string[];
-    protected _Data:any[];
+    protected _Data:ArrayBuffer[];
     public get BufferExists():boolean { return this._BufferExists; }
     public set BufferExists(value:boolean) { this._BufferExists = value; }
     public get BufferLines():number { return this._BufferLines; }
@@ -66,7 +66,7 @@ class ShaderAttributePackage
         this._Data.push(null);
         return true;
     }
-    public SetData(ID:string, DataSize:number, Data:any) : boolean
+    public SetData(ID:string, DataSize:number, Data:ArrayBuffer) : boolean
     {
         // Virtual
         let Index:number = this.FindIndex(ID);

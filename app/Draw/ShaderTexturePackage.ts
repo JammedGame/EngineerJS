@@ -8,7 +8,7 @@ class ShaderTexturePackage
     protected _Active:boolean;
     protected _Loaded:boolean;
     protected _TexturesNumber:number;
-    protected _Textures:any;
+    protected _Textures:ArrayBuffer;
     public constructor(Old?:ShaderTexturePackage)
     {
         if(Old != null)
@@ -31,7 +31,7 @@ class ShaderTexturePackage
         let New:ShaderTexturePackage = new ShaderTexturePackage(this);
         return New;
     }
-    public SetData(TexturesNumber:number, Textures:any) : void
+    public SetData(TexturesNumber:number, Textures:ArrayBuffer) : void
     {
         // Virtual
         this._Active = false;

@@ -1,3 +1,4 @@
-import { Uuid } from "./Uuid"
+import { Uuid } from "./Uuid";
+import * as DataStream from "./DataStream";
 
-export  { Uuid };
+export  { Uuid, DataStream };

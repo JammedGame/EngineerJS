@@ -112,5 +112,5 @@ class ShaderProgram
     public Activate() { /*Virtual*/ }
     public Draw(DrawMode:GraphicDrawMode, Offset:number) { /*Virtual*/ }
     public Compile(VertexShaderCode:string, FragmentShaderCode:string, GeometryShaderCode?:string, TessellationControlCode?:string, TessellationEvaluationCode?:string) : boolean { return false; /*Virtual*/ }
-    public ReCompile(VertexShaderCode:string, FragmentShaderCode:string, GeometryShaderCode?:string, TessellationControlCode?:string, TessellationEvaluationCode?:string) : boolean { return false; /*Virtual*/ }
+    public ReCompile() : boolean { return false; /*Virtual*/ }
 }
