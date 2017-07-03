@@ -1,3 +1,4 @@
 import { Converter } from "./Converter";
+import { Buffer } from "./Buffer";
 
-export { Converter };
+export { Converter, Buffer };

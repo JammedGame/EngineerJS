@@ -23,7 +23,7 @@ class Renderer
             this._LightsNumber = 0;
         }
     }
-    public Copy() : Renderer
+    public Copy() : any
     {
         let New:Renderer = new Renderer(this);
         return New;

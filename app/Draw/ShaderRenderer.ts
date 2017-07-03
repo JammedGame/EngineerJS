@@ -1,10 +1,12 @@
 export  { ShaderRenderer };
 
 import * as Util from "./../Util/Util";
+import * as Data from "./../Data/Data";
 import * as Math from "./../Mathematics/Mathematics";
 
 import { Renderer } from "./Renderer";
 import { ShaderManager } from "./ShaderManager";
+import { ShaderProgram, GraphicDrawMode } from "./ShaderProgram";
 import { ShaderUniformPackage } from "./ShaderUniformPackage";
 
 class ShaderRenderer extends Renderer
@@ -38,7 +40,7 @@ class ShaderRenderer extends Renderer
             this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
         }
     }
-    public Copy() : ShaderRenderer
+    public Copy() : Renderer
     {
         let New:ShaderRenderer = new ShaderRenderer(this);
         return New;
@@ -139,5 +141,118 @@ class ShaderRenderer extends Renderer
         this._Globals.SetData("Lights[" + Index + "].Intensity", Util.Converter.ConvertNumberArrayToByteArray([ LightParameters[3].X ]));
         return Update;
     }
-    //Continue here
+    public Render2DGrid() : void
+    {
+        // Override
+        if (!this.IsMaterialReady("Grid2D"))
+        {
+            let Vertex2D:string = "";
+            let Fragment2D:string = "";
+            this.SetMaterial([["Grid2D", Vertex2D, Fragment2D, null, null, null ], null, null ], true);
+        }
+        else this.SetMaterial([["Grid2D", null, null, null, null, null ], null, null ], false);
+        this.UpdateMaterial();
+        let GridWidth:number = 100;
+        if (this._GridSize == -1)
+        {
+            let Vertices:Math.Vertex[] = [];
+            for (let i = -10; i <= 10; i++)
+            {
+                for (let j = -10; j <= 10; j++)
+                {
+                    Vertices.push(new Math.Vertex(GridWidth * +i, GridWidth * j, 0));
+                    Vertices.push(new Math.Vertex(GridWidth * -i, GridWidth * j, 0));
+                    Vertices.push(new Math.Vertex(GridWidth * i, GridWidth * +j, 0));
+                    Vertices.push(new Math.Vertex(GridWidth * i, GridWidth * -j, 0));
+                }
+            }
+            Vertices.push(new Math.Vertex(-50, -50, 0));
+            Vertices.push(new Math.Vertex(50, -50, 0));
+            Vertices.push(new Math.Vertex(50, -50, 0));
+            Vertices.push(new Math.Vertex(50, 50, 0));
+            Vertices.push(new Math.Vertex(50, 50, 0));
+            Vertices.push(new Math.Vertex(-50, 50, 0));
+            Vertices.push(new Math.Vertex(-50, 50, 0));
+            Vertices.push(new Math.Vertex(-50, -50, 0));
+            this._GridSize = Vertices.length;
+            this._GridVertices = Util.Converter.ConvertVerticesToByteArray(Vertices, 3);
+        }
+        this.SetSurface([0.3,0.3,0.3,1]);
+        this._Manager.Active.Attributes.SetData("V_Vertex", this._GridSize * 3 * 4, this._GridVertices);
+        this._Manager.Active.Uniforms.SetData("Index", -1);
+        this._Manager.SetDrawMode(GraphicDrawMode.Lines);
+        this._Manager.Draw();
+    }
+    public RenderSprite(ID:string, Textures:string[], CurrentIndex:number, Update:boolean) : void
+    {
+        // Override
+        if (!this.IsMaterialReady(ID))
+        {
+            this._Manager.ActivateShader("2D");
+            this.SetMaterial([[ID, this._Manager.Active.VertexShaderCode, this._Manager.Active.FragmentShaderCode, null, null, null ], null, null ], true);
+        }
+        this.UpdateMaterial();
+        if (this._SpriteVertices == null)
+        {
+            let Vertices:Math.Vertex[] = [];
+            Vertices.push(new Math.Vertex(0, 0, 0));
+            Vertices.push(new Math.Vertex(1, 0, 0));
+            Vertices.push(new Math.Vertex(0, 1, 0));
+            Vertices.push(new Math.Vertex(0, 1, 0));
+            Vertices.push(new Math.Vertex(1, 0, 0));
+            Vertices.push(new Math.Vertex(1, 1, 0));
+            this._SpriteVertices = Util.Converter.ConvertVerticesToByteArray(Vertices, 3);
+            let UV:Math.Vertex[] = [];
+            UV.push(new Math.Vertex(0, 0, 0));
+            UV.push(new Math.Vertex(1, 0, 0));
+            UV.push(new Math.Vertex(0, 1, 0));
+            UV.push(new Math.Vertex(0, 1, 0));
+            UV.push(new Math.Vertex(1, 0, 0));
+            UV.push(new Math.Vertex(1, 1, 0));
+            this._SpriteUV = Util.Converter.ConvertVerticesToByteArray(UV, 2);
+        }
+        this._Manager.Active.Attributes.SetData("V_Vertex", 6 * 3 * 4, this._SpriteVertices);
+        this._Manager.Active.Attributes.SetData("V_TextureUV", 6 * 2 * 4, this._SpriteUV);
+        if (!this._Manager.Active.Uniforms.Exists("Index")) this._Manager.Active.Uniforms.SetDefinition("Index", 4, "int");
+        this._Manager.Active.Uniforms.SetData("Index", CurrentIndex);
+        this._Manager.SetDrawMode(GraphicDrawMode.Triangles);
+        this._Manager.Draw();
+    }
+    public RenderGeometry(Vetices:Math.Vertex[], Normals:Math.Vertex[], TexCoords:Math.Vertex[], Faces:any[], Update:boolean) : void
+    {
+        /*if((TexCoords == null || TexCoords.Count == 0) && _Manager.Active.Attributes.Exists("V_TextureUV"))
+            {
+                _Manager.Active.Attributes.DeleteDefinition("V_TextureUV");
+                _Manager.Active.ReCompile();
+                Update = true;
+            }
+            if (Update || (!_Manager.Active.Attributes.BufferExists))
+            {
+                _Manager.Active.Attributes.SetData("V_Vertex", Vertices.Count * 3 * sizeof(float), ConvertToByteArray(Vertices, 3));
+                _Manager.Active.Attributes.SetData("V_Normal", Vertices.Count * 3 * sizeof(float), ConvertToByteArray(Normals, 3));
+                if(TexCoords != null) _Manager.Active.Attributes.SetData("V_TextureUV", Vertices.Count * 2 * sizeof(float), ConvertToByteArray(TexCoords, 2));
+            }
+            _Manager.SetDrawMode(GraphicDrawMode.Triangles);
+            _Manager.Draw();*/
+    }
+    public PushPreferences() : void
+    {
+        // Override
+        this._PushedID = this._Manager.Active.ShaderID;
+    }
+    public PopPreferences() : void
+    {
+        // Override
+        if (this._PushedID != "") this._Manager.ActivateShader(this._PushedID);
+    }
+    public CurrentShader() : ShaderProgram
+    {
+        // Virtual
+        return this._Manager.Active;
+    }
+    public static PackTextures(Textures:string[], CallBack:Function):ArrayBuffer
+    {
+        return null;
+        //return Data.ImageContainer.LoadArray(Textures, CallBack);
+    }
 }
