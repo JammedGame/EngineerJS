@@ -116,10 +116,10 @@ class ShaderRenderer extends Renderer
         // Override
         this._Globals.SetData("ModelView", Util.Converter.ConvertNumberArrayToByteArray(Matrix));
     }
-    public SetCameraPosition(Matrix:number[]) : void
+    public SetCameraPosition(CameraPosition:Math.Vertex) : void
     {
         // Override
-        this._Globals.SetData("CameraPosition", Util.Converter.ConvertNumberArrayToByteArray(Matrix));
+        this._Globals.SetData("CameraPosition", Util.Converter.ConvertVerticesToByteArray([CameraPosition], 3));
     }
     public SetViewLight(Index:number, LightParameters:Math.Vertex[]) : boolean
     {
