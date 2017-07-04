@@ -1,4 +1,4 @@
-export  { Matrix, MatrixTransformer };
+export  { MatrixMode, Matrix, MatrixTransformer };
 
 import { Axis, Vertex } from "./Vertex";
 
@@ -172,7 +172,7 @@ class MatrixTransformer
         if(this._MatrixMode == MatrixMode.ModelView) this._ModelViewMatrix.Ortho(Left, Right, Bottom, Top, Near, Far);
         else this._ProjectionMatrix.Ortho(Left, Right, Bottom, Top, Near, Far);
     }
-    public Ortho2D(Left:number, Right:number, Bottom:number, Top:number, Near:number, Far:number) : void
+    public Ortho2D(Left:number, Right:number, Bottom:number, Top:number) : void
     {
         if(this._MatrixMode == MatrixMode.ModelView) this._ModelViewMatrix.Ortho(Left, Right, Bottom, Top, -1, 1);
         else this._ProjectionMatrix.Ortho(Left, Right, Bottom, Top, -1, 1);

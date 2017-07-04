@@ -1,4 +1,4 @@
-export  { Renderer };
+export  { RenderEnableCap, Renderer };
 
 import * as Math from "./../Mathematics/Mathematics";
 
@@ -23,7 +23,7 @@ class Renderer
             this._LightsNumber = 0;
         }
     }
-    public Copy() : any
+    public Copy() : Renderer
     {
         let New:Renderer = new Renderer(this);
         return New;

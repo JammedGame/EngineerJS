@@ -12,6 +12,10 @@ class Sprite extends DrawObject
     private _CurrentSpriteSet:number;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
+    public get Modified():boolean { return this._Modified; }
+    public set Modified(value:boolean) { this._Modified = value; }
+    public get SubSprites():Sprite[] { return this._SubSprites; }
+    public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
     public constructor(Old?:Sprite)
     {
         if(Old != null)
@@ -82,6 +86,16 @@ class Sprite extends DrawObject
         {
             if(this._SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
         }
+    }
+    public Index():number
+    {
+        let Index:number = 0;
+        for(let i = 0; i < this._CurrentSpriteSet; i++)
+        {
+            Index += this._SpriteSets[i].Sprites.length;
+        }
+        Index += this._CurrentIndex;
+        return Index;
     }
 }
 class SpriteSet

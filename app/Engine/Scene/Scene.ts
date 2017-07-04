@@ -3,6 +3,8 @@ export  { SceneType, Scene };
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
+import { SceneObject } from "./SceneObject";
+
 enum SceneType
 {
     Scene2D,
@@ -14,6 +16,7 @@ class Scene
     private _Name:string;
     private _Type:SceneType;
     private _BackColor:Math.Color;
+    private _Objects:SceneObject[];
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
@@ -21,6 +24,9 @@ class Scene
     public set Type(value:SceneType) { this._Type = value; }
     public get BackColor():Math.Color { return this._BackColor; }
     public set BackColor(value:Math.Color) { this._BackColor = value; }
+    public get Objects():SceneObject[] { return this._Objects; }
+    public set Objects(value:SceneObject[]) { this._Objects = value; }
+    public Data: { [key: string]:any; } = {};
     public constructor(Old?:Scene)
     {
         if(Old != null)
@@ -41,5 +47,9 @@ class Scene
     {
         let New:Scene = new Scene(this);
         return New;
+    }
+    public AddSceneObject(Object:SceneObject) : void
+    {
+        this._Objects.push(Object);
     }
 }

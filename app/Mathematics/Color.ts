@@ -17,6 +17,10 @@ class Color
     {
         return Color.FromRGBA(this.R, this.G, this.B, this.A);
     }
+    public ToArray() : number[]
+    {
+        return [(this.R * 1.0 + 1) / 256, (this.G * 1.0 + 1) / 256, (this.B * 1.0 + 1) / 256, (this.A * 1.0 + 1) / 256];
+    }
     public static FromRGBA(R:number, G:number, B:number, A:number):Color
     {
         let New:Color = new Color();

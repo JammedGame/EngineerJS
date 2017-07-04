@@ -40,7 +40,7 @@ class ShaderRenderer extends Renderer
             this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
         }
     }
-    public Copy() : Renderer
+    public Copy() : ShaderRenderer
     {
         let New:ShaderRenderer = new ShaderRenderer(this);
         return New;
