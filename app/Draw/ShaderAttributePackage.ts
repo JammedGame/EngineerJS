@@ -1,5 +1,7 @@
 export  { ShaderAttributePackage };
 
+import * as Util from "./../Util/Util";
+
 class ShaderAttributePackage
 {
     protected _BufferExists:boolean;
@@ -31,7 +33,8 @@ class ShaderAttributePackage
             this._VertexArrayIndexer = Old._VertexArrayIndexer;
             this._VertexBufferIndexer = Old._VertexBufferIndexer;
             this._ManualBufferLines = Old._ManualBufferLines;
-            for(let i = 0; i < Old._ManualBufferLines; i++) this._ManualDataArray.push(Old._ManualDataArray[i]);
+            this._ManualDataArray = new ArrayBuffer(Old._ManualDataArray.byteLength);
+            this._ManualDataArray = Old._ManualDataArray.slice(0);
             this._Size = [];
             this._DataSize = [];
             this._ID = [];
@@ -110,6 +113,7 @@ class ShaderAttributePackage
         this._ManualBufferLines = BufferLines;
         this._ManualDataArray = Data;
     }
+    protected ActivateAttributesWithManualBuffer(ProgramIndexer:number) : boolean  { return false; /*Virtual*/ }
     public Bind(Program_Indexer:number) : void { /*Virtual*/ }
     public Activate(Program_Indexer:number) : boolean { return false; /*Virtual*/ }
     private FindIndex(ID:string):number

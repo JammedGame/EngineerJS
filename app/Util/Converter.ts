@@ -5,7 +5,18 @@ import * as Math from "./../Mathematics/Mathematics";
 
 class Converter
 {
-    public static ConvertVerticesToByteArray(Vertices:Math.Vertex[], Relevant:number) : ArrayBuffer
+    public static ConvertVerticesToByteArray(Vertices:Math.Vertex[], Relevant:number) : Float32Array
+    {
+        let NewArrayBuffer:number[] = [];
+        for(let i = 0; i < Vertices.length; i++)
+        {
+            NewArrayBuffer.push(Vertices[i].X);
+            if(Relevant > 1) NewArrayBuffer.push(Vertices[i].Y);
+            else if(Relevant > 2) NewArrayBuffer.push(Vertices[i].Z);
+        }
+        return new Float32Array(NewArrayBuffer);
+    }
+    /*public static ConvertVerticesToByteArray(Vertices:Math.Vertex[], Relevant:number) : ArrayBuffer
     {
         let NewArrayBuffer:ArrayBuffer = new ArrayBuffer(Vertices.length * Relevant * 4);
         let Stream = new Data.DataStream(NewArrayBuffer, 0, Data.DataStream.LITTLE_ENDIAN);
@@ -23,5 +34,5 @@ class Converter
         let Stream = new Data.DataStream(NewArrayBuffer, 0, Data.DataStream.LITTLE_ENDIAN);
         Stream.writeFloat32Array(Array);
         return NewArrayBuffer;
-    }
+    }*/
 }

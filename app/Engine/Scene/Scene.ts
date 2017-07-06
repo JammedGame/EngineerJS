@@ -34,12 +34,15 @@ class Scene
             this._ID = Data.Uuid.Create();
             this._Name = Old._Name;
             this._BackColor = Old._BackColor;
+            this._Objects = [];
+            for(let i = 0; i < Old._Objects.length; i++) this._Objects.push(Old._Objects[i].Copy());
         }
         else
         {
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._BackColor = Math.Color.FromRGBA(40,40,40,255);
+            this._Objects = [];
         }
         
     }

@@ -72,9 +72,9 @@ class ShaderRenderer extends Renderer
     {
         // Override
         if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Manager.Active.Uniforms.SetData("Color", Util.Converter.ConvertNumberArrayToByteArray(Color));
+        this._Manager.Active.Uniforms.SetData("Color", Color);
         if(!this._Globals.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Globals.SetData("Color", Util.Converter.ConvertNumberArrayToByteArray(Color));
+        this._Globals.SetData("Color", Color);
     }
     public IsMaterialReady(ID:string) : boolean
     {
@@ -109,17 +109,17 @@ class ShaderRenderer extends Renderer
     public SetProjectionMatrix(Matrix:number[]) : void
     {
         // Override
-        this._Globals.SetData("Projection", Util.Converter.ConvertNumberArrayToByteArray(Matrix));
+        this._Globals.SetData("Projection", Matrix);
     }
     public SetModelViewMatrix(Matrix:number[]) : void
     {
         // Override
-        this._Globals.SetData("ModelView", Util.Converter.ConvertNumberArrayToByteArray(Matrix));
+        this._Globals.SetData("ModelView", Matrix);
     }
     public SetCameraPosition(CameraPosition:Math.Vertex) : void
     {
         // Override
-        this._Globals.SetData("CameraPosition", Util.Converter.ConvertVerticesToByteArray([CameraPosition], 3));
+        this._Globals.SetData("CameraPosition", CameraPosition.ToArray());
     }
     public SetViewLight(Index:number, LightParameters:Math.Vertex[]) : boolean
     {
@@ -135,10 +135,10 @@ class ShaderRenderer extends Renderer
             this._LightsNumber++;
             Update = true;
         }
-        this._Globals.SetData("Lights[" + Index + "].Color", Util.Converter.ConvertNumberArrayToByteArray([ LightParameters[0].X, LightParameters[0].Y, LightParameters[0].Z ]));
-        this._Globals.SetData("Lights[" + Index + "].Position", Util.Converter.ConvertNumberArrayToByteArray([ LightParameters[1].X, LightParameters[1].Y, LightParameters[1].Z ]));
-        this._Globals.SetData("Lights[" + Index + "].Attenuation", Util.Converter.ConvertNumberArrayToByteArray([ LightParameters[2].X, LightParameters[2].Y, LightParameters[2].Z ]));
-        this._Globals.SetData("Lights[" + Index + "].Intensity", Util.Converter.ConvertNumberArrayToByteArray([ LightParameters[3].X ]));
+        this._Globals.SetData("Lights[" + Index + "].Color", LightParameters[0].ToArray());
+        this._Globals.SetData("Lights[" + Index + "].Position", LightParameters[1].ToArray());
+        this._Globals.SetData("Lights[" + Index + "].Attenuation", LightParameters[2].ToArray());
+        this._Globals.SetData("Lights[" + Index + "].Intensity", LightParameters[3].X);
         return Update;
     }
     public Render2DGrid() : void
@@ -175,7 +175,7 @@ class ShaderRenderer extends Renderer
             Vertices.push(new Math.Vertex(-50, 50, 0));
             Vertices.push(new Math.Vertex(-50, -50, 0));
             this._GridSize = Vertices.length;
-            this._GridVertices = Util.Converter.ConvertVerticesToByteArray(Vertices, 3);
+            //this._GridVertices = Util.Converter.ConvertVerticesToByteArray(Vertices, 3);
         }
         this.SetSurface([0.3,0.3,0.3,1]);
         this._Manager.Active.Attributes.SetData("V_Vertex", this._GridSize * 3 * 4, this._GridVertices);

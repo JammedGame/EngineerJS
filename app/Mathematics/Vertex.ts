@@ -75,6 +75,14 @@ class Vertex
         this.Scalar(Divider);
         return this;
     }
+    public ToArray() : number[]
+    {
+        return [this.X, this.Y, this.Z];
+    }
+    public ToQuattroArray(W:number) : number[]
+    {
+        return [this.X, this.Y, this.Z, W];
+    }
     public static FromRGB(R:number, G:number, B:number) : Vertex
     {
         return new Vertex((R * 1.0 + 1) / 256, (G * 1.0 + 1) / 256, (B * 1.0 + 1) / 256);

@@ -17,15 +17,15 @@ class Transformation
     {
         if(Old != null)
         {
-            this._Translation = new Vertex(0,0,0);
-            this._Rotation = new Vertex(0,0,0);
-            this._Scale = new Vertex(1,1,1);
-        }
-        else
-        {
             this._Translation = Old._Translation.Copy();
             this._Rotation = Old._Rotation.Copy();
             this._Scale = Old._Scale.Copy();
+        }
+        else
+        {
+            this._Translation = new Vertex(0,0,0);
+            this._Rotation = new Vertex(0,0,0);
+            this._Scale = new Vertex(1,1,1);
         }
     }
     public Copy():Transformation

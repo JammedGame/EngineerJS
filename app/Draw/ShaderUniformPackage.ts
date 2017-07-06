@@ -5,7 +5,7 @@ class ShaderUniformPackage
     protected _Size:number[];
     protected _ID:string[];
     protected _Type:string[];
-    protected _Data:ArrayBuffer[];
+    protected _Data:any[];
     public constructor(Old?:ShaderUniformPackage)
     {
         if(Old != null)

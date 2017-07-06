@@ -3,6 +3,11 @@
         "target": "es5",
         "module": "commonjs",
         "sourceMap": true,
-        "allowJs":true
-    }
+        "allowJs":true,
+        "lib": ["es2015", "es2017", "dom"]
+    },
+    "files": [
+        "app/Draw/WebGL2/Misc.d.ts",
+        "app/Draw/WebGL2/WebGL2.d.ts"
+    ]
 }
