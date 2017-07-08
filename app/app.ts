@@ -4,7 +4,7 @@ import * as Engine from "./Engine/Engine";
 import * as Math from "./Mathematics/Mathematics";
 
 import * as Draw from "./Draw/Draw";
-import * as WGL2 from "./Draw/WebGL2/WebGL2";
+import * as Three from "./Draw/Three/Three";
 
 console.log("EngineerJS");
 
@@ -14,7 +14,13 @@ G.Name = "Test Game";
 let S:Engine.Scene2D = new Engine.Scene2D();
 S.BackColor = Math.Color.FromRGBA(255,0,0,255);
 
-let WGL:WGL2.WGL2ShaderRenderer = new WGL2.WGL2ShaderRenderer();
-let Drawer:Draw.DrawEngine = new Draw.DrawEngine();
-Drawer.CurrentRenderer = WGL;
+let Sprite:Engine.Sprite = new Engine.Sprite();
+Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", "/resources/sprites/run.png"));
+Sprite.SetSpriteSet(0);
+let Drawn:Engine.DrawnSceneObject = new Engine.DrawnSceneObject();
+Drawn.Visual = Sprite;
+
+S.AddSceneObject(Drawn);
+
+let Drawer:Three.ThreeDrawEngine = new Three.ThreeDrawEngine();
 Drawer.Draw2DScene(S, window.innerWidth, window.innerHeight);

@@ -32,7 +32,7 @@ class Renderer
     {
         this._LightsNumber = 0;
     }
-    public SetViewport(Width:number, Heighyt:number) : void { /*Virtual*/ }
+    public SetViewport(Width:number, Height:number) : void { /*Virtual*/ }
     public Clear() : void { /*Virtual*/ }
     public ClearColor(Color:number[]) : void { /*Virtual*/ }
     public SetSurface(Color:number[]) : void { /*Virtual*/ }

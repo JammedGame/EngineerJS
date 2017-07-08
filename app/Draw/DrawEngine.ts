@@ -11,6 +11,7 @@ class DrawEngine
     private _CurrentRenderer:Renderer;
     public get CurrentRenderer():Renderer { return this._CurrentRenderer; }
     public set CurrentRenderer(value:Renderer) { this._CurrentRenderer = value; }
+    public Data: { [key: string]:any; } = {};
     public constructor(Old?:DrawEngine)
     {
         this._Matrix = new Math.MatrixTransformer();
@@ -22,6 +23,7 @@ class DrawEngine
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
+        // Virtual
         if(Scene == null) return;
         this._CurrentRenderer.Toggle(RenderEnableCap.Depth, false);
         this._CurrentRenderer.SetViewport(Width, Height);
@@ -42,12 +44,14 @@ class DrawEngine
             this.DrawSprite(<Engine.Sprite>(<Engine.DrawnSceneObject>Sprites[i]).Visual);
         }
     }
-    public Draw3DScene(Scene:Engine.Scene) : void
+    public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
     {
+        // Virtual
         // TODO
     }
     private DrawSprite(Sprite:Engine.Sprite) : void
     {
+        // Virtual
         if(Sprite.Active)
         {
             this._Matrix.Translate(Sprite.Trans.Translation.X, Sprite.Trans.Translation.Y, Sprite.Trans.Translation.Z);
