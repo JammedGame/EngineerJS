@@ -2,7 +2,7 @@
   "name": "engineer-js",
   "version": "0.0.1",
   "description": "Web renderer for engineer game engine.",
-  "main": "public/engineer.js",
+  "main": "build/public/engineer.js",
   "scripts": {
     "start": "tsc && webpack-dev-server --hot",
     "build": "tsc && webpack",

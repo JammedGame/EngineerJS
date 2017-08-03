@@ -4,9 +4,9 @@ module.exports = {
     app: ["./app/app.ts"]
   },
   output: {
-    path: path.resolve(__dirname, "build") + "/public",
-    publicPath: "./public",
-    filename: "engineer.js"
+    path: path.resolve(__dirname, "build"),
+    filename: "engineer.js",
+    publicPath: "/resources/"
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']

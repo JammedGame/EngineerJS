@@ -15,7 +15,7 @@ let S:Engine.Scene2D = new Engine.Scene2D();
 S.BackColor = Math.Color.FromRGBA(255,0,0,255);
 
 let Sprite:Engine.Sprite = new Engine.Sprite();
-Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", "/resources/sprites/run.png"));
+Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", "/build/resources/sprites/run.png"));
 Sprite.SetSpriteSet(0);
 let Drawn:Engine.DrawnSceneObject = new Engine.DrawnSceneObject();
 Drawn.Visual = Sprite;

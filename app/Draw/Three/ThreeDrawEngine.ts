@@ -18,6 +18,7 @@ class ThreeDrawEngine extends DrawEngine
         this._Scene = new Three.Scene();
         this._Target = document.getElementById("canvas") as HTMLCanvasElement;
         this._Renderer = new Three.WebGLRenderer({canvas:this._Target});
+        this._Renderer.setPixelRatio( window.devicePixelRatio );
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
@@ -30,7 +31,8 @@ class ThreeDrawEngine extends DrawEngine
         }
         if(this._Camera == null)
         {
-            this._Camera = new Three.OrthographicCamera( 0, Width, Height, 0, 1, 1000 );
+            this._Camera = new Three.OrthographicCamera( 0, Width, Height, 0, 1, 10 );
+            this._Camera.position.z = 10;
         }
         let Checked:any[] = [];
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
@@ -56,7 +58,7 @@ class ThreeDrawEngine extends DrawEngine
                 this.Data[Drawn.ID] = Sprite;
                 Sprite.visible = SpriteData.Active;
                 Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 0);
+                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
                 Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
                 this._Scene.add(Sprite);
                 Checked.push(Sprite);
@@ -79,7 +81,7 @@ class ThreeDrawEngine extends DrawEngine
                 }
                 Sprite.visible = SpriteData.Active;
                 Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 0);
+                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
                 Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
                 Checked.push(Sprite);
             }
@@ -92,6 +94,7 @@ class ThreeDrawEngine extends DrawEngine
         console.log(this._Scene);
         console.log(this._Camera);
         console.log(this._Target);
+        this._Renderer.clear();
         this._Renderer.render(this._Scene, this._Camera);
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
