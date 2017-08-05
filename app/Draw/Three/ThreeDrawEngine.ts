@@ -1,13 +1,15 @@
 export  { ThreeDrawEngine };
 
-import * as Three from 'three';
+import * as Three from 'Three';
 import * as Math from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
+import * as Util from "./../../Util/Util";
 
 import { DrawEngine } from "./../DrawEngine";
 
 class ThreeDrawEngine extends DrawEngine
 {
+    private _Init:boolean;
     private _Target:HTMLCanvasElement;
     private _Scene:Three.Scene;
     private _Camera:Three.Camera;
@@ -16,9 +18,11 @@ class ThreeDrawEngine extends DrawEngine
     {
         super(Old);
         this._Scene = new Three.Scene();
+        this._Init = false;
         this._Target = document.getElementById("canvas") as HTMLCanvasElement;
         this._Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this._Renderer.setPixelRatio( window.devicePixelRatio );
+        this._Renderer.setSize( window.innerWidth, window.innerHeight );
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
@@ -27,12 +31,12 @@ class ThreeDrawEngine extends DrawEngine
             this.Data["Width"] = Width;
             this.Data["Height"] = Height;
             this._Renderer.setSize(Width, Height);
-            console.log("ENGINEERJS-RESIZE");
+            Util.Log.Event("Scene2D Resize");
         }
         if(this._Camera == null)
         {
-            this._Camera = new Three.OrthographicCamera( 0, Width, Height, 0, 1, 10 );
-            this._Camera.position.z = 10;
+            this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
+            this._Camera.position.z = 5;
         }
         let Checked:any[] = [];
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
@@ -48,6 +52,7 @@ class ThreeDrawEngine extends DrawEngine
                 if(SpriteData.GetActiveSprites() != "")
                 {
                     let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
+                    SpriteMap.flipY = false;
                     SpriteMaterial = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
                 }
                 else
@@ -61,7 +66,8 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
                 Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
                 this._Scene.add(Sprite);
-                Checked.push(Sprite);
+                Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
+                Checked.push(Sprite.uuid);
             }
             else
             {
@@ -72,6 +78,7 @@ class ThreeDrawEngine extends DrawEngine
                     if(SpriteData.GetActiveSprites() != "")
                     {
                         let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
+                        SpriteMap.flipY = false;
                         Sprite.material = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
                     }
                     else
@@ -83,18 +90,40 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
                 Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
                 Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
-                Checked.push(Sprite);
+                Checked.push(Sprite.uuid);
             }
         }
         for(let i = 0; i < this._Scene.children.length; i++)
         {
-            let Sprite:Three.Sprite = <Three.Sprite>this._Scene.children[i];
-            //if(Checked.findIndex(<any>Sprite) == -1) this._Scene.remove(Sprite);
+            let Found = false;
+            let Sprite:any = this._Scene.children[i];
+            for(let i = 0; i < Checked.length; i++)
+            {
+                if(Checked[i] == Sprite.uuid) Found = true;
+            }
+            if(!Found)
+            {
+                this._Scene.remove(Sprite);
+                Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
+            }
         }
-        console.log(this._Scene);
-        console.log(this._Camera);
-        console.log(this._Target);
+        if(!this._Init)
+        {
+            this.Animate();
+            this._Init = true;
+            Util.Log.Info("ThreeJS Scene "+ this._Scene.uuid + " initialized.");
+        }
+        Util.Log.Info("Scene2D " + Scene.ID + " drawn.");
+    }
+    private Animate() : void
+    {
+        requestAnimationFrame( this.Animate.bind(this) );
+        this._Renderer.render( this._Scene, this._Camera );
+    }
+    private DrawThree() : void
+    {
         this._Renderer.clear();
+        this._Renderer.clearDepth();
         this._Renderer.render(this._Scene, this._Camera);
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
