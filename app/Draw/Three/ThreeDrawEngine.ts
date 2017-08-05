@@ -4,6 +4,7 @@ import * as Three from 'Three';
 import * as Math from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
+import * as Shaders from "./../WebGL2/Shaders";
 
 import { DrawEngine } from "./../DrawEngine";
 
