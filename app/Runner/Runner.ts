@@ -35,6 +35,7 @@ class Runner
             if(this._Game.Scenes[i].Name == SceneName)
             {
                 this._Current = this._Game.Scenes[i];
+                this._Current.Events.Invoke("Load", this._Game, {});
                 this.Run();
                 return;
             }
@@ -64,16 +65,19 @@ class Runner
         document.addEventListener("mousedown", this.OnMouseDown.bind(this), false);
         document.addEventListener("mouseup", this.OnMouseUp.bind(this), false);
         document.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
+        document.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
         document.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
         window.addEventListener("resize", this.OnResize.bind(this), false);
     }
     private OnRenderFrame()
     {
         if(this._Stop) return;
+        this._Current.Events.Invoke("TimeTick", this._Game, {});
         requestAnimationFrame( this.OnRenderFrame.bind(this) );
         if(this._Current.Type == Engine.SceneType.Scene2D)
         {
             this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
+            this._Current.Events.Invoke("RenderFrame", this._Game, {});
         }
         else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
     }
@@ -85,32 +89,38 @@ class Runner
     private OnKeyPress(event) : void
     {
         Util.Log.Event("KeyPress");
-        event.preventDefault();
+        this._Current.Events.Invoke("KeyPress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
     }
     private OnKeyDown(event) : void
     {
         Util.Log.Event("KeyDown");
-        event.preventDefault();
+        this._Current.Events.Invoke("KeyDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
     }
     private OnKeyUp(event) : void
     {
         Util.Log.Event("KeyUp");
-        event.preventDefault();
+        this._Current.Events.Invoke("KeyUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
     }
     private OnMouseDown(event) : void
     {
         Util.Log.Event("MouseDown");
-        event.preventDefault();
+        this._Current.Events.Invoke("MousePress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
+        this._Current.Events.Invoke("MouseDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
     }
     private OnMouseUp(event) : void
     {
         Util.Log.Event("MouseUp");
-        event.preventDefault();
+        this._Current.Events.Invoke("MouseUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
+    }
+    private OnMouseWheel(event) : void
+    {
+        Util.Log.Event("MouseWheel");
+        this._Current.Events.Invoke("MouseWheel", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Delta:event.wheelDelta});
     }
     private OnMouseMove(event) : void
     {
         Util.Log.Event("MouseMove");
-        event.preventDefault();
+        this._Current.Events.Invoke("MouseMove", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Location:new Math.Vertex(event.x, event.y, 0)});
     }
     private OnMouseRight(event) : void
     {
@@ -120,6 +130,6 @@ class Runner
     private OnResize(event) : void
     {
         Util.Log.Event("Resize");
-        event.preventDefault();
+        this._Current.Events.Invoke("Resize", this._Game, {Width:window.innerWidth, Height:window.innerHeight});
     }
 }
