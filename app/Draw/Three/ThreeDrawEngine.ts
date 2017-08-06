@@ -10,7 +10,6 @@ import { DrawEngine } from "./../DrawEngine";
 
 class ThreeDrawEngine extends DrawEngine
 {
-    private _Init:boolean;
     private _Checked:string[];
     private _Target:HTMLCanvasElement;
     private _Scene:Three.Scene;
@@ -19,7 +18,6 @@ class ThreeDrawEngine extends DrawEngine
     {
         super(Old);
         this._Scene = new Three.Scene();
-        this._Init = false;
         this._Target = document.getElementById("canvas") as HTMLCanvasElement;
         this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this.Renderer.setPixelRatio( window.devicePixelRatio );
@@ -68,18 +66,8 @@ class ThreeDrawEngine extends DrawEngine
             this._Camera.position.z = 5;
         }
         this.Load2DScene(Scene);
-        if(!this._Init)
-        {
-            this.Animate();
-            this._Init = true;
-            Util.Log.Info("ThreeJS Scene "+ this._Scene.uuid + " initialized.");
-        }
-        Util.Log.Info("Scene2D " + Scene.ID + " drawn.");
-    }
-    private Animate() : void
-    {
-        requestAnimationFrame( this.Animate.bind(this) );
         this.Renderer.render( this._Scene, this._Camera );
+        Util.Log.Info("Scene2D " + Scene.ID + " drawn.");
     }
     private DrawThree() : void
     {

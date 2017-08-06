@@ -35,12 +35,16 @@ class Runner
             if(this._Game.Scenes[i].Name == SceneName)
             {
                 this._Current = this._Game.Scenes[i];
+                this.Run();
+                return;
             }
         }
+        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
     }
-    public Run()
+    private Run()
     {
-        if(this._Current.Type == Engine.SceneType.Scene2D) this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
+        this._Stop = false;
+        this.OnRenderFrame();
     }
     private EngineInit(EngineType:Draw.DrawEngineType) : void
     {
@@ -62,6 +66,16 @@ class Runner
         document.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
         document.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
         window.addEventListener("resize", this.OnResize.bind(this), false);
+    }
+    private OnRenderFrame()
+    {
+        if(this._Stop) return;
+        requestAnimationFrame( this.OnRenderFrame.bind(this) );
+        if(this._Current.Type == Engine.SceneType.Scene2D)
+        {
+            this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
+        }
+        else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
     }
     private OnClosing(event) : void
     {

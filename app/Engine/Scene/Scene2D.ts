@@ -2,7 +2,7 @@ export  { Scene2D };
 
 import * as Math from "./../../Mathematics/Mathematics";
 
-import { Scene } from "./Scene";
+import { SceneType, Scene } from "./Scene";
 import { SceneObjectType, SceneObject } from "./SceneObject";
 import { DrawObjectType, DrawObject } from "./../Scene/DrawObject";
 import { Sprite } from "./../Scene/Sprite";
@@ -37,6 +37,7 @@ class Scene2D extends Scene
         else
         {
             super();
+            this.Type = SceneType.Scene2D;
             this._Trans = new Math.Transformation();
         }
     }

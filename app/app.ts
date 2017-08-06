@@ -3,8 +3,8 @@ import * as Data from "./Data/Data";
 import * as Engine from "./Engine/Engine";
 import * as Math from "./Mathematics/Mathematics";
 
+import * as Runner from "./Runner/Runner";
 import * as Draw from "./Draw/Draw";
-import * as Three from "./Draw/Three/Three";
 
 Util.Log.Print(" EngineerJS Version 0.0.0.1");
 
@@ -13,14 +13,16 @@ G.Name = "Test Game";
 
 let S:Engine.Scene2D = new Engine.Scene2D();
 S.BackColor = Math.Color.FromRGBA(0,0,0,255);
+S.Name = "Test Scene";
 
 let Sprite:Engine.Sprite = new Engine.Sprite();
 Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", ["/build/resources/sprites/enm3-1.png"]));
 Sprite.SetSpriteSet(0);
 Sprite.Trans.Translation = new Math.Vertex(300,300,0);
 Sprite.Trans.Scale = new Math.Vertex(300,300,1);
-
 S.AddSceneObject(Sprite);
 
-let Drawer:Three.ThreeDrawEngine = new Three.ThreeDrawEngine();
-Drawer.Draw2DScene(S, window.innerWidth, window.innerHeight);
+G.AddScene(S);
+
+let R:Runner.Runner = new Runner.Runner(G, Draw.DrawEngineType.ThreeJS);
+R.SwitchScene("Test Scene", false);

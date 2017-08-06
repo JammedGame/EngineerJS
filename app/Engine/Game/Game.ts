@@ -18,6 +18,7 @@ class Game
     public constructor(Name?:string)
     {
         this._Name = "EngineerJS Game";
+        this._Scenes = [];
         if(Name != null) this._Name = Name;
         this.UpdateName();
     }
