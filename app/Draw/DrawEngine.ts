@@ -41,7 +41,7 @@ class DrawEngine
         let Sprites:Engine.SceneObject[] = Scene.Sprites;
         for(let i = 0; i < Sprites.length; i++)
         {
-            this.DrawSprite(<Engine.Sprite>(<Engine.DrawnSceneObject>Sprites[i]).Visual);
+            this.DrawSprite(Scene, <Engine.Sprite>(<Engine.DrawnSceneObject>Sprites[i]).Visual);
         }
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
@@ -49,9 +49,10 @@ class DrawEngine
         // Virtual
         // TODO
     }
-    private DrawSprite(Sprite:Engine.Sprite) : void
+    private DrawSprite(Scene:Engine.Scene, Drawn:Engine.DrawnSceneObject) : void
     {
         // Virtual
+        let Sprite:Engine.Sprite = <Engine.Sprite>Drawn.Visual;
         if(Sprite.Active)
         {
             this._Matrix.Translate(Sprite.Trans.Translation.X, Sprite.Trans.Translation.Y, Sprite.Trans.Translation.Z);
@@ -64,7 +65,7 @@ class DrawEngine
             Sprite.Modified = false;
             for(let i = 0; i < Sprite.SubSprites.length; i++)
             {
-                this.DrawSprite(Sprite.SubSprites[i]);
+                this.DrawSprite(Scene, Sprite.SubSprites[i]);
             }
             this._Matrix.PopMatrix();
         }

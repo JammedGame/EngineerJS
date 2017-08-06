@@ -15,12 +15,12 @@ class Scene2D extends Scene
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public get Sprites() : SceneObject[]
     {
-        let Sprites = [];
+        let Sprites:Sprite[] = [];
         for(let i = 0; i < this.Objects.length; i++)
         {
             if(this.Objects[i].Type == SceneObjectType.Drawn)
             {
-                if((<DrawnSceneObject>this.Objects[i]).Visual.Type = DrawObjectType.Sprite)
+                if((<DrawnSceneObject>this.Objects[i]).DrawType = DrawObjectType.Sprite)
                 {
                     Sprites.push(this.Objects[i]);
                 }

@@ -1,38 +1,35 @@
-export  { DrawObjectType, DrawObject };
+export  { DrawnSceneObject };
 
-import * as Data from "./../../Data/Data";
-import * as Math from "./../../Mathematics/Mathematics";
+import { SceneObjectType, SceneObject } from "./SceneObject";
+import { DrawObject } from "./../Draw/DrawObject"
 
-enum DrawObjectType
+class DrawObject extends SceneObject
 {
-    Undefined,
-    Sprite
-}
-class DrawObject
-{
-    private _ID:string;
+    private _Fixed:boolean;
     private _Active:boolean;
-    private _Type:DrawObjectType;
+    private _DrawType:DrawObjectType;
     private _Trans:Math.Transformation;
-    public get ID():string { return this._ID; }
     public get Active():boolean { return this._Active; }
     public set Active(value:boolean) { this._Active = value; }
-    public get Type():DrawObjectType { return this._Type; }
-    public set Type(value:DrawObjectType) { this._Type = value; }
+    public get Fixed():boolean { return this._Fixed; }
+    public set Fixed(value:boolean) { this._Fixed = value; }
+    public get DrawType():DrawObjectType { return this._DrawType; }
+    public set DrawType(value:DrawObjectType) { this._DrawType = value; }
     public get Trans():Math.Transformation { return this._Trans; }
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public constructor(Old?:DrawObject)
     {
+        super(Old);
         if(Old != null)
         {
-            this._ID = Data.Uuid.Create();
+            this._Fixed = Old._Fixed;
             this._Active = Old._Active;
             this._Type = Old._Type;
             this._Trans = Old._Trans.Copy();
         }
         else
         {
-            this._ID = Data.Uuid.Create();
+            this._Fixed = false;
             this._Active = true;
             this._Type = DrawObjectType.Undefined;
             this._Trans = new Math.Transformation();

@@ -53,6 +53,7 @@ class Scene
     }
     public AddSceneObject(Object:SceneObject) : void
     {
+        this._Data[Object.ID] = Object;
         this._Objects.push(Object);
     }
 }

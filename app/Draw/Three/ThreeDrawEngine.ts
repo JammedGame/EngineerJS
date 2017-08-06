@@ -25,20 +25,8 @@ class ThreeDrawEngine extends DrawEngine
         this._Renderer.setPixelRatio( window.devicePixelRatio );
         this._Renderer.setSize( window.innerWidth, window.innerHeight );
     }
-    public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
+    public Load2DScene(Scene:Engine.Scene2D) : void
     {
-        if(this.Data["Width"] == null || this.Data["Width"] != Width || this.Data["Height"] != Height)
-        {
-            this.Data["Width"] = Width;
-            this.Data["Height"] = Height;
-            this._Renderer.setSize(Width, Height);
-            Util.Log.Event("Scene2D Resize");
-        }
-        if(this._Camera == null)
-        {
-            this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
-            this._Camera.position.z = 5;
-        }
         let Checked:any[] = [];
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
         for(let i = 0; i < Scene.Objects.length; i++)
@@ -46,53 +34,7 @@ class ThreeDrawEngine extends DrawEngine
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
             let Drawn:Engine.DrawnSceneObject = <Engine.DrawnSceneObject>Scene.Objects[i];
             let SpriteData = <Engine.Sprite>Drawn.Visual;
-            if(this.Data[Drawn.ID] == null)
-            {
-                this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
-                let SpriteMaterial;
-                if(SpriteData.GetActiveSprites() != "")
-                {
-                    let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
-                    SpriteMap.flipY = false;
-                    SpriteMaterial = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
-                }
-                else
-                {
-                    SpriteMaterial  = new Three.SpriteMaterial( { color: 0xffffff } );
-                }
-                let Sprite:Three.Sprite = new Three.Sprite( SpriteMaterial );
-                this.Data[Drawn.ID] = Sprite;
-                Sprite.visible = SpriteData.Active;
-                Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
-                Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
-                this._Scene.add(Sprite);
-                Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
-                Checked.push(Sprite.uuid);
-            }
-            else
-            {
-                let Sprite:Three.Sprite = this.Data[Drawn.ID];
-                if(this.Data[Drawn.ID + "_Set"] != SpriteData.GetActiveSprites())
-                {
-                    this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
-                    if(SpriteData.GetActiveSprites() != "")
-                    {
-                        let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
-                        SpriteMap.flipY = false;
-                        Sprite.material = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
-                    }
-                    else
-                    {
-                        Sprite.material  = new Three.SpriteMaterial( { color: 0xffffff } );
-                    }
-                }
-                Sprite.visible = SpriteData.Active;
-                Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-                Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
-                Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
-                Checked.push(Sprite.uuid);
-            }
+            this.DrawSprite(Scene, SpriteData);
         }
         for(let i = 0; i < this._Scene.children.length; i++)
         {
@@ -108,6 +50,22 @@ class ThreeDrawEngine extends DrawEngine
                 Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
             }
         }
+    }
+    public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
+    {
+        if(this.Data["Width"] == null || this.Data["Width"] != Width || this.Data["Height"] != Height)
+        {
+            this.Data["Width"] = Width;
+            this.Data["Height"] = Height;
+            this._Renderer.setSize(Width, Height);
+            Util.Log.Event("Scene2D Resize");
+        }
+        if(this._Camera == null)
+        {
+            this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
+            this._Camera.position.z = 5;
+        }
+        this.Load2DScene(Scene);
         if(!this._Init)
         {
             this.Animate();
@@ -133,6 +91,58 @@ class ThreeDrawEngine extends DrawEngine
         {
             this._Camera = new Three.PerspectiveCamera( 45, Width / Height, 1, 10000 );
 	        this._Camera.position.z = 1000;
+        }
+    }
+    private DrawSprite(Scene:Engine.Scene2D, Drawn:Engine.DrawnSceneObject) : void
+    {  
+        let SpriteData = <Engine.Sprite>Drawn.Visual;
+        if(this.Data[Drawn.ID] == null)
+        {
+            this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
+            let SpriteMaterial;
+            if(SpriteData.GetActiveSprites().length > 0)
+            {
+                for(let j = 0; j < )
+                let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
+                SpriteMap.flipY = false;
+                SpriteMaterial = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
+            }
+            else
+            {
+                SpriteMaterial  = new Three.SpriteMaterial( { color: 0xffffff } );
+            }
+            let Sprite:Three.Sprite = new Three.Sprite( SpriteMaterial );
+            this.Data[Drawn.ID] = Sprite;
+            Sprite.visible = SpriteData.Active;
+            Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
+            Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
+            Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
+            this._Scene.add(Sprite);
+            Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
+            Checked.push(Sprite.uuid);
+        }
+        else
+        {
+            let Sprite:Three.Sprite = this.Data[Drawn.ID];
+            if(this.Data[Drawn.ID + "_Set"] != SpriteData.GetActiveSprites())
+            {
+                this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
+                if(SpriteData.GetActiveSprites() != "")
+                {
+                    let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
+                    SpriteMap.flipY = false;
+                    Sprite.material = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
+                }
+                else
+                {
+                    Sprite.material  = new Three.SpriteMaterial( { color: 0xffffff } );
+                }
+            }
+            Sprite.visible = SpriteData.Active;
+            Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
+            Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
+            Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
+            Checked.push(Sprite.uuid);
         }
     }
 }
