@@ -7,24 +7,44 @@ class Log
     public static LogError:boolean = true;
     public static LogWarning:boolean = true;
     public static LogEvent:boolean = true;
-    public static Print(Message:string)
+    public static Print(Message:any)
     {
-        if(Log.LogPrint) console.info("EngineerJS:" + Message);
+        if(!Log.LogPrint) return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Message");
+        console.info(Message);
+        console.log(" - - - ");
     };
-    public static Info(Message:string)
+    public static Info(Message:any)
     {
-        if(Log.LogInfo) console.info("EngineerJS: Info - " + Message);
+        if(!Log.LogInfo) return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Info");
+        console.info(Message);
+        console.log(" - - - ");
     };
-    public static Error(Message:string)
+    public static Error(Message:any)
     {
-        if(Log.LogError) console.error("EngineerJS: Error - " + Message);
+        if(!Log.LogError) return;
+        console.log(" - - - ");
+        console.error("EngineerJS: Error");
+        console.error(Message);
+        console.log(" - - - ");
     };
-    public static Warning(Message:string)
+    public static Warning(Message:any)
     {
-        if(Log.LogWarning) console.warn("EngineerJS: Warning - " + Message);
+        if(!Log.LogWarning) return;
+        console.log(" - - - ");
+        console.warn("EngineerJS: Warning");
+        console.warn(Message);
+        console.log(" - - - ");
     };
-    public static Event(Message:string)
+    public static Event(Message:any)
     {
-        if(Log.LogEvent) console.info("EngineerJS: Event - " + Message);
+        if(!Log.LogEvent) return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Event");
+        console.info(Message);
+        console.log(" - - - ");
     };
 }

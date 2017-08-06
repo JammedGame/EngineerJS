@@ -85,7 +85,6 @@ class ThreeDrawEngine extends DrawEngine
     private DrawThree() : void
     {
         this.Renderer.clear();
-        this.Renderer.clearDepth();
         this.Renderer.render(this._Scene, this._Camera);
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
@@ -120,13 +119,14 @@ class ThreeDrawEngine extends DrawEngine
                         uniforms:
                         {
                             index: { type:"i", value:SpriteData.Index() },
-                            color: { type:"v4", value:[1,0,0,1] },
+                            color: { type:"v4", value:[1,1,1,1] },
                             texture: { type:"tv", value: Textures[SpriteData.Index()] }
                         },
                         vertexShader: Shaders.ThreeJSShaders.Vertex2D,
                         fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
                     }
                 );
+                SpriteMaterial.transparent = true;
             }
             else
             {
@@ -136,13 +136,14 @@ class ThreeDrawEngine extends DrawEngine
                         uniforms:
                         {
                             index: { type:"i", value:-1 },
-                            color: { type:"v4", value:[1,0,0,1] },
+                            color: { type:"v4", value:[1,1,1,1] },
                             texture: { type:"tv", value: null }
                         },
                         vertexShader: Shaders.ThreeJSShaders.Vertex2D,
                         fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
                     }
                 );
+                SpriteMaterial.transparent = true;
             }
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data[Drawn.ID] = Sprite;
