@@ -25,7 +25,7 @@ class Sprite extends DrawObject
             super();
             this._CurrentIndex = 0;
             this._CurrentSpriteSet = 0;
-            this.Type = DrawObjectType.Sprite;
+            this.DrawType = DrawObjectType.Sprite;
             this._SpriteSets = Old._SpriteSets;
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
@@ -36,7 +36,7 @@ class Sprite extends DrawObject
             super(Old);
             this._CurrentIndex = 0;
             this._CurrentSpriteSet = 0;
-            this.Type = DrawObjectType.Sprite;
+            this.DrawType = DrawObjectType.Sprite;
             this._SpriteSets = [];
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);
@@ -99,9 +99,9 @@ class Sprite extends DrawObject
         Index += this._CurrentIndex;
         return Index;
     }
-    public GetActiveSprites() : string
+    public GetActiveSprites() : string[]
     {
-        if(this._SpriteSets.length == 0) return "";
+        if(this._SpriteSets.length == 0) return [];
         return this._SpriteSets[this._CurrentSpriteSet].Sprites;
     }
 }
@@ -109,13 +109,13 @@ class SpriteSet
 {
     private _ID:string;
     private _Name:string;
-    private _Sprites:string;
+    private _Sprites:string[];
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
-    public get Sprites():string { return this._Sprites; }
-    public set Sprites(value:string) { this._Sprites = value; }
-    public constructor(Old?:SpriteSet, Name?:string, Image?:string)
+    public get Sprites():string[] { return this._Sprites; }
+    public set Sprites(value:string[]) { this._Sprites = value; }
+    public constructor(Old?:SpriteSet, Name?:string, Images?:string[])
     {
         if(Old != null)
         {
@@ -128,8 +128,7 @@ class SpriteSet
             this._ID = Data.Uuid.Create();
             if(Name != null) this._Name = Name;
             else this._Name = "";
-            this._Sprites = "";
-            if(Image != null) this._Sprites = Image;
+            this._Sprites = Images;
         }
     }
     public Copy() : SpriteSet

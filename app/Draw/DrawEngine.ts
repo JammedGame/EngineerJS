@@ -38,10 +38,10 @@ class DrawEngine
         this._Matrix.Translate(Scene.Trans.Translation.X, Scene.Trans.Translation.Y, Scene.Trans.Translation.Z);
         this._Matrix.PushMatrix();
         this._CurrentRenderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
-        let Sprites:Engine.SceneObject[] = Scene.Sprites;
+        let Sprites:Engine.Sprite[] = Scene.Sprites;
         for(let i = 0; i < Sprites.length; i++)
         {
-            this.DrawSprite(<Engine.Sprite>(<Engine.DrawnSceneObject>Sprites[i]).Visual);
+            this.DrawSprite(Scene, Sprites[i]);
         }
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
@@ -49,24 +49,28 @@ class DrawEngine
         // Virtual
         // TODO
     }
-    private DrawSprite(Sprite:Engine.Sprite) : void
+    private DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {
         // Virtual
-        if(Sprite.Active)
+        if(Drawn.Active)
         {
-            this._Matrix.Translate(Sprite.Trans.Translation.X, Sprite.Trans.Translation.Y, Sprite.Trans.Translation.Z);
-            this._Matrix.Scale(Sprite.Trans.Scale.X, Sprite.Trans.Scale.Y, Sprite.Trans.Scale.Z);
-            this._Matrix.Rotate(Sprite.Trans.Rotation.X, 1, 0, 0);
-            this._Matrix.Rotate(Sprite.Trans.Rotation.Y, 0, 1, 0);
-            this._Matrix.Rotate(Sprite.Trans.Rotation.Z, 0, 0, 1);
+            this._Matrix.Translate(Drawn.Trans.Translation.X, Drawn.Trans.Translation.Y, Drawn.Trans.Translation.Z);
+            this._Matrix.Scale(Drawn.Trans.Scale.X, Drawn.Trans.Scale.Y, Drawn.Trans.Scale.Z);
+            this._Matrix.Rotate(Drawn.Trans.Rotation.X, 1, 0, 0);
+            this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
+            this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
             this._CurrentRenderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
-            this._CurrentRenderer.RenderSprite(Sprite.ID, Sprite.CollectiveList(), (Sprite.CollectiveList().length > 0) ? Sprite.Index() : -1, Sprite.Modified);
-            Sprite.Modified = false;
-            for(let i = 0; i < Sprite.SubSprites.length; i++)
+            this._CurrentRenderer.RenderSprite(Drawn.ID, Drawn.CollectiveList(), (Drawn.CollectiveList().length > 0) ? Drawn.Index() : -1, Drawn.Modified);
+            Drawn.Modified = false;
+            for(let i = 0; i < Drawn.SubSprites.length; i++)
             {
-                this.DrawSprite(Sprite.SubSprites[i]);
+                this.DrawSprite(Scene, Drawn.SubSprites[i]);
             }
             this._Matrix.PopMatrix();
         }
+    }
+    protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    {
+
     }
 }
