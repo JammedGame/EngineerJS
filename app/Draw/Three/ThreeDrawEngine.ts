@@ -15,16 +15,15 @@ class ThreeDrawEngine extends DrawEngine
     private _Target:HTMLCanvasElement;
     private _Scene:Three.Scene;
     private _Camera:Three.Camera;
-    private _Renderer:Three.WebGLRenderer;
     public constructor(Old?:ThreeDrawEngine)
     {
         super(Old);
         this._Scene = new Three.Scene();
         this._Init = false;
         this._Target = document.getElementById("canvas") as HTMLCanvasElement;
-        this._Renderer = new Three.WebGLRenderer({canvas:this._Target});
-        this._Renderer.setPixelRatio( window.devicePixelRatio );
-        this._Renderer.setSize( window.innerWidth, window.innerHeight );
+        this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
+        this.Renderer.setPixelRatio( window.devicePixelRatio );
+        this.Renderer.setSize( window.innerWidth, window.innerHeight );
     }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
@@ -61,7 +60,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Data["Width"] = Width;
             this.Data["Height"] = Height;
-            this._Renderer.setSize(Width, Height);
+            this.Renderer.setSize(Width, Height);
             Util.Log.Event("Scene2D Resize");
         }
         if(this._Camera == null)
@@ -81,13 +80,13 @@ class ThreeDrawEngine extends DrawEngine
     private Animate() : void
     {
         requestAnimationFrame( this.Animate.bind(this) );
-        this._Renderer.render( this._Scene, this._Camera );
+        this.Renderer.render( this._Scene, this._Camera );
     }
     private DrawThree() : void
     {
-        this._Renderer.clear();
-        this._Renderer.clearDepth();
-        this._Renderer.render(this._Scene, this._Camera);
+        this.Renderer.clear();
+        this.Renderer.clearDepth();
+        this.Renderer.render(this._Scene, this._Camera);
     }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
     {
