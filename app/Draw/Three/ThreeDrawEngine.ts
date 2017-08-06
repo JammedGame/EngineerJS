@@ -11,6 +11,7 @@ import { DrawEngine } from "./../DrawEngine";
 class ThreeDrawEngine extends DrawEngine
 {
     private _Init:boolean;
+    private _Checked:string[];
     private _Target:HTMLCanvasElement;
     private _Scene:Three.Scene;
     private _Camera:Three.Camera;
@@ -27,22 +28,25 @@ class ThreeDrawEngine extends DrawEngine
     }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
-        let Checked:any[] = [];
+        this._Checked = [];
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
         for(let i = 0; i < Scene.Objects.length; i++)
         {
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
-            let Drawn:Engine.DrawnSceneObject = <Engine.DrawnSceneObject>Scene.Objects[i];
-            let SpriteData = <Engine.Sprite>Drawn.Visual;
-            this.DrawSprite(Scene, SpriteData);
+            let Drawn:Engine.DrawObject = <Engine.DrawObject>Scene.Objects[i];
+            if(Drawn.DrawType == Engine.DrawObjectType.Sprite)
+            {
+                let SpriteData = <Engine.Sprite>Drawn;
+                this.LoadSprite(Scene, SpriteData);
+            }
         }
         for(let i = 0; i < this._Scene.children.length; i++)
         {
             let Found = false;
             let Sprite:any = this._Scene.children[i];
-            for(let i = 0; i < Checked.length; i++)
+            for(let i = 0; i < this._Checked.length; i++)
             {
-                if(Checked[i] == Sprite.uuid) Found = true;
+                if(this._Checked[i] == Sprite.uuid) Found = true;
             }
             if(!Found)
             {
@@ -93,19 +97,25 @@ class ThreeDrawEngine extends DrawEngine
 	        this._Camera.position.z = 1000;
         }
     }
-    private DrawSprite(Scene:Engine.Scene2D, Drawn:Engine.DrawnSceneObject) : void
+    protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {  
-        let SpriteData = <Engine.Sprite>Drawn.Visual;
+        let SpriteData = <Engine.Sprite>Drawn;
         if(this.Data[Drawn.ID] == null)
         {
             this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
             let SpriteMaterial;
             if(SpriteData.GetActiveSprites().length > 0)
             {
-                for(let j = 0; j < )
-                let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
-                SpriteMap.flipY = false;
-                SpriteMaterial = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
+                let TextureLoader = new Three.TextureLoader();
+                let Textures : Three.Texture[] = [];
+                let TextureUrls : string[] = SpriteData.GetActiveSprites();
+                for(let j = 0; j < TextureUrls.length; j++)
+                {
+                    let NewTexture = TextureLoader.load(TextureUrls[j]);
+                    NewTexture.flipY = false;
+                    Textures.push(NewTexture);
+                }
+                SpriteMaterial = new Three.SpriteMaterial( { map: Textures[0], color: 0xffffff } );
             }
             else
             {
@@ -119,19 +129,25 @@ class ThreeDrawEngine extends DrawEngine
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Scene.add(Sprite);
             Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
-            Checked.push(Sprite.uuid);
+            this._Checked.push(Sprite.uuid);
         }
         else
         {
             let Sprite:Three.Sprite = this.Data[Drawn.ID];
-            if(this.Data[Drawn.ID + "_Set"] != SpriteData.GetActiveSprites())
+            if(this.Data[Drawn.ID + "_Set"].length != SpriteData.GetActiveSprites().length)
             {
-                this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
-                if(SpriteData.GetActiveSprites() != "")
+                if(SpriteData.GetActiveSprites().length > 0)
                 {
-                    let SpriteMap:any = new Three.TextureLoader().load(SpriteData.GetActiveSprites());
-                    SpriteMap.flipY = false;
-                    Sprite.material = new Three.SpriteMaterial( { map: SpriteMap, color: 0xffffff } );
+                    let TextureLoader = new Three.TextureLoader();
+                    let Textures : Three.Texture[] = [];
+                    let TextureUrls : string[] = SpriteData.GetActiveSprites();
+                    for(let j = 0; j < TextureUrls.length; j++)
+                    {
+                        let NewTexture = TextureLoader.load(TextureUrls[j]);
+                        NewTexture.flipY = false;
+                        Textures.push(NewTexture);
+                    }
+                    Sprite.material = new Three.SpriteMaterial( { map: Textures[0], color: 0xffffff } );
                 }
                 else
                 {
@@ -142,7 +158,7 @@ class ThreeDrawEngine extends DrawEngine
             Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
             Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
-            Checked.push(Sprite.uuid);
+            this._Checked.push(Sprite.uuid);
         }
     }
 }

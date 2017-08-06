@@ -25,7 +25,7 @@ class Sprite extends DrawObject
             super();
             this._CurrentIndex = 0;
             this._CurrentSpriteSet = 0;
-            this.Type = DrawObjectType.Sprite;
+            this.DrawType = DrawObjectType.Sprite;
             this._SpriteSets = Old._SpriteSets;
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
@@ -36,7 +36,7 @@ class Sprite extends DrawObject
             super(Old);
             this._CurrentIndex = 0;
             this._CurrentSpriteSet = 0;
-            this.Type = DrawObjectType.Sprite;
+            this.DrawType = DrawObjectType.Sprite;
             this._SpriteSets = [];
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);

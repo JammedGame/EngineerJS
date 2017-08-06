@@ -1,8 +1,15 @@
-export  { DrawnSceneObject };
+export  { DrawObject, DrawObjectType };
+
+import * as Math from "./../../Mathematics/Mathematics";
 
 import { SceneObjectType, SceneObject } from "./SceneObject";
-import { DrawObject } from "./../Draw/DrawObject"
 
+enum DrawObjectType
+{
+    Undefined,
+    Sprite,
+    Tile
+}
 class DrawObject extends SceneObject
 {
     private _Fixed:boolean;
@@ -24,14 +31,15 @@ class DrawObject extends SceneObject
         {
             this._Fixed = Old._Fixed;
             this._Active = Old._Active;
-            this._Type = Old._Type;
+            this._DrawType = Old._DrawType;
             this._Trans = Old._Trans.Copy();
         }
         else
         {
+            this.Type = SceneObjectType.Drawn;
             this._Fixed = false;
             this._Active = true;
-            this._Type = DrawObjectType.Undefined;
+            this._DrawType = DrawObjectType.Undefined;
             this._Trans = new Math.Transformation();
         }
     }

@@ -4,25 +4,24 @@ import * as Math from "./../../Mathematics/Mathematics";
 
 import { Scene } from "./Scene";
 import { SceneObjectType, SceneObject } from "./SceneObject";
-import { DrawnSceneObject } from "./SceneObjectDrawn";
-import { DrawObjectType, DrawObject } from "./../Draw/DrawObject";
-import { Sprite } from "./../Draw/Sprite";
+import { DrawObjectType, DrawObject } from "./../Scene/DrawObject";
+import { Sprite } from "./../Scene/Sprite";
 
 class Scene2D extends Scene
 {
     private _Trans:Math.Transformation;
     public get Trans() : Math.Transformation { return this._Trans; }
     public set Trans(value:Math.Transformation) { this._Trans = value; }
-    public get Sprites() : SceneObject[]
+    public get Sprites() : Sprite[]
     {
         let Sprites:Sprite[] = [];
         for(let i = 0; i < this.Objects.length; i++)
         {
             if(this.Objects[i].Type == SceneObjectType.Drawn)
             {
-                if((<DrawnSceneObject>this.Objects[i]).DrawType = DrawObjectType.Sprite)
+                if((<DrawObject>this.Objects[i]).DrawType = DrawObjectType.Sprite)
                 {
-                    Sprites.push(this.Objects[i]);
+                    Sprites.push(<Sprite>this.Objects[i]);
                 }
             }
         }

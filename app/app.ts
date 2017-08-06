@@ -19,10 +19,8 @@ Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", "/build/resources/sprit
 Sprite.SetSpriteSet(0);
 Sprite.Trans.Translation = new Math.Vertex(600,600,0);
 Sprite.Trans.Scale = new Math.Vertex(600,100,1);
-let Drawn:Engine.DrawnSceneObject = new Engine.DrawnSceneObject();
-Drawn.Visual = Sprite;
 
-S.AddSceneObject(Drawn);
+S.AddSceneObject(Sprite);
 
 let Drawer:Three.ThreeDrawEngine = new Three.ThreeDrawEngine();
 Drawer.Draw2DScene(S, window.innerWidth, window.innerHeight);
