@@ -1,8 +1,12 @@
-export  { DrawEngine };
+export  { DrawEngineType, DrawEngine };
 
 import * as Math from "./../Mathematics/Mathematics"
 import * as Engine from "./../Engine/Engine";
 
+enum DrawEngineType
+{
+    ThreeJS = 0
+}
 class DrawEngine
 {
     private _Matrix:Math.MatrixTransformer;

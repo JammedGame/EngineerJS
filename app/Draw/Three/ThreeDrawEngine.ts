@@ -61,7 +61,6 @@ class ThreeDrawEngine extends DrawEngine
             this.Data["Width"] = Width;
             this.Data["Height"] = Height;
             this.Renderer.setSize(Width, Height);
-            Util.Log.Event("Scene2D Resize");
         }
         if(this._Camera == null)
         {
@@ -95,6 +94,24 @@ class ThreeDrawEngine extends DrawEngine
 	        this._Camera.position.z = 1000;
         }
     }
+    private GenerateSpriteMaterial(Sprite:Engine.Sprite, Texture:Three.Texture) : Three.ShaderMaterial
+    {
+        let SpriteMaterial = new Three.ShaderMaterial
+        (
+            {
+                uniforms:
+                {
+                    index: { type:"i", value:Sprite.Index() },
+                    color: { type:"v4", value:[1,1,1,1] },
+                    texture: { type:"tv", value: Texture }
+                },
+                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+            }
+        );
+        SpriteMaterial.transparent = true;
+        return SpriteMaterial;
+    }
     protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {  
         let SpriteData = <Engine.Sprite>Drawn;
@@ -106,6 +123,7 @@ class ThreeDrawEngine extends DrawEngine
             {
                 let TextureLoader = new Three.TextureLoader();
                 let Textures : Three.Texture[] = [];
+                this.Data[Drawn.ID + "_Tex"] = Textures;
                 let TextureUrls : string[] = SpriteData.GetActiveSprites();
                 for(let j = 0; j < TextureUrls.length; j++)
                 {
@@ -113,36 +131,11 @@ class ThreeDrawEngine extends DrawEngine
                     NewTexture.flipY = false;
                     Textures.push(NewTexture);
                 }
-                SpriteMaterial = new Three.ShaderMaterial
-                (
-                    {
-                        uniforms:
-                        {
-                            index: { type:"i", value:SpriteData.Index() },
-                            color: { type:"v4", value:[1,1,1,1] },
-                            texture: { type:"tv", value: Textures[SpriteData.Index()] }
-                        },
-                        vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                        fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-                    }
-                );
-                SpriteMaterial.transparent = true;
+                SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
             }
             else
             {
-                SpriteMaterial = new Three.ShaderMaterial
-                (
-                    {
-                        uniforms:
-                        {
-                            index: { type:"i", value:-1 },
-                            color: { type:"v4", value:[1,1,1,1] },
-                            texture: { type:"tv", value: null }
-                        },
-                        vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                        fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-                    }
-                );
+                SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
                 SpriteMaterial.transparent = true;
             }
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
@@ -158,12 +151,14 @@ class ThreeDrawEngine extends DrawEngine
         else
         {
             let Sprite:Three.Mesh = this.Data[Drawn.ID];
-            if(this.Data[Drawn.ID + "_Set"].length != SpriteData.GetActiveSprites().length)
+            if(SpriteData.GetActiveSprites().length > 0)
             {
-                if(SpriteData.GetActiveSprites().length > 0)
+                if(this.Data[Drawn.ID + "_Set"].length != SpriteData.GetActiveSprites().length)
                 {
+                    this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
                     let TextureLoader = new Three.TextureLoader();
                     let Textures : Three.Texture[] = [];
+                    this.Data[Drawn.ID + "_Tex"] = Textures;
                     let TextureUrls : string[] = SpriteData.GetActiveSprites();
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
@@ -171,12 +166,14 @@ class ThreeDrawEngine extends DrawEngine
                         NewTexture.flipY = false;
                         Textures.push(NewTexture);
                     }
-                    Sprite.material = new Three.SpriteMaterial( { map: Textures[0], color: 0xffffff } );
                 }
-                else
-                {
-                    Sprite.material  = new Three.SpriteMaterial( { color: 0xffffff } );
-                }
+                let TextureLoader = new Three.TextureLoader();
+                let Textures : Three.Texture[] = <Three.Texture[]> this.Data[SpriteData.ID + "_Tex"];
+                Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
+            }
+            else
+            {
+                Sprite.material = this.GenerateSpriteMaterial(SpriteData, null);
             }
             Sprite.visible = SpriteData.Active;
             Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);

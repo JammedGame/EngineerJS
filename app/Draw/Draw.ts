@@ -1,3 +1,3 @@
-import { DrawEngine } from "./DrawEngine";
+import { DrawEngineType, DrawEngine } from "./DrawEngine";
 
-export {DrawEngine};
+export { DrawEngineType, DrawEngine };

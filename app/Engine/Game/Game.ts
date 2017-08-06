@@ -32,4 +32,9 @@ class Game
         let Title:HTMLElement = document.getElementById("title") as HTMLElement;
         Title.innerHTML = this._Name;
     }
+    public AddScene(Scene:Scene) : void
+    {
+        this.Data[Scene.Name] = Scene;
+        this._Scenes.push(Scene);
+    }
 }
