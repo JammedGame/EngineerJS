@@ -115,7 +115,7 @@ class SpriteSet
     public set Name(value:string) { this._Name = value; }
     public get Sprites():string[] { return this._Sprites; }
     public set Sprites(value:string[]) { this._Sprites = value; }
-    public constructor(Old?:SpriteSet, Name?:string, Image?:string)
+    public constructor(Old?:SpriteSet, Name?:string, Images?:string[])
     {
         if(Old != null)
         {
@@ -128,8 +128,7 @@ class SpriteSet
             this._ID = Data.Uuid.Create();
             if(Name != null) this._Name = Name;
             else this._Name = "";
-            this._Sprites = [];
-            if(Image != null) this._Sprites.push(Image);
+            this._Sprites = Images;
         }
     }
     public Copy() : SpriteSet

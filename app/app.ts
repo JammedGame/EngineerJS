@@ -15,7 +15,7 @@ let S:Engine.Scene2D = new Engine.Scene2D();
 S.BackColor = Math.Color.FromRGBA(200,200,200,255);
 
 let Sprite:Engine.Sprite = new Engine.Sprite();
-Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", "/build/resources/sprites/run.png"));
+Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", ["/build/resources/sprites/run.png"]));
 Sprite.SetSpriteSet(0);
 Sprite.Trans.Translation = new Math.Vertex(600,600,0);
 Sprite.Trans.Scale = new Math.Vertex(600,100,1);

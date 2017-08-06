@@ -4,7 +4,7 @@ import * as Three from 'Three';
 import * as Math from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
-import * as Shaders from "./../WebGL2/Shaders";
+import * as Shaders from "./Shaders";
 
 import { DrawEngine } from "./../DrawEngine";
 
@@ -115,13 +115,37 @@ class ThreeDrawEngine extends DrawEngine
                     NewTexture.flipY = false;
                     Textures.push(NewTexture);
                 }
-                SpriteMaterial = new Three.SpriteMaterial( { map: Textures[0], color: 0xffffff } );
+                SpriteMaterial = new Three.ShaderMaterial
+                (
+                    {
+                        uniforms:
+                        {
+                            index: { type:"i", value:SpriteData.Index() },
+                            color: { type:"v4", value:[1,0,0,1] },
+                            texture: { type:"tv", value: Textures[SpriteData.Index()] }
+                        },
+                        vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                        fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+                    }
+                );
             }
             else
             {
-                SpriteMaterial  = new Three.SpriteMaterial( { color: 0xffffff } );
+                SpriteMaterial = new Three.ShaderMaterial
+                (
+                    {
+                        uniforms:
+                        {
+                            index: { type:"i", value:-1 },
+                            color: { type:"v4", value:[1,0,0,1] },
+                            texture: { type:"tv", value: null }
+                        },
+                        vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                        fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+                    }
+                );
             }
-            let Sprite:Three.Sprite = new Three.Sprite( SpriteMaterial );
+            let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data[Drawn.ID] = Sprite;
             Sprite.visible = SpriteData.Active;
             Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
@@ -133,7 +157,7 @@ class ThreeDrawEngine extends DrawEngine
         }
         else
         {
-            let Sprite:Three.Sprite = this.Data[Drawn.ID];
+            let Sprite:Three.Mesh = this.Data[Drawn.ID];
             if(this.Data[Drawn.ID + "_Set"].length != SpriteData.GetActiveSprites().length)
             {
                 if(SpriteData.GetActiveSprites().length > 0)
