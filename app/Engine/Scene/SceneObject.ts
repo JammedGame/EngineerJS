@@ -45,7 +45,6 @@ class SceneObject
     }
     public Copy() : SceneObject
     {
-        let New:SceneObject = new SceneObject(this);
-        return New;
+        return new SceneObject(this);
     }
 }

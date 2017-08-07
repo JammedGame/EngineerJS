@@ -22,6 +22,13 @@ Sprite.Trans.Translation = new Math.Vertex(300,300,0);
 Sprite.Trans.Scale = new Math.Vertex(300,300,1);
 S.AddSceneObject(Sprite);
 
+let Tile:Engine.Tile = new Engine.Tile();
+Tile.Collection = new Engine.TileCollection(null, ["/build/resources/sprites/enm8-1.png"]);
+Tile.Index = 0;
+Tile.Trans.Translation = new Math.Vertex(700, 700, 0);
+Tile.Trans.Scale = new Math.Vertex(600, 400, 1);
+S.AddSceneObject(Tile);
+
 G.AddScene(S);
 
 let R:Runner.Runner = new Runner.Runner(G, Draw.DrawEngineType.ThreeJS);

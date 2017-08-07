@@ -36,6 +36,11 @@ class ThreeDrawEngine extends DrawEngine
                 let SpriteData = <Engine.Sprite>Drawn;
                 this.LoadSprite(Scene, SpriteData);
             }
+            else if(Drawn.DrawType == Engine.DrawObjectType.Tile)
+            {
+                let TileData = <Engine.Tile>Drawn;
+                this.LoadTile(Scene, TileData);
+            }
         }
         for(let i = 0; i < this._Scene.children.length; i++)
         {
@@ -90,7 +95,7 @@ class ThreeDrawEngine extends DrawEngine
                 uniforms:
                 {
                     index: { type:"i", value:Sprite.Index() },
-                    color: { type:"v4", value:[1,1,1,1] },
+                    color: { type:"v4", value:Sprite.Paint.ToArray() },
                     texture: { type:"tv", value: Texture }
                 },
                 vertexShader: Shaders.ThreeJSShaders.Vertex2D,
@@ -99,6 +104,24 @@ class ThreeDrawEngine extends DrawEngine
         );
         SpriteMaterial.transparent = true;
         return SpriteMaterial;
+    }
+    private GenerateTileMaterial(Tile:Engine.Tile, Texture:Three.Texture) : Three.ShaderMaterial
+    {
+        let TileMaterial = new Three.ShaderMaterial
+        (
+            {
+                uniforms:
+                {
+                    index: { type:"i", value:Tile.Index },
+                    color: { type:"v4", value:Tile.Paint.ToArray() },
+                    texture: { type:"tv", value: Texture }
+                },
+                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+            }
+        );
+        TileMaterial.transparent = true;
+        return TileMaterial;
     }
     protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {  
@@ -121,11 +144,7 @@ class ThreeDrawEngine extends DrawEngine
                 }
                 SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
             }
-            else
-            {
-                SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
-                SpriteMaterial.transparent = true;
-            }
+            else SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data[Drawn.ID] = Sprite;
             Sprite.visible = SpriteData.Active;
@@ -159,15 +178,67 @@ class ThreeDrawEngine extends DrawEngine
                 let Textures : Three.Texture[] = <Three.Texture[]> this.Data[SpriteData.ID + "_Tex"];
                 Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
             }
-            else
-            {
-                Sprite.material = this.GenerateSpriteMaterial(SpriteData, null);
-            }
+            else Sprite.material = this.GenerateSpriteMaterial(SpriteData, null);
             Sprite.visible = SpriteData.Active;
             Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
             Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Checked.push(Sprite.uuid);
+        }
+    }
+    protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    {  
+        let TileData = <Engine.Tile>Drawn;
+        if(this.Data[Drawn.ID] == null)
+        {
+            let TileMaterial;
+            if(this.Data[TileData.Collection.ID + "_Tex"] == null)
+            {
+                if(TileData.Collection.Images.length > 0)
+                {
+                    let TextureLoader = new Three.TextureLoader();
+                    let Textures : Three.Texture[] = [];
+                    let TextureUrls : string[] = TileData.Collection.Images;
+                    for(let j = 0; j < TextureUrls.length; j++)
+                    {
+                        let NewTexture = TextureLoader.load(TextureUrls[j]);
+                        NewTexture.flipY = false;
+                        Textures.push(NewTexture);
+                    }
+                    this.Data[TileData.Collection.ID + "_Tex"] = Textures;
+                    TileMaterial = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
+                }
+                else TileMaterial = this.GenerateTileMaterial(TileData, null);
+            }
+            else
+            {
+                let Textures : Three.Texture[] = <Three.Texture[]>this.Data[TileData.Collection.ID + "_Tex"];
+                TileMaterial = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
+            }
+            let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
+            this.Data[Drawn.ID] = Tile;
+            Tile.visible = TileData.Active;
+            Tile.position.set(TileData.Trans.Translation.X, TileData.Trans.Translation.Y, 0);
+            Tile.scale.set(TileData.Trans.Scale.X, TileData.Trans.Scale.Y, 1);
+            Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
+            this._Scene.add(Tile);
+            Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
+            this._Checked.push(Tile.uuid);
+        }
+        else
+        {
+            let Tile:Three.Mesh = this.Data[Drawn.ID];
+            if(this.Data[TileData.Collection.ID + "_Tex"])
+            {
+                let Textures : Three.Texture[] = <Three.Texture[]>this.Data[TileData.Collection.ID + "_Tex"];
+                Tile.material = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
+            }
+            else Tile.material = this.GenerateTileMaterial(TileData, null);
+            Tile.visible = TileData.Active;
+            Tile.position.set(TileData.Trans.Translation.X, TileData.Trans.Translation.Y, 0);
+            Tile.scale.set(TileData.Trans.Scale.X, TileData.Trans.Scale.Y, 1);
+            Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
+            this._Checked.push(Tile.uuid);
         }
     }
 }

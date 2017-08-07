@@ -49,15 +49,14 @@ class Scene
             this._Events = new EventPackage();
             this._Objects = [];
         }
-        
     }
     public Copy() : Scene
     {
-        let New:Scene = new Scene(this);
-        return New;
+        return new Scene(this);
     }
     public AddSceneObject(Object:SceneObject) : void
     {
+        // Virtual
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
     }

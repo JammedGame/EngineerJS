@@ -10,23 +10,27 @@ class Sprite extends DrawObject
     private _Modified:boolean;
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
+    private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
     public get Modified():boolean { return this._Modified; }
     public set Modified(value:boolean) { this._Modified = value; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
+    public get Paint():Math.Color { return this._Paint; }
+    public set Paint(value:Math.Color) { this._Paint = value; }
     public get SpriteSets():SpriteSet[] { return this._SpriteSets; }
     public set SpriteSets(value:SpriteSet[]) { this._SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
     public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
     public constructor(Old?:Sprite)
     {
+        super(Old);
+        this.DrawType = DrawObjectType.Sprite;
+        this._CurrentIndex = 0;
+        this._CurrentSpriteSet = 0;
         if(Old != null)
         {
-            super();
-            this._CurrentIndex = 0;
-            this._CurrentSpriteSet = 0;
-            this.DrawType = DrawObjectType.Sprite;
+            this._Paint = Old._Paint;
             this._SpriteSets = Old._SpriteSets;
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
@@ -34,10 +38,7 @@ class Sprite extends DrawObject
         }
         else
         {
-            super(Old);
-            this._CurrentIndex = 0;
-            this._CurrentSpriteSet = 0;
-            this.DrawType = DrawObjectType.Sprite;
+            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
             this._SpriteSets = [];
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);

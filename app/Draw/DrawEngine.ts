@@ -39,4 +39,12 @@ class DrawEngine
     {
         // Virtual
     }
+    private DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    {
+        // Virtual
+    }
+    protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    {
+        // Virtual
+    }
 }

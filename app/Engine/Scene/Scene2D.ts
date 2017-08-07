@@ -19,7 +19,7 @@ class Scene2D extends Scene
         {
             if(this.Objects[i].Type == SceneObjectType.Drawn)
             {
-                if((<DrawObject>this.Objects[i]).DrawType = DrawObjectType.Sprite)
+                if((<DrawObject>this.Objects[i]).DrawType == DrawObjectType.Sprite)
                 {
                     Sprites.push(<Sprite>this.Objects[i]);
                 }
@@ -45,5 +45,17 @@ class Scene2D extends Scene
     {
         let New:Scene2D = new Scene2D(this);
         return New;
+    }
+    public AddSceneObject(Object:SceneObject) : void
+    {
+        // Override
+        if(Object.Type == SceneObjectType.Drawn)
+        {
+            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile)
+            {
+                this.Data[Object.ID] = Object;
+                this.Objects.push(Object);
+            }
+        }
     }
 }

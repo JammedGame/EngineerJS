@@ -6,9 +6,9 @@ import { SceneObjectType, SceneObject } from "./SceneObject";
 
 enum DrawObjectType
 {
-    Undefined,
-    Sprite,
-    Tile
+    Undefined = 0,
+    Sprite = 1,
+    Tile = 2
 }
 class DrawObject extends SceneObject
 {
