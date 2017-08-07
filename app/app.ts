@@ -16,7 +16,7 @@ S.BackColor = Math.Color.FromRGBA(0,0,0,255);
 S.Name = "Test Scene";
 
 let Sprite:Engine.Sprite = new Engine.Sprite();
-Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", ["/build/resources/sprites/enm3-1.png"]));
+Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", ["/build/resources/sprites/enm3-1.png", "/build/resources/sprites/enm3-2.png", "/build/resources/sprites/enm3-3.png"]));
 Sprite.SetSpriteSet(0);
 Sprite.Trans.Translation = new Math.Vertex(300,300,0);
 Sprite.Trans.Scale = new Math.Vertex(300,300,1);

@@ -14,6 +14,7 @@ class Sprite extends DrawObject
     private _SubSprites:Sprite[];
     public get Modified():boolean { return this._Modified; }
     public set Modified(value:boolean) { this._Modified = value; }
+    public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get SpriteSets():SpriteSet[] { return this._SpriteSets; }
     public set SpriteSets(value:SpriteSet[]) { this._SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
@@ -109,10 +110,13 @@ class SpriteSet
 {
     private _ID:string;
     private _Name:string;
+    private _Seed:number;
     private _Sprites:string[];
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
+    public get Seed():number { return this._Seed; }
+    public set Seed(value:number) { this._Seed = value; }
     public get Sprites():string[] { return this._Sprites; }
     public set Sprites(value:string[]) { this._Sprites = value; }
     public constructor(Old?:SpriteSet, Name?:string, Images?:string[])
@@ -121,6 +125,7 @@ class SpriteSet
         {
             this._ID = Data.Uuid.Create();
             this._Name = Old._Name;
+            this._Seed = Old._Seed;
             this._Sprites = Old._Sprites;
         }
         else
@@ -128,6 +133,7 @@ class SpriteSet
             this._ID = Data.Uuid.Create();
             if(Name != null) this._Name = Name;
             else this._Name = "";
+            this._Seed = -1;
             this._Sprites = Images;
         }
     }
