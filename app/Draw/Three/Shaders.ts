@@ -23,7 +23,7 @@ class ThreeJSShaders
             }
             else
             {
-                gl_FragColor = texture2D(texture, vUv);
+                gl_FragColor = color * texture2D(texture, vUv);
             }
         }
         `;

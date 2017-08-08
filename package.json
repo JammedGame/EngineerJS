@@ -5,7 +5,8 @@
   "main": "build/public/engineer.js",
   "scripts": {
     "start": "tsc && webpack-dev-server --hot",
-    "build": "tsc && webpack",
+    "build": "tsc && webpack --watch",
+    "prod" : "tsc && webpack -p",
     "test": "cd tests"
   },
   "repository": {
