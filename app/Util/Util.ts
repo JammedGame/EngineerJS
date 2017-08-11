@@ -1,5 +1,5 @@
-import { Converter } from "./Converter";
+import { Convert } from "./Converter";
 import { Buffer } from "./Buffer";
 import { Log } from "./Log";
 
-export { Converter, Buffer, Log };
+export { Convert, Buffer, Log };

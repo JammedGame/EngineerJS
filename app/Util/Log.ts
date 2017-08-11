@@ -6,7 +6,7 @@ class Log
     public static LogInfo:boolean = false;
     public static LogError:boolean = true;
     public static LogWarning:boolean = true;
-    public static LogEvent:boolean = true;
+    public static LogEvent:boolean = false;
     public static Print(Message:any)
     {
         if(!Log.LogPrint) return;
