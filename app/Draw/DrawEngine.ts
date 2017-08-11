@@ -2,6 +2,7 @@ export  { DrawEngineType, DrawEngine };
 
 import * as Math from "./../Mathematics/Mathematics"
 import * as Engine from "./../Engine/Engine";
+import * as Util from "./../Util/Util";
 
 enum DrawEngineType
 {
@@ -16,6 +17,7 @@ class DrawEngine
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:DrawEngine)
     {
+        Util.Log.Print("EngineerJS Version " + Engine.Settings.Version);
         this._Matrix = new Math.MatrixTransformer();
     }
     public Copy() : DrawEngine

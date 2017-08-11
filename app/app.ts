@@ -2,34 +2,7 @@ import * as Util from "./Util/Util";
 import * as Data from "./Data/Data";
 import * as Engine from "./Engine/Engine";
 import * as Math from "./Mathematics/Mathematics";
-
 import * as Runner from "./Runner/Runner";
 import * as Draw from "./Draw/Draw";
 
-Util.Log.Print(" EngineerJS Version 0.0.0.1");
-
-let G:Engine.Game = new Engine.Game();
-G.Name = "Test Game";
-
-let S:Engine.Scene2D = new Engine.Scene2D();
-S.BackColor = Math.Color.FromRGBA(0,0,0,255);
-S.Name = "Test Scene";
-
-let Sprite:Engine.Sprite = new Engine.Sprite();
-Sprite.SpriteSets.push(new Engine.SpriteSet(null, "Run", ["/build/resources/sprites/enm3-1.png", "/build/resources/sprites/enm3-2.png", "/build/resources/sprites/enm3-3.png"]));
-Sprite.SetSpriteSet(0);
-Sprite.Trans.Translation = new Math.Vertex(300,300,0);
-Sprite.Trans.Scale = new Math.Vertex(300,300,1);
-S.AddSceneObject(Sprite);
-
-let Tile:Engine.Tile = new Engine.Tile();
-Tile.Collection = new Engine.TileCollection(null, ["/build/resources/sprites/enm8-1.png"]);
-Tile.Index = 0;
-Tile.Trans.Translation = new Math.Vertex(700, 700, 0);
-Tile.Trans.Scale = new Math.Vertex(600, 400, 1);
-S.AddSceneObject(Tile);
-
-G.AddScene(S);
-
-let R:Runner.Runner = new Runner.Runner(G, Draw.DrawEngineType.ThreeJS);
-R.SwitchScene("Test Scene", false);
+export { Util, Data, Engine, Math, Runner, Draw };
