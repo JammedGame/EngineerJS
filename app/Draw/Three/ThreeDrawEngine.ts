@@ -123,6 +123,7 @@ class ThreeDrawEngine extends DrawEngine
         TileMaterial.transparent = true;
         return TileMaterial;
     }
+    // Methods for loading base64 image
     protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {  
         let SpriteData = <Engine.Sprite>Drawn;
@@ -138,7 +139,9 @@ class ThreeDrawEngine extends DrawEngine
                 let TextureUrls : string[] = SpriteData.GetActiveSprites();
                 for(let j = 0; j < TextureUrls.length; j++)
                 {
-                    let NewTexture = TextureLoader.load(TextureUrls[j]);
+                    let NewTexture:Three.Texture;
+                    if(TextureUrls[j].startsWith("data:image/png;base64")) NewTexture = new Three.Texture();
+                    else NewTexture = TextureLoader.load(TextureUrls[j]);
                     NewTexture.flipY = false;
                     Textures.push(NewTexture);
                 }
