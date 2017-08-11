@@ -6,6 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
     library: "engineerjs",
+    libraryTarget: "umd",
     filename: "engineer.js",
     publicPath: "/resources/"
   },

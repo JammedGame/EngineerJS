@@ -1,6 +1,6 @@
 {
   "name": "engineer-js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Web renderer for engineer game engine.",
   "main": "build/engineer.js",
   "scripts": {
