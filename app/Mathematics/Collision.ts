@@ -88,7 +88,7 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -112,7 +112,7 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -136,7 +136,7 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -150,13 +150,24 @@ class Collision
     private static CheckRectangular2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
     {
         let Result:CollisionValue = new CollisionValue();
-        let XCollision:boolean = Collider1.Position.X <= Collider2.Position.X && Collider1.Position.X + Collider1.Scale.X >= Collider2.Position.X;
-        XCollision = XCollision || Collider2.Position.X <= Collider1.Position.X && Collider2.Position.X + Collider2.Scale.X >= Collider1.Position.X;
-        let YCollision:boolean = Collider1.Position.Y <= Collider2.Position.Y && Collider1.Position.Y + Collider1.Scale.Y >= Collider2.Position.Y;
-        YCollision = YCollision || Collider2.Position.Y <= Collider1.Position.Y && Collider2.Position.Y + Collider2.Scale.Y >= Collider1.Position.Y;
-        if(XCollision && YCollision)
+        let Collided:boolean = false;
+        Collided = Collided || Collision.CheckRectangleToPoint(Collider1, new Vertex(Collider2.Position.X - Collider2.Scale.X / 2.0, Collider2.Position.Y - Collider2.Scale.Y / 2.0, 0));
+        Collided = Collided || Collision.CheckRectangleToPoint(Collider1, new Vertex(Collider2.Position.X + Collider2.Scale.X / 2.0, Collider2.Position.Y - Collider2.Scale.Y / 2.0, 0));
+        Collided = Collided || Collision.CheckRectangleToPoint(Collider1, new Vertex(Collider2.Position.X - Collider2.Scale.X / 2.0, Collider2.Position.Y + Collider2.Scale.Y / 2.0, 0));
+        Collided = Collided || Collision.CheckRectangleToPoint(Collider1, new Vertex(Collider2.Position.X + Collider2.Scale.X / 2.0, Collider2.Position.Y + Collider2.Scale.Y / 2.0, 0));
+        if(Collider1.Position.Y > Collider2.Position.Y - Collider2.Scale.Y / 2.0 && Collider1.Position.Y < Collider2.Position.Y + Collider2.Scale.Y / 2.0)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Collided = Collided || Collision.CheckRadiusToLineX(Collider1, Collider2.Position.X - Collider2.Scale.X / 2.0);
+            Collided = Collided || Collision.CheckRadiusToLineX(Collider1, Collider2.Position.X + Collider2.Scale.X / 2.0);
+        }
+        if(Collider1.Position.X > Collider2.Position.X - Collider2.Scale.X / 2.0 && Collider1.Position.X < Collider2.Position.X + Collider2.Scale.X / 2.0)
+        {
+            Collided = Collided || Collision.CheckRadiusToLineY(Collider1, Collider2.Position.Y - Collider2.Scale.Y / 2.0);
+            Collided = Collided || Collision.CheckRadiusToLineY(Collider1, Collider2.Position.Y + Collider2.Scale.Y / 2.0);
+        }
+        if(Collided)
+        {
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -180,7 +191,7 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -204,7 +215,7 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
         return Result;
@@ -318,5 +329,19 @@ class Collision
             Result.Left = true;
         }
         return Result;
+    }
+    private static GetCollisionRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
+    {
+        let Result:CollisionValue = new CollisionValue();
+        if(Collider.Position.X - Collider.Scale.X / 2.0 > Position.X) Result.Left = true;
+        if(Collider.Position.X + Collider.Scale.X / 2.0 < Position.X) Result.Right = true;
+        if(Collider.Position.Y - Collider.Scale.Y / 2.0 > Position.Y) Result.Top = true;
+        if(Collider.Position.Y + Collider.Scale.Y / 2.0 < Position.Y) Result.Bottom = true;
+        return Result;
+    }
+    private static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
+    {
+        return Collision.GetCollisionRectangularWay(Collider, Position);
+        //return Collision.GetCollision4Way(Collider.Position, Position);
     }
 }
