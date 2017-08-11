@@ -5,6 +5,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "build"),
+    library: "engineerjs",
     filename: "engineer.js",
     publicPath: "/resources/"
   },
