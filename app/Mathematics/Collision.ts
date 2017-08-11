@@ -49,6 +49,7 @@ class Collision
         }
         if(Collider1.Type == CollisionType.Rectangular2D)
         {
+            if(Collider2.Type == CollisionType.Rectangular2D) return Collision.CheckRectangular2DToRectangular2D(Collider1, Collider2);
             if(Collider2.Type == CollisionType.Radius2D) return Collision.CheckRectangular2DToRadius2D(Collider1, Collider2);
         }
         return new CollisionValue();
@@ -92,6 +93,20 @@ class Collision
     {
         let Result:CollisionValue = Collision.CheckRadius2DToRectangular2D(Collider2, Collider1);
         Result.Revert();
+        return Result;
+    }
+    private static CheckRectangular2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
+    {
+        let Result:CollisionValue = new CollisionValue();
+        let XCollision:boolean = Collider1.Position.X <= Collider2.Position.X && Collider1.Position.X + Collider1.Scale.X >= Collider2.Position.X;
+        XCollision = XCollision || Collider2.Position.X <= Collider1.Position.X && Collider2.Position.X + Collider2.Scale.X >= Collider1.Position.X;
+        let YCollision:boolean = Collider1.Position.Y <= Collider2.Position.Y && Collider1.Position.Y + Collider1.Scale.Y >= Collider2.Position.Y;
+        YCollision = YCollision || Collider2.Position.Y <= Collider1.Position.Y && Collider2.Position.Y + Collider2.Scale.Y >= Collider1.Position.Y;
+        if(XCollision && YCollision)
+        {
+            Result = Collision.GetCollision4Way(Collider1.Position, Collider2.Position);
+            Result.Collision = true;
+        }
         return Result;
     }
     private static CheckRadius(Collider1:ColliderObject, Collider2:ColliderObject) : boolean
