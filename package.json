@@ -2,10 +2,11 @@
   "name": "engineer-js",
   "version": "0.0.1",
   "description": "Web renderer for engineer game engine.",
-  "main": "app/app.js",
+  "main": "build/public/engineer.js",
   "scripts": {
     "start": "tsc && webpack-dev-server --hot",
-    "build": "tsc && webpack app/app.js public/bundle.js",
+    "build": "tsc && webpack --watch",
+    "prod" : "tsc && webpack -p",
     "test": "cd tests"
   },
   "repository": {
@@ -17,14 +18,19 @@
     "engineerjs"
   ],
   "author": "Miloš Manojlović",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ShadySolutions/EngineerJS/issues"
   },
   "homepage": "https://github.com/ShadySolutions/EngineerJS#readme",
   "devDependencies": {
     "typescript": "^2.4.1",
-    "webpack": "^3.0.0",
+    "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.0"
+  },
+  "dependencies": {
+    "@types/three": "^0.84.15",
+    "three": "^0.86.0",
+    "ts-loader": "^2.2.2"
   }
 }
