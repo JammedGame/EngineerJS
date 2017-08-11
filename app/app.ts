@@ -5,4 +5,4 @@ import * as Math from "./Mathematics/Mathematics";
 import * as Runner from "./Runner/Runner";
 import * as Draw from "./Draw/Draw";
 
-export { Util, Data, Engine, Math, Runner, Draw };
+export default { Util, Data, Engine, Math, Runner, Draw };
