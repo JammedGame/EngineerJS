@@ -30,18 +30,18 @@ class Sprite extends DrawObject
         this._CurrentSpriteSet = 0;
         if(Old != null)
         {
-            this._Paint = Old._Paint;
             this._SpriteSets = Old._SpriteSets;
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
             this.Trans.Scale = Old.Trans.Scale.Copy();
+            this._Paint = Old._Paint;
         }
         else
         {
-            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
             this._SpriteSets = [];
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);
+            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
         }
     }
     public Copy() : Sprite
