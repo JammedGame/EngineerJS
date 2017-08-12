@@ -1,6 +1,7 @@
 export = Engineer;
 
 declare const Engineer: {
+    default: {
         Data: {
             ImageContainer: any;
             Reader: any;
@@ -110,5 +111,6 @@ declare const Engineer: {
             Convert: any;
             Log: any;
         };
+    };
 };
 
