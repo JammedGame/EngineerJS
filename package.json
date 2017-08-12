@@ -1,8 +1,9 @@
 {
   "name": "engineer-js",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Web renderer for engineer game engine.",
   "main": "build/engineer.js",
+  "types": "build/engineer-js.d.ts",
   "scripts": {
     "start": "tsc && webpack-dev-server --hot",
     "build": "tsc && webpack --watch",
