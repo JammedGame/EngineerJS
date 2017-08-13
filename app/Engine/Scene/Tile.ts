@@ -7,17 +7,13 @@ import { DrawObject, DrawObjectType } from "./DrawObject";
 
 class Tile extends DrawObject
 {
-    private _Modified:boolean;
     private _Index:number;
     private _Collection:TileCollection;
     private _Paint:Math.Color;
     private _SubTiles:Tile[];
-    public get Modified():boolean { return this._Modified; }
-    public set Modified(value:boolean) { this._Modified = value; }
     public get Index():number { return this._Index; }
     public set Index(value:number)
     {
-        this._Modified = true;
         if(this._Collection.Images.length > value) this._Index = value;
         else this._Index = 0;
     }
@@ -33,14 +29,12 @@ class Tile extends DrawObject
         this.DrawType = DrawObjectType.Tile;
         if(Old != null)
         {
-            this._Modified = false;
             this._Index = Old._Index;
             this._Collection = Old._Collection;
             this._Paint = Old._Paint;
         }
         else
         {
-            this._Modified = false;
             this._Index = -1;
             this._Collection = new TileCollection();
             this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);

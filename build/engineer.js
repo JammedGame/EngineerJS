@@ -119,12 +119,14 @@ var DrawObject = (function (_super) {
     function DrawObject(Old) {
         var _this = _super.call(this, Old) || this;
         if (Old != null) {
+            _this._Modified = false;
             _this._Fixed = Old._Fixed;
             _this._Active = Old._Active;
             _this._DrawType = Old._DrawType;
             _this._Trans = Old._Trans.Copy();
         }
         else {
+            _this._Modified = false;
             _this.Type = SceneObject_1.SceneObjectType.Drawn;
             _this._Fixed = false;
             _this._Active = true;
@@ -133,6 +135,12 @@ var DrawObject = (function (_super) {
         }
         return _this;
     }
+    Object.defineProperty(DrawObject.prototype, "Modified", {
+        get: function () { return this._Modified; },
+        set: function (value) { this._Modified = value; },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(DrawObject.prototype, "Active", {
         get: function () { return this._Active; },
         set: function (value) { this._Active = value; },
@@ -1413,12 +1421,6 @@ var Sprite = (function (_super) {
         }
         return _this;
     }
-    Object.defineProperty(Sprite.prototype, "Modified", {
-        get: function () { return this._Modified; },
-        set: function (value) { this._Modified = value; },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Sprite.prototype, "CurrentSpriteSet", {
         get: function () { return this._CurrentSpriteSet; },
         enumerable: true,
@@ -1576,29 +1578,20 @@ var Tile = (function (_super) {
         var _this = _super.call(this, Old) || this;
         _this.DrawType = DrawObject_1.DrawObjectType.Tile;
         if (Old != null) {
-            _this._Modified = false;
             _this._Index = Old._Index;
             _this._Collection = Old._Collection;
             _this._Paint = Old._Paint;
         }
         else {
-            _this._Modified = false;
             _this._Index = -1;
             _this._Collection = new TileCollection();
             _this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
         }
         return _this;
     }
-    Object.defineProperty(Tile.prototype, "Modified", {
-        get: function () { return this._Modified; },
-        set: function (value) { this._Modified = value; },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Tile.prototype, "Index", {
         get: function () { return this._Index; },
         set: function (value) {
-            this._Modified = true;
             if (this._Collection.Images.length > value)
                 this._Index = value;
             else
