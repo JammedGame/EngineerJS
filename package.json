@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsc && webpack-dev-server --hot",
     "build": "tsc && webpack --watch",
-    "prod" : "tsc && webpack -p",
+    "prod": "tsc && webpack -p",
     "test": "cd tests"
   },
   "repository": {
@@ -29,7 +29,9 @@
     "webpack-dev-server": "^2.5.0"
   },
   "dependencies": {
+    "@types/howler": "^2.0.2",
     "@types/three": "^0.84.15",
+    "howler": "^2.0.4",
     "three": "^0.86.0",
     "ts-loader": "^2.2.2"
   }
