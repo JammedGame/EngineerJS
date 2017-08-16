@@ -12,10 +12,13 @@ enum DrawObjectType
 }
 class DrawObject extends SceneObject
 {
+    private _Modified:boolean;
     private _Fixed:boolean;
     private _Active:boolean;
     private _DrawType:DrawObjectType;
     private _Trans:Math.Transformation;
+    public get Modified():boolean { return this._Modified; }
+    public set Modified(value:boolean) { this._Modified = value; }
     public get Active():boolean { return this._Active; }
     public set Active(value:boolean) { this._Active = value; }
     public get Fixed():boolean { return this._Fixed; }
@@ -29,6 +32,7 @@ class DrawObject extends SceneObject
         super(Old);
         if(Old != null)
         {
+            this._Modified = false;
             this._Fixed = Old._Fixed;
             this._Active = Old._Active;
             this._DrawType = Old._DrawType;
@@ -36,6 +40,7 @@ class DrawObject extends SceneObject
         }
         else
         {
+            this._Modified = false;
             this.Type = SceneObjectType.Drawn;
             this._Fixed = false;
             this._Active = true;

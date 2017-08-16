@@ -7,14 +7,11 @@ import { DrawObject, DrawObjectType } from "./DrawObject";
 
 class Sprite extends DrawObject
 {
-    private _Modified:boolean;
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
     private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
-    public get Modified():boolean { return this._Modified; }
-    public set Modified(value:boolean) { this._Modified = value; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get Paint():Math.Color { return this._Paint; }
     public set Paint(value:Math.Color) { this._Paint = value; }
