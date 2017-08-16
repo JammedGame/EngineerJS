@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/resources/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,18 +70,18 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vertex_1 = __webpack_require__(2);
+var Vertex_1 = __webpack_require__(3);
 exports.Axis = Vertex_1.Axis;
 exports.Vertex = Vertex_1.Vertex;
-var Transformation_1 = __webpack_require__(10);
+var Transformation_1 = __webpack_require__(14);
 exports.Transformation = Transformation_1.Transformation;
-var MatrixTransformer_1 = __webpack_require__(11);
+var MatrixTransformer_1 = __webpack_require__(15);
 exports.MatrixMode = MatrixTransformer_1.MatrixMode;
 exports.Matrix = MatrixTransformer_1.Matrix;
 exports.MatrixTransformer = MatrixTransformer_1.MatrixTransformer;
-var Color_1 = __webpack_require__(12);
+var Color_1 = __webpack_require__(16);
 exports.Color = Color_1.Color;
-var Collision_1 = __webpack_require__(13);
+var Collision_1 = __webpack_require__(17);
 exports.Collision = Collision_1.Collision;
 exports.CollisionType = Collision_1.CollisionType;
 exports.CollisionValue = Collision_1.CollisionValue;
@@ -94,88 +94,49 @@ exports.ColliderObject = Collision_1.ColliderObject;
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Math = __webpack_require__(0);
-var SceneObject_1 = __webpack_require__(3);
-var DrawObjectType;
-(function (DrawObjectType) {
-    DrawObjectType[DrawObjectType["Undefined"] = 0] = "Undefined";
-    DrawObjectType[DrawObjectType["Sprite"] = 1] = "Sprite";
-    DrawObjectType[DrawObjectType["Tile"] = 2] = "Tile";
-})(DrawObjectType || (DrawObjectType = {}));
-exports.DrawObjectType = DrawObjectType;
-var DrawObject = (function (_super) {
-    __extends(DrawObject, _super);
-    function DrawObject(Old) {
-        var _this = _super.call(this, Old) || this;
-        if (Old != null) {
-            _this._Modified = false;
-            _this._Fixed = Old._Fixed;
-            _this._Active = Old._Active;
-            _this._DrawType = Old._DrawType;
-            _this._Trans = Old._Trans.Copy();
-        }
-        else {
-            _this._Modified = false;
-            _this.Type = SceneObject_1.SceneObjectType.Drawn;
-            _this._Fixed = false;
-            _this._Active = true;
-            _this._DrawType = DrawObjectType.Undefined;
-            _this._Trans = new Math.Transformation();
-        }
-        return _this;
+var Uuid_1 = __webpack_require__(20);
+exports.Uuid = Uuid_1.Uuid;
+var ImageContainer_1 = __webpack_require__(21);
+exports.ImageContainer = ImageContainer_1.ImageContainer;
+var Reader = (function () {
+    function Reader() {
     }
-    Object.defineProperty(DrawObject.prototype, "Modified", {
-        get: function () { return this._Modified; },
-        set: function (value) { this._Modified = value; },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DrawObject.prototype, "Active", {
-        get: function () { return this._Active; },
-        set: function (value) { this._Active = value; },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DrawObject.prototype, "Fixed", {
-        get: function () { return this._Fixed; },
-        set: function (value) { this._Fixed = value; },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DrawObject.prototype, "DrawType", {
-        get: function () { return this._DrawType; },
-        set: function (value) { this._DrawType = value; },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(DrawObject.prototype, "Trans", {
-        get: function () { return this._Trans; },
-        set: function (value) { this._Trans = value; },
-        enumerable: true,
-        configurable: true
-    });
-    DrawObject.prototype.Copy = function () {
-        var New = new DrawObject(this);
-        return New;
+    Reader.Read = function (FilePath, Callback) {
+        var RawFile = new XMLHttpRequest();
+        RawFile.open("GET", FilePath, false);
+        RawFile.onreadystatechange = function () {
+            if (RawFile.readyState === 4) {
+                if (RawFile.status === 200 || RawFile.status == 0) {
+                    var AllText = RawFile.responseText;
+                    Callback(AllText);
+                }
+            }
+        }.bind(this);
+        RawFile.send(null);
     };
-    return DrawObject;
-}(SceneObject_1.SceneObject));
-exports.DrawObject = DrawObject;
+    return Reader;
+}());
+exports.Reader = Reader;
 
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Converter_1 = __webpack_require__(13);
+exports.Convert = Converter_1.Convert;
+var Buffer_1 = __webpack_require__(18);
+exports.Buffer = Buffer_1.Buffer;
+var Log_1 = __webpack_require__(19);
+exports.Log = Log_1.Log;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -284,14 +245,136 @@ exports.Vertex = Vertex;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Data = __webpack_require__(4);
-var Events_1 = __webpack_require__(5);
+var DrawObject_1 = __webpack_require__(5);
+exports.DrawObjectType = DrawObject_1.DrawObjectType;
+exports.DrawObject = DrawObject_1.DrawObject;
+var Sprite_1 = __webpack_require__(22);
+exports.SpriteSet = Sprite_1.SpriteSet;
+exports.Sprite = Sprite_1.Sprite;
+var Tile_1 = __webpack_require__(23);
+exports.TileCollection = Tile_1.TileCollection;
+exports.Tile = Tile_1.Tile;
+var Events_1 = __webpack_require__(7);
+exports.MouseButton = Events_1.MouseButton;
+exports.EventPackage = Events_1.EventPackage;
+var Game_1 = __webpack_require__(24);
+exports.Game = Game_1.Game;
+var Scene_1 = __webpack_require__(8);
+exports.SceneType = Scene_1.SceneType;
+exports.Scene = Scene_1.Scene;
+var Scene2D_1 = __webpack_require__(25);
+exports.Scene2D = Scene2D_1.Scene2D;
+var SceneObject_1 = __webpack_require__(6);
+exports.SceneObjectType = SceneObject_1.SceneObjectType;
+exports.SceneObject = SceneObject_1.SceneObject;
+var SoundObject_1 = __webpack_require__(26);
+exports.SoundObject = SoundObject_1.SoundObject;
+var Settings_1 = __webpack_require__(29);
+exports.Settings = Settings_1.Settings;
+exports.Quality = Settings_1.Quality;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var Math = __webpack_require__(0);
+var SceneObject_1 = __webpack_require__(6);
+var DrawObjectType;
+(function (DrawObjectType) {
+    DrawObjectType[DrawObjectType["Undefined"] = 0] = "Undefined";
+    DrawObjectType[DrawObjectType["Sprite"] = 1] = "Sprite";
+    DrawObjectType[DrawObjectType["Tile"] = 2] = "Tile";
+})(DrawObjectType || (DrawObjectType = {}));
+exports.DrawObjectType = DrawObjectType;
+var DrawObject = (function (_super) {
+    __extends(DrawObject, _super);
+    function DrawObject(Old) {
+        var _this = _super.call(this, Old) || this;
+        if (Old != null) {
+            _this._Modified = false;
+            _this._Fixed = Old._Fixed;
+            _this._Active = Old._Active;
+            _this._DrawType = Old._DrawType;
+            _this._Trans = Old._Trans.Copy();
+        }
+        else {
+            _this._Modified = false;
+            _this.Type = SceneObject_1.SceneObjectType.Drawn;
+            _this._Fixed = false;
+            _this._Active = true;
+            _this._DrawType = DrawObjectType.Undefined;
+            _this._Trans = new Math.Transformation();
+        }
+        return _this;
+    }
+    Object.defineProperty(DrawObject.prototype, "Modified", {
+        get: function () { return this._Modified; },
+        set: function (value) { this._Modified = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrawObject.prototype, "Active", {
+        get: function () { return this._Active; },
+        set: function (value) { this._Active = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrawObject.prototype, "Fixed", {
+        get: function () { return this._Fixed; },
+        set: function (value) { this._Fixed = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrawObject.prototype, "DrawType", {
+        get: function () { return this._DrawType; },
+        set: function (value) { this._DrawType = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DrawObject.prototype, "Trans", {
+        get: function () { return this._Trans; },
+        set: function (value) { this._Trans = value; },
+        enumerable: true,
+        configurable: true
+    });
+    DrawObject.prototype.Copy = function () {
+        var New = new DrawObject(this);
+        return New;
+    };
+    return DrawObject;
+}(SceneObject_1.SceneObject));
+exports.DrawObject = DrawObject;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Data = __webpack_require__(1);
+var Events_1 = __webpack_require__(7);
 var SceneObjectType;
 (function (SceneObjectType) {
     SceneObjectType[SceneObjectType["Undefined"] = 0] = "Undefined";
@@ -348,39 +431,7 @@ exports.SceneObject = SceneObject;
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Uuid_1 = __webpack_require__(14);
-exports.Uuid = Uuid_1.Uuid;
-var ImageContainer_1 = __webpack_require__(15);
-exports.ImageContainer = ImageContainer_1.ImageContainer;
-var Reader = (function () {
-    function Reader() {
-    }
-    Reader.Read = function (FilePath, Callback) {
-        var RawFile = new XMLHttpRequest();
-        RawFile.open("GET", FilePath, false);
-        RawFile.onreadystatechange = function () {
-            if (RawFile.readyState === 4) {
-                if (RawFile.status === 200 || RawFile.status == 0) {
-                    var AllText = RawFile.responseText;
-                    Callback(AllText);
-                }
-            }
-        }.bind(this);
-        RawFile.send(null);
-    };
-    return Reader;
-}());
-exports.Reader = Reader;
-
-
-/***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -534,15 +585,15 @@ exports.EventPackage = EventPackage;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Data = __webpack_require__(4);
+var Data = __webpack_require__(1);
 var Math = __webpack_require__(0);
-var Events_1 = __webpack_require__(5);
+var Events_1 = __webpack_require__(7);
 var SceneType;
 (function (SceneType) {
     SceneType[SceneType["Scene2D"] = 0] = "Scene2D";
@@ -617,67 +668,15 @@ exports.Scene = Scene;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(8);
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Util = __webpack_require__(24);
-exports.Util = Util;
-var Data = __webpack_require__(4);
-exports.Data = Data;
-var Engine = __webpack_require__(9);
-exports.Engine = Engine;
-var Math = __webpack_require__(0);
-exports.Math = Math;
-var Runner = __webpack_require__(30);
-exports.Runner = Runner;
-var Draw = __webpack_require__(25);
-exports.Draw = Draw;
-
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DrawObject_1 = __webpack_require__(1);
-exports.DrawObjectType = DrawObject_1.DrawObjectType;
-exports.DrawObject = DrawObject_1.DrawObject;
-var Sprite_1 = __webpack_require__(16);
-exports.SpriteSet = Sprite_1.SpriteSet;
-exports.Sprite = Sprite_1.Sprite;
-var Tile_1 = __webpack_require__(17);
-exports.TileCollection = Tile_1.TileCollection;
-exports.Tile = Tile_1.Tile;
-var Events_1 = __webpack_require__(5);
-exports.MouseButton = Events_1.MouseButton;
-exports.EventPackage = Events_1.EventPackage;
-var Game_1 = __webpack_require__(18);
-exports.Game = Game_1.Game;
-var Scene_1 = __webpack_require__(6);
-exports.SceneType = Scene_1.SceneType;
-exports.Scene = Scene_1.Scene;
-var Scene2D_1 = __webpack_require__(19);
-exports.Scene2D = Scene2D_1.Scene2D;
-var SceneObject_1 = __webpack_require__(3);
-exports.SceneObjectType = SceneObject_1.SceneObjectType;
-exports.SceneObject = SceneObject_1.SceneObject;
-var SoundObject_1 = __webpack_require__(20);
-exports.SoundObject = SoundObject_1.SoundObject;
-var Settings_1 = __webpack_require__(21);
-exports.Settings = Settings_1.Settings;
-exports.Quality = Settings_1.Quality;
+var DrawEngine_1 = __webpack_require__(10);
+exports.DrawEngineType = DrawEngine_1.DrawEngineType;
+exports.DrawEngine = DrawEngine_1.DrawEngine;
 
 
 /***/ }),
@@ -687,7 +686,123 @@ exports.Quality = Settings_1.Quality;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vertex_1 = __webpack_require__(2);
+var Math = __webpack_require__(0);
+var Engine = __webpack_require__(4);
+var Util = __webpack_require__(2);
+var DrawEngineType;
+(function (DrawEngineType) {
+    DrawEngineType[DrawEngineType["ThreeJS"] = 0] = "ThreeJS";
+})(DrawEngineType || (DrawEngineType = {}));
+exports.DrawEngineType = DrawEngineType;
+var DrawEngine = (function () {
+    function DrawEngine(Old) {
+        this.Data = {};
+        Util.Log.Print("EngineerJS Version " + Engine.Settings.Version);
+        this._Matrix = new Math.MatrixTransformer();
+    }
+    Object.defineProperty(DrawEngine.prototype, "Renderer", {
+        get: function () { return this._Renderer; },
+        set: function (value) { this._Renderer = value; },
+        enumerable: true,
+        configurable: true
+    });
+    DrawEngine.prototype.Copy = function () {
+        var New = new DrawEngine(this);
+        return New;
+    };
+    DrawEngine.prototype.Draw2DScene = function (Scene, Width, Height) {
+        // Virtual
+    };
+    DrawEngine.prototype.Draw3DScene = function (Scene, Width, Height) {
+        // Virtual
+    };
+    DrawEngine.prototype.DrawSprite = function (Scene, Drawn) {
+        // Virtual
+    };
+    DrawEngine.prototype.LoadSprite = function (Scene, Drawn) {
+        // Virtual
+    };
+    DrawEngine.prototype.DrawTile = function (Scene, Drawn) {
+        // Virtual
+    };
+    DrawEngine.prototype.LoadTile = function (Scene, Drawn) {
+        // Virtual
+    };
+    return DrawEngine;
+}());
+exports.DrawEngine = DrawEngine;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(12);
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Util = __webpack_require__(2);
+exports.Util = Util;
+var Data = __webpack_require__(1);
+exports.Data = Data;
+var Engine = __webpack_require__(4);
+exports.Engine = Engine;
+var Math = __webpack_require__(0);
+exports.Math = Math;
+var Runner = __webpack_require__(30);
+exports.Runner = Runner;
+var Draw = __webpack_require__(9);
+exports.Draw = Draw;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Math = __webpack_require__(0);
+var Convert = (function () {
+    function Convert() {
+    }
+    Convert.VerticesToByteArray = function (Vertices, Relevant) {
+        var NewArrayBuffer = [];
+        for (var i = 0; i < Vertices.length; i++) {
+            NewArrayBuffer.push(Vertices[i].X);
+            if (Relevant > 1)
+                NewArrayBuffer.push(Vertices[i].Y);
+            else if (Relevant > 2)
+                NewArrayBuffer.push(Vertices[i].Z);
+        }
+        return new Float32Array(NewArrayBuffer);
+    };
+    Convert.DrawObjectToCollider = function (Object) {
+        var Collider = new Math.ColliderObject();
+        Collider.Position = Object.Trans.Translation;
+        Collider.Scale = Object.Trans.Scale;
+        Collider.Type = Object.Data["Collision"];
+        return Collider;
+    };
+    return Convert;
+}());
+exports.Convert = Convert;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Vertex_1 = __webpack_require__(3);
 var Transformation = (function () {
     function Transformation(Old) {
         if (Old != null) {
@@ -729,13 +844,13 @@ exports.Transformation = Transformation;
 
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vertex_1 = __webpack_require__(2);
+var Vertex_1 = __webpack_require__(3);
 var MatrixMode;
 (function (MatrixMode) {
     MatrixMode[MatrixMode["Projection"] = 0] = "Projection";
@@ -979,7 +1094,7 @@ exports.MatrixTransformer = MatrixTransformer;
 
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1012,13 +1127,13 @@ exports.Color = Color;
 
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Vertex_1 = __webpack_require__(2);
+var Vertex_1 = __webpack_require__(3);
 var CollisionType;
 (function (CollisionType) {
     CollisionType[CollisionType["Radius2D"] = 0] = "Radius2D";
@@ -1321,7 +1436,94 @@ exports.Collision = Collision;
 
 
 /***/ }),
-/* 14 */
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Buffer = (function () {
+    function Buffer() {
+    }
+    Buffer.Append = function (Buffer1, Buffer2) {
+        var Tmp = new Uint8Array(Buffer1.byteLength + Buffer2.byteLength);
+        Tmp.set(new Uint8Array(Buffer1), 0);
+        Tmp.set(new Uint8Array(Buffer2), Buffer1.byteLength);
+        return Tmp.buffer;
+    };
+    ;
+    return Buffer;
+}());
+exports.Buffer = Buffer;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Log = (function () {
+    function Log() {
+    }
+    Log.Print = function (Message) {
+        if (!Log.LogPrint)
+            return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Message");
+        console.info(Message);
+        console.log(" - - - ");
+    };
+    ;
+    Log.Info = function (Message) {
+        if (!Log.LogInfo)
+            return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Info");
+        console.info(Message);
+        console.log(" - - - ");
+    };
+    ;
+    Log.Error = function (Message) {
+        if (!Log.LogError)
+            return;
+        console.log(" - - - ");
+        console.error("EngineerJS: Error");
+        console.error(Message);
+        console.log(" - - - ");
+    };
+    ;
+    Log.Warning = function (Message) {
+        if (!Log.LogWarning)
+            return;
+        console.log(" - - - ");
+        console.warn("EngineerJS: Warning");
+        console.warn(Message);
+        console.log(" - - - ");
+    };
+    ;
+    Log.Event = function (Message) {
+        if (!Log.LogEvent)
+            return;
+        console.log(" - - - ");
+        console.info("EngineerJS: Event");
+        console.info(Message);
+        console.log(" - - - ");
+    };
+    ;
+    Log.LogPrint = true;
+    Log.LogInfo = false;
+    Log.LogError = true;
+    Log.LogWarning = true;
+    Log.LogEvent = false;
+    return Log;
+}());
+exports.Log = Log;
+
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1345,7 +1547,7 @@ exports.Uuid = Uuid;
 
 
 /***/ }),
-/* 15 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1379,7 +1581,7 @@ exports.ImageContainer = ImageContainer;
 
 
 /***/ }),
-/* 16 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1395,9 +1597,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Data = __webpack_require__(4);
+var Data = __webpack_require__(1);
 var Math = __webpack_require__(0);
-var DrawObject_1 = __webpack_require__(1);
+var DrawObject_1 = __webpack_require__(5);
 var Sprite = (function (_super) {
     __extends(Sprite, _super);
     function Sprite(Old) {
@@ -1553,7 +1755,7 @@ exports.SpriteSet = SpriteSet;
 
 
 /***/ }),
-/* 17 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1569,9 +1771,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Data = __webpack_require__(4);
+var Data = __webpack_require__(1);
 var Math = __webpack_require__(0);
-var DrawObject_1 = __webpack_require__(1);
+var DrawObject_1 = __webpack_require__(5);
 var Tile = (function (_super) {
     __extends(Tile, _super);
     function Tile(Old) {
@@ -1658,7 +1860,7 @@ exports.TileCollection = TileCollection;
 
 
 /***/ }),
-/* 18 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1710,7 +1912,7 @@ exports.Game = Game;
 
 
 /***/ }),
-/* 19 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1727,9 +1929,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Math = __webpack_require__(0);
-var Scene_1 = __webpack_require__(6);
-var SceneObject_1 = __webpack_require__(3);
-var DrawObject_1 = __webpack_require__(1);
+var Scene_1 = __webpack_require__(8);
+var SceneObject_1 = __webpack_require__(6);
+var DrawObject_1 = __webpack_require__(5);
 var Scene2D = (function (_super) {
     __extends(Scene2D, _super);
     function Scene2D(Old) {
@@ -1785,7 +1987,7 @@ exports.Scene2D = Scene2D;
 
 
 /***/ }),
-/* 20 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1801,8 +2003,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Howler = __webpack_require__(22);
-var SceneObject_1 = __webpack_require__(3);
+var Howler = __webpack_require__(27);
+var SceneObject_1 = __webpack_require__(6);
 var SoundObject = (function (_super) {
     __extends(SoundObject, _super);
     function SoundObject(Url, Old) {
@@ -1868,32 +2070,7 @@ exports.SoundObject = SoundObject;
 
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Quality;
-(function (Quality) {
-    Quality[Quality["Low"] = 1] = "Low";
-    Quality[Quality["Medium"] = 2] = "Medium";
-    Quality[Quality["High"] = 4] = "High";
-})(Quality || (Quality = {}));
-exports.Quality = Quality;
-var Settings = (function () {
-    function Settings() {
-    }
-    Settings.Version = "0.0.1";
-    Settings.LibPath = "/resources/";
-    Settings.Graphics = Quality.High;
-    return Settings;
-}());
-exports.Settings = Settings;
-
-
-/***/ }),
-/* 22 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4699,10 +4876,10 @@ exports.Settings = Settings;
   };
 })();
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ (function(module, exports) {
 
 var g;
@@ -4729,205 +4906,28 @@ module.exports = g;
 
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Converter_1 = __webpack_require__(27);
-exports.Convert = Converter_1.Convert;
-var Buffer_1 = __webpack_require__(28);
-exports.Buffer = Buffer_1.Buffer;
-var Log_1 = __webpack_require__(29);
-exports.Log = Log_1.Log;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var DrawEngine_1 = __webpack_require__(26);
-exports.DrawEngineType = DrawEngine_1.DrawEngineType;
-exports.DrawEngine = DrawEngine_1.DrawEngine;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Math = __webpack_require__(0);
-var Engine = __webpack_require__(9);
-var Util = __webpack_require__(24);
-var DrawEngineType;
-(function (DrawEngineType) {
-    DrawEngineType[DrawEngineType["ThreeJS"] = 0] = "ThreeJS";
-})(DrawEngineType || (DrawEngineType = {}));
-exports.DrawEngineType = DrawEngineType;
-var DrawEngine = (function () {
-    function DrawEngine(Old) {
-        this.Data = {};
-        Util.Log.Print("EngineerJS Version " + Engine.Settings.Version);
-        this._Matrix = new Math.MatrixTransformer();
-    }
-    Object.defineProperty(DrawEngine.prototype, "Renderer", {
-        get: function () { return this._Renderer; },
-        set: function (value) { this._Renderer = value; },
-        enumerable: true,
-        configurable: true
-    });
-    DrawEngine.prototype.Copy = function () {
-        var New = new DrawEngine(this);
-        return New;
-    };
-    DrawEngine.prototype.Draw2DScene = function (Scene, Width, Height) {
-        // Virtual
-    };
-    DrawEngine.prototype.Draw3DScene = function (Scene, Width, Height) {
-        // Virtual
-    };
-    DrawEngine.prototype.DrawSprite = function (Scene, Drawn) {
-        // Virtual
-    };
-    DrawEngine.prototype.LoadSprite = function (Scene, Drawn) {
-        // Virtual
-    };
-    DrawEngine.prototype.DrawTile = function (Scene, Drawn) {
-        // Virtual
-    };
-    DrawEngine.prototype.LoadTile = function (Scene, Drawn) {
-        // Virtual
-    };
-    return DrawEngine;
-}());
-exports.DrawEngine = DrawEngine;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Math = __webpack_require__(0);
-var Convert = (function () {
-    function Convert() {
-    }
-    Convert.VerticesToByteArray = function (Vertices, Relevant) {
-        var NewArrayBuffer = [];
-        for (var i = 0; i < Vertices.length; i++) {
-            NewArrayBuffer.push(Vertices[i].X);
-            if (Relevant > 1)
-                NewArrayBuffer.push(Vertices[i].Y);
-            else if (Relevant > 2)
-                NewArrayBuffer.push(Vertices[i].Z);
-        }
-        return new Float32Array(NewArrayBuffer);
-    };
-    Convert.DrawObjectToCollider = function (Object) {
-        var Collider = new Math.ColliderObject();
-        Collider.Position = Object.Trans.Translation;
-        Collider.Scale = Object.Trans.Scale;
-        Collider.Type = Object.Data["Collision"];
-        return Collider;
-    };
-    return Convert;
-}());
-exports.Convert = Convert;
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Buffer = (function () {
-    function Buffer() {
-    }
-    Buffer.Append = function (Buffer1, Buffer2) {
-        var Tmp = new Uint8Array(Buffer1.byteLength + Buffer2.byteLength);
-        Tmp.set(new Uint8Array(Buffer1), 0);
-        Tmp.set(new Uint8Array(Buffer2), Buffer1.byteLength);
-        return Tmp.buffer;
-    };
-    ;
-    return Buffer;
-}());
-exports.Buffer = Buffer;
-
-
-/***/ }),
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Log = (function () {
-    function Log() {
+var Quality;
+(function (Quality) {
+    Quality[Quality["Low"] = 1] = "Low";
+    Quality[Quality["Medium"] = 2] = "Medium";
+    Quality[Quality["High"] = 4] = "High";
+})(Quality || (Quality = {}));
+exports.Quality = Quality;
+var Settings = (function () {
+    function Settings() {
     }
-    Log.Print = function (Message) {
-        if (!Log.LogPrint)
-            return;
-        console.log(" - - - ");
-        console.info("EngineerJS: Message");
-        console.info(Message);
-        console.log(" - - - ");
-    };
-    ;
-    Log.Info = function (Message) {
-        if (!Log.LogInfo)
-            return;
-        console.log(" - - - ");
-        console.info("EngineerJS: Info");
-        console.info(Message);
-        console.log(" - - - ");
-    };
-    ;
-    Log.Error = function (Message) {
-        if (!Log.LogError)
-            return;
-        console.log(" - - - ");
-        console.error("EngineerJS: Error");
-        console.error(Message);
-        console.log(" - - - ");
-    };
-    ;
-    Log.Warning = function (Message) {
-        if (!Log.LogWarning)
-            return;
-        console.log(" - - - ");
-        console.warn("EngineerJS: Warning");
-        console.warn(Message);
-        console.log(" - - - ");
-    };
-    ;
-    Log.Event = function (Message) {
-        if (!Log.LogEvent)
-            return;
-        console.log(" - - - ");
-        console.info("EngineerJS: Event");
-        console.info(Message);
-        console.log(" - - - ");
-    };
-    ;
-    Log.LogPrint = true;
-    Log.LogInfo = false;
-    Log.LogError = true;
-    Log.LogWarning = true;
-    Log.LogEvent = false;
-    return Log;
+    Settings.Version = "0.0.1";
+    Settings.LibPath = "/resources/";
+    Settings.Graphics = Quality.High;
+    return Settings;
 }());
-exports.Log = Log;
+exports.Settings = Settings;
 
 
 /***/ }),
@@ -4938,9 +4938,9 @@ exports.Log = Log;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Math = __webpack_require__(0);
-var Engine = __webpack_require__(9);
-var Util = __webpack_require__(24);
-var Draw = __webpack_require__(25);
+var Engine = __webpack_require__(4);
+var Util = __webpack_require__(2);
+var Draw = __webpack_require__(9);
 var Three = __webpack_require__(31);
 var Runner = (function () {
     function Runner(Game, EngineType) {
@@ -5133,10 +5133,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Three = __webpack_require__(33);
-var Engine = __webpack_require__(9);
-var Util = __webpack_require__(24);
+var Engine = __webpack_require__(4);
+var Util = __webpack_require__(2);
 var Shaders = __webpack_require__(34);
-var DrawEngine_1 = __webpack_require__(26);
+var DrawEngine_1 = __webpack_require__(10);
 var ThreeDrawEngine = (function (_super) {
     __extends(ThreeDrawEngine, _super);
     function ThreeDrawEngine(Old) {
