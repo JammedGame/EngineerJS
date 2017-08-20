@@ -1,13 +1,8 @@
-export  { MouseButton, EventPackage };
+export  { EventPackage };
 
 import { Game } from "./../Game/Game";
 
-enum MouseButton
-{
-    Left = 0,
-    Middle = 1,
-    Right = 2
-}
+
 class EventPackage
 {
     private _Closing:Function[];
