@@ -60,4 +60,20 @@ class Scene
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
     }
+    public GetObjectsWithData(Key:string, Data?:any) : any[]
+    {
+        let Objects:any[] = [];
+        for(let i = 0; i < this.Objects.length; i++)
+        {
+            if(this.Objects[i].Data[Key])
+            {
+                if(Data)
+                {
+                    if(this.Objects[i].Data[Key] == Data) Objects.push(this.Objects[i]);
+                }
+                else Objects.push(this.Objects[i]);
+            }
+        }
+        return Objects;
+    }
 }
