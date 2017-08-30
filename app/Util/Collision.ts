@@ -6,7 +6,7 @@ import * as Math from "./../Mathematics/Mathematics";
 
 class Collision
 {
-    public static CreateColliderObject(Object:any) : any
+    public static CreateColliderObject(Object:Engine.DrawObject) : Math.ColliderObject
     {
         let Collider = new Math.ColliderObject();
         Collider.Position = Object.Trans.Translation;
@@ -14,7 +14,7 @@ class Collision
         Collider.Type = Object.Data["Collision"];
         return Collider;
     }
-    public static CalculateObjectCollisions(Type:string, Object:any, Colliders:any[])
+    public static CalculateObjectCollisions(Type:string, Object:Engine.DrawObject, Colliders:Engine.DrawObject[])
     {
         Object.Data["Collision_"+Type] = new Math.CollisionValue();
         Object.Data["Colliders_"+Type] = [];
@@ -30,7 +30,7 @@ class Collision
             let CollisionValue = Math.Collision.Check(Collider1, Collider2);
             if(CollisionValue.Collision)
             {
-                Object.Data["Collision_"+Type] = Math.CollisionValue.CombineCollisionValues(Object.Data["Collision_"+Type], Collision);
+                Object.Data["Collision_"+Type] = Math.CollisionValue.Combine(Object.Data["Collision_"+Type], CollisionValue);
                 Object.Data["Colliders_"+Type].push(Colliders[i]);
                 if(CollisionValue.Left) Object.Data["Colliders_"+Type+"_Left"].push(Colliders[i]);
                 if(CollisionValue.Right) Object.Data["Colliders_"+Type+"_Right"].push(Colliders[i]);

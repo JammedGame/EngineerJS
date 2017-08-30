@@ -30,7 +30,7 @@ class CollisionValue
         this.Front = this.Back;
         this.Back = Store;
     }
-    public static CombineCollisionValues(CollisionValue1:any, CollisionValue2:any) : any
+    public static Combine(CollisionValue1:CollisionValue, CollisionValue2:CollisionValue) : CollisionValue
     {
         let NewCollisionValue = new CollisionValue();
         NewCollisionValue.Collision = CollisionValue1.Collision || CollisionValue2.Collision;
