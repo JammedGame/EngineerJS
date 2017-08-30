@@ -17,7 +17,7 @@ class EventPackage
     private _MouseWheel:Function[];
     private _RenderFrame:Function[];
     private _Resize:Function[];
-    private _TimerTick:Function[];
+    private _TimeTick:Function[];
     private _OperationProgress:Function[];
     private _OperationFinished:Function[];
     public get Closing() : Function[] { return this._Closing; }
@@ -32,7 +32,7 @@ class EventPackage
     public get MouseWheel() : Function[] { return this._MouseMove; }
     public get RenderFrame() : Function[] { return this._RenderFrame; }
     public get Resize() : Function[] { return this._Resize; }
-    public get TimerTick() : Function[] { return this._TimerTick; }
+    public get TimeTick() : Function[] { return this._TimeTick; }
     public get OperationProgress() : Function[] { return this._OperationProgress; }
     public get OperationFinished() : Function[] { return this._OperationFinished; }
     public constructor(Old?:EventPackage)
@@ -49,7 +49,7 @@ class EventPackage
         this._MouseWheel = [];
         this._RenderFrame = [];
         this._Resize = [];
-        this._TimerTick = [];
+        this._TimeTick = [];
         this._OperationProgress = [];
         this._OperationFinished = [];
 
@@ -73,7 +73,7 @@ class EventPackage
         if (EventName == "MouseWheel") return this.InvokeEvents(this._MouseWheel, CurrentGame, Args);
         if (EventName == "RenderFrame") return this.InvokeEvents(this._RenderFrame, CurrentGame, Args);
         if (EventName == "Resize") return this.InvokeEvents(this._Resize, CurrentGame, Args);
-        if (EventName == "TimerTick") return this.InvokeEvents(this._TimerTick, CurrentGame, Args);
+        if (EventName == "TimeTick") return this.InvokeEvents(this._TimeTick, CurrentGame, Args);
         if (EventName == "OperationProgress") return this.InvokeEvents(this._OperationProgress, CurrentGame, Args);
         if (EventName == "OperationFinished") return this.InvokeEvents(this._OperationFinished, CurrentGame, Args);
     }
