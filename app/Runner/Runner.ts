@@ -107,17 +107,20 @@ class Runner
     private OnKeyPress(event) : void
     {
         Util.Log.Event("KeyPress");
-        this._Current.Events.Invoke("KeyPress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
+        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        this._Current.Events.Invoke("KeyPress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
     }
     private OnKeyDown(event) : void
     {
         Util.Log.Event("KeyDown");
-        this._Current.Events.Invoke("KeyDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
+        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        this._Current.Events.Invoke("KeyDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
     }
     private OnKeyUp(event) : void
     {
         Util.Log.Event("KeyUp");
-        this._Current.Events.Invoke("KeyUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:event.key});
+        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        this._Current.Events.Invoke("KeyUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
     }
     private OnMouseDown(event) : void
     {
@@ -177,8 +180,8 @@ class Runner
                     let X:number = event.x;
                     let Y:number = event.y;
                     Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X, Scale.Y * Current2DScene.Trans.Scale.Y, 1);
-                    if ((Current.Fixed && Trans.X < X && X < Trans.X + Scale.X && Trans.Y < Y && Y < Trans.Y + Scale.Y) ||
-                    (STrans.X + Trans.X < X && X < STrans.X + Trans.X + Scale.X && STrans.Y + Trans.Y < Y && Y < STrans.Y + Trans.Y + Scale.Y))
+                    if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
+                    (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
                         for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
                         if(true || Handled)
