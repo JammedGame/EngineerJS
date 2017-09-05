@@ -132,7 +132,8 @@ class SpriteSet
             if(Name != null) this._Name = Name;
             else this._Name = "";
             this._Seed = -1;
-            this._Sprites = Images;
+            if(Images) this._Sprites = Images;
+            else this._Sprites = [];
         }
     }
     public Copy() : SpriteSet

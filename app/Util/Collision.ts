@@ -6,6 +6,12 @@ import * as Math from "./../Mathematics/Mathematics";
 
 class Collision
 {
+    public static Check(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
+    {
+        let Collider1:Math.ColliderObject = Collision.CreateColliderObject(Object1);
+        let Collider2:Math.ColliderObject = Collision.CreateColliderObject(Object2);
+        return Math.Collision.Check(Collider1, Collider2);
+    }
     public static CreateColliderObject(Object:Engine.DrawObject) : Math.ColliderObject
     {
         let Collider = new Math.ColliderObject();

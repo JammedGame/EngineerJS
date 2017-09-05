@@ -98,7 +98,8 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider2, Collider1.Position);
+            Result.Revert();
             Result.Collision = true;
         }
         return Result;
