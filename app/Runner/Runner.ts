@@ -92,7 +92,7 @@ class Runner
         requestAnimationFrame( this.OnRenderFrame.bind(this) );
         if(this._Current.Type == Engine.SceneType.Scene2D)
         {
-            // Spamer
+            // Spammer
             // Util.Log.Event("RenderFrame");
             this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
             this._Current.Events.Invoke("RenderFrame", this._Game, {});
@@ -147,7 +147,7 @@ class Runner
     }
     private OnMouseMove(event) : void
     {
-        // Spamer
+        // Spammer
         // Util.Log.Event("MouseMove");
         this._Current.Events.Invoke("MouseMove", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Location:new Math.Vertex(event.x, event.y, 0)});
     }
@@ -168,18 +168,18 @@ class Runner
         {
             let Current2DScene:Engine.Scene2D  = <Engine.Scene2D>this._Current;
             let STrans:Math.Vertex = Current2DScene.Trans.Translation;
-            STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X, STrans.Y * Current2DScene.Trans.Scale.Y, 0);
+            STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, STrans.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 0);
             for (let i = this._Current.Objects.length - 1; i >= 0; i--)
             {
                 if (this._Current.Objects[i].Type == Engine.SceneObjectType.Drawn)
                 {
                     let Current:Engine.DrawObject = <Engine.DrawObject>this._Current.Objects[i];
                     let Trans:Math.Vertex = Current.Trans.Translation;
-                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X, Trans.Y * Current2DScene.Trans.Scale.Y, 0);
+                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 0);
                     let Scale:Math.Vertex = Current.Trans.Scale;
                     let X:number = event.x;
                     let Y:number = event.y;
-                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X, Scale.Y * Current2DScene.Trans.Scale.Y, 1);
+                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 1);
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
