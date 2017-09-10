@@ -31,15 +31,19 @@ class DrawEngine
         let New:DrawEngine = new DrawEngine(this);
         return New;
     }
-    public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
+    public DrawScene(Scene:Engine.Scene, Width:number, Height:number) : void
     {
         // Virtual
     }
-    public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
+    protected Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
         // Virtual
     }
-    private DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    protected Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
+    {
+        // Virtual
+    }
+    protected DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {
         // Virtual
     }
@@ -47,11 +51,27 @@ class DrawEngine
     {
         // Virtual
     }
-    private DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    protected DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
     {
         // Virtual
     }
     protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    {
+        // Virtual
+    }
+    protected DrawActor(Scene:Engine.Scene, Drawn:Engine.Actor) : void
+    {
+        // Virtual
+    }
+    protected LoadActor(Scene:Engine.Scene, Drawn:Engine.Actor) : void
+    {
+        // Virtual
+    }
+    protected LoadCamera(Scene:Engine.Scene, Drawn:Engine.Camera) : void
+    {
+        // Virtual
+    }
+    protected LoadLight(Scene:Engine.Scene, Drawn:Engine.Light) : void
     {
         // Virtual
     }

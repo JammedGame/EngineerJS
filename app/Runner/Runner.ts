@@ -90,14 +90,10 @@ class Runner
         this.UpdateScene();
         this._Current.Events.Invoke("TimeTick", this._Game, {});
         requestAnimationFrame( this.OnRenderFrame.bind(this) );
-        if(this._Current.Type == Engine.SceneType.Scene2D)
-        {
-            // Spammer
-            // Util.Log.Event("RenderFrame");
-            this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
-            this._Current.Events.Invoke("RenderFrame", this._Game, {});
-        }
-        else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
+        this._DrawEngine.DrawScene(this._Current, window.innerWidth, window.innerHeight);
+        this._Current.Events.Invoke("RenderFrame", this._Game, {});
+        // Spammer
+        // Util.Log.Event("RenderFrame");
     }
     private OnClosing(event) : void
     {
