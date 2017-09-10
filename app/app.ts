@@ -5,4 +5,6 @@ import * as Math from "./Mathematics/Mathematics";
 import * as Runner from "./Runner/Runner";
 import * as Draw from "./Draw/Draw";
 
-export default { Util, Data, Engine, Math, Runner, Draw };
+this._Game = new Engine.Game();
+this._Game.Name = "3D Animation";
+this._Runner = new Runner.Runner(this._Game, Draw.DrawEngineType.ThreeJS);

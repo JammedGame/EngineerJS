@@ -4,7 +4,8 @@ import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
-import { SceneObject } from "./SceneObject";
+import { SceneObject, SceneObjectType } from "./SceneObject";
+import { DrawObject, DrawObjectType } from "./DrawObject";
 
 enum SceneType
 {
@@ -60,6 +61,18 @@ class Scene
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
     }
+    public GetObjectsWithType(Type:SceneObjectType) : any[]
+    {
+        let Objects:any[] = [];
+        for(let i = 0; i < this.Objects.length; i++)
+        {
+            if(this.Objects[i].Type == Type)
+            {
+                Objects.push(this.Objects[i]);
+            }
+        }
+        return Objects;
+    }
     public GetObjectsWithData(Key:string, Data?:any) : any[]
     {
         let Objects:any[] = [];
@@ -72,6 +85,21 @@ class Scene
                     if(this.Objects[i].Data[Key] == Data) Objects.push(this.Objects[i]);
                 }
                 else Objects.push(this.Objects[i]);
+            }
+        }
+        return Objects;
+    }
+    public GetObjectsWithDrawType(Type:DrawObjectType) : any[]
+    {
+        let Objects:any[] = [];
+        for(let i = 0; i < this.Objects.length; i++)
+        {
+            if(this.Objects[i].Type == SceneObjectType.Drawn)
+            {
+                if((<DrawObject>this.Objects[i]).DrawType == Type)
+                {
+                    Objects.push(this.Objects[i]);
+                }
             }
         }
         return Objects;
