@@ -30,6 +30,16 @@ class CollisionValue
         this.Front = this.Back;
         this.Back = Store;
     }
+    public static Combine(CollisionValue1:CollisionValue, CollisionValue2:CollisionValue) : CollisionValue
+    {
+        let NewCollisionValue = new CollisionValue();
+        NewCollisionValue.Collision = CollisionValue1.Collision || CollisionValue2.Collision;
+        NewCollisionValue.Bottom = CollisionValue1.Bottom || CollisionValue2.Bottom;
+        NewCollisionValue.Top = CollisionValue1.Top || CollisionValue2.Top;
+        NewCollisionValue.Left = CollisionValue1.Left || CollisionValue2.Left;
+        NewCollisionValue.Right = CollisionValue1.Right || CollisionValue2.Right;
+        return NewCollisionValue;
+    }
 }
 class ColliderObject
 {
@@ -88,7 +98,8 @@ class Collision
         }
         if(Collided)
         {
-            Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
+            Result = Collision.GetDefaultRectangularWay(Collider2, Collider1.Position);
+            Result.Revert();
             Result.Collision = true;
         }
         return Result;

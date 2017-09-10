@@ -12,20 +12,40 @@ class ThreeDrawEngine extends DrawEngine
 {
     private _Checked:string[];
     private _Target:HTMLCanvasElement;
+    private _Parent:HTMLCanvasElement;
     private _Scene:Three.Scene;
+    private _EngineerScene:Engine.Scene;
     private _Camera:Three.Camera;
-    public constructor(Old?:ThreeDrawEngine)
+    public constructor(Old?:ThreeDrawEngine, Resolution?:Math.Vertex)
     {
         super(Old);
         this._Scene = new Three.Scene();
+        this._GlobalScale = new Math.Vertex(1,1,1);
+        this._GlobalOffset = new Math.Vertex(0,0,0);
+        if(Resolution) this._Resolution = Resolution;
+        else this._Resolution = new Math.Vertex(1920, 1080, 1);
         this._Target = document.getElementById("canvas") as HTMLCanvasElement;
+        this._Parent = document.getElementById("canvas-parent") as HTMLCanvasElement;
         this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this.Renderer.setPixelRatio( window.devicePixelRatio );
-        this.Renderer.setSize( window.innerWidth, window.innerHeight );
+        this.Resize();
+    }
+    public Resize()
+    {
+        let Width:number = this._Parent.clientWidth;
+        let Height:number = this._Parent.clientHeight;
+        this.Renderer.setSize( Width, Height );
+        this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
     }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         this._Checked = [];
+        if(this._EngineerScene)
+        {
+            this._EngineerScene.Events.Resize.splice(this._EngineerScene.Events.Resize.indexOf(this.Resize), 1);
+        }
+        this._EngineerScene = Scene;
+        this._EngineerScene.Events.Resize.push(this.Resize.bind(this));
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
         for(let i = 0; i < Scene.Objects.length; i++)
         {
@@ -148,8 +168,8 @@ class ThreeDrawEngine extends DrawEngine
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data[Drawn.ID] = Sprite;
             Sprite.visible = SpriteData.Active;
-            Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-            Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
+            Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Scene.add(Sprite);
             Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
@@ -180,8 +200,8 @@ class ThreeDrawEngine extends DrawEngine
             }
             else Sprite.material = this.GenerateSpriteMaterial(SpriteData, null);
             Sprite.visible = SpriteData.Active;
-            Sprite.position.set(SpriteData.Trans.Translation.X, SpriteData.Trans.Translation.Y, 0);
-            Sprite.scale.set(SpriteData.Trans.Scale.X, SpriteData.Trans.Scale.Y, 1);
+            Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Checked.push(Sprite.uuid);
         }
@@ -218,8 +238,8 @@ class ThreeDrawEngine extends DrawEngine
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data[Drawn.ID] = Tile;
             Tile.visible = TileData.Active;
-            Tile.position.set(TileData.Trans.Translation.X, TileData.Trans.Translation.Y, 0);
-            Tile.scale.set(TileData.Trans.Scale.X, TileData.Trans.Scale.Y, 1);
+            Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Scene.add(Tile);
             Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
@@ -235,8 +255,8 @@ class ThreeDrawEngine extends DrawEngine
             }
             else Tile.material = this.GenerateTileMaterial(TileData, null);
             Tile.visible = TileData.Active;
-            Tile.position.set(TileData.Trans.Translation.X, TileData.Trans.Translation.Y, 0);
-            Tile.scale.set(TileData.Trans.Scale.X, TileData.Trans.Scale.Y, 1);
+            Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Checked.push(Tile.uuid);
         }
