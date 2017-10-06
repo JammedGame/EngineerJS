@@ -14,7 +14,7 @@ class ThreeDrawEngine extends DrawEngine
     private _Target:HTMLCanvasElement;
     private _Parent:HTMLCanvasElement;
     private _Scene:Three.Scene;
-    private _EngineerScene:Engine.Scene;
+    private _EngineerScene:Engine.Scene2D;
     private _Camera:Three.Camera;
     public constructor(Old?:ThreeDrawEngine, Resolution?:Math.Vertex)
     {
@@ -172,7 +172,8 @@ class ThreeDrawEngine extends DrawEngine
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data[Drawn.ID] = Sprite;
             Sprite.visible = SpriteData.Active;
-            Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
+            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Scene.add(Sprite);
@@ -189,7 +190,8 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
             }
             Sprite.visible = SpriteData.Active;
-            Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
+            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Checked.push(Sprite.uuid);
@@ -227,7 +229,8 @@ class ThreeDrawEngine extends DrawEngine
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data[Drawn.ID] = Tile;
             Tile.visible = TileData.Active;
-            Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            if(!Drawn.Fixed) Tile.position.set((this._EngineerScene.Trans.Translation.X + TileData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + TileData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
+            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Scene.add(Tile);
@@ -238,7 +241,8 @@ class ThreeDrawEngine extends DrawEngine
         {
             let Tile:Three.Mesh = this.Data[Drawn.ID];
             Tile.visible = TileData.Active;
-            Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            if(!Drawn.Fixed) Tile.position.set((this._EngineerScene.Trans.Translation.X + TileData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + TileData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
+            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Checked.push(Tile.uuid);
