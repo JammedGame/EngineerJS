@@ -248,12 +248,6 @@ class ThreeDrawEngine extends DrawEngine
         else
         {
             let Tile:Three.Mesh = this.Data[Drawn.ID];
-            if(this.Data[TileData.Collection.ID + "_Tex"])
-            {
-                let Textures : Three.Texture[] = <Three.Texture[]>this.Data[TileData.Collection.ID + "_Tex"];
-                Tile.material = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
-            }
-            else Tile.material = this.GenerateTileMaterial(TileData, null);
             Tile.visible = TileData.Active;
             Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
