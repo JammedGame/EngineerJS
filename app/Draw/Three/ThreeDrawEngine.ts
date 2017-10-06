@@ -148,21 +148,25 @@ class ThreeDrawEngine extends DrawEngine
         let SpriteData = <Engine.Sprite>Drawn;
         if(this.Data[Drawn.ID] == null)
         {
-            this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
+            this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
             let SpriteMaterial;
-            if(SpriteData.GetActiveSprites().length > 0)
+            if(Drawn.SpriteSets.length > 0)
             {
-                let TextureLoader = new Three.TextureLoader();
-                let Textures : Three.Texture[] = [];
-                this.Data[Drawn.ID + "_Tex"] = Textures;
-                let TextureUrls : string[] = SpriteData.GetActiveSprites();
-                for(let j = 0; j < TextureUrls.length; j++)
+                for(let i = 0; i < Drawn.SpriteSets.length; i++)
                 {
-                    let NewTexture = TextureLoader.load(TextureUrls[j]);
-                    NewTexture.flipY = false;
-                    Textures.push(NewTexture);
+                    let TextureLoader = new Three.TextureLoader();
+                    let Textures : Three.Texture[] = [];
+                    this.Data[Drawn.ID + "_Tex_" + i] = Textures;
+                    let TextureUrls : string[] = SpriteData.GetSprites(i);
+                    for(let j = 0; j < TextureUrls.length; j++)
+                    {
+                        let NewTexture = TextureLoader.load(TextureUrls[j]);
+                        NewTexture.flipY = false;
+                        Textures.push(NewTexture);
+                    }
                 }
-                SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
+                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentIndex];
+                SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
             }
             else SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
@@ -178,27 +182,12 @@ class ThreeDrawEngine extends DrawEngine
         else
         {
             let Sprite:Three.Mesh = this.Data[Drawn.ID];
-            if(SpriteData.GetActiveSprites().length > 0)
+            if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet)
             {
-                if(this.Data[Drawn.ID + "_Set"].length != SpriteData.GetActiveSprites().length)
-                {
-                    this.Data[Drawn.ID + "_Set"] = SpriteData.GetActiveSprites();
-                    let TextureLoader = new Three.TextureLoader();
-                    let Textures : Three.Texture[] = [];
-                    this.Data[Drawn.ID + "_Tex"] = Textures;
-                    let TextureUrls : string[] = SpriteData.GetActiveSprites();
-                    for(let j = 0; j < TextureUrls.length; j++)
-                    {
-                        let NewTexture = TextureLoader.load(TextureUrls[j]);
-                        NewTexture.flipY = false;
-                        Textures.push(NewTexture);
-                    }
-                }
-                let TextureLoader = new Three.TextureLoader();
-                let Textures : Three.Texture[] = <Three.Texture[]> this.Data[SpriteData.ID + "_Tex"];
-                Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.Index()]);
+                this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
+                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
+                Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
             }
-            else Sprite.material = this.GenerateSpriteMaterial(SpriteData, null);
             Sprite.visible = SpriteData.Active;
             Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
             Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);

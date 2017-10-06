@@ -12,6 +12,7 @@ class Sprite extends DrawObject
     private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
+    public get CurrentIndex():number { return this._CurrentIndex; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get Paint():Math.Color { return this._Paint; }
     public set Paint(value:Math.Color) { this._Paint = value; }
@@ -102,6 +103,11 @@ class Sprite extends DrawObject
     {
         if(this._SpriteSets.length == 0) return [];
         return this._SpriteSets[this._CurrentSpriteSet].Sprites;
+    }
+    public GetSprites(Set:number) : string[]
+    {
+        if(this._SpriteSets.length == 0) return [];
+        return this._SpriteSets[Set].Sprites;
     }
 }
 class SpriteSet
