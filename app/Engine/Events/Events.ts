@@ -54,6 +54,7 @@ class EventPackage
         this._TimeTick = [];
         this._OperationProgress = [];
         this._OperationFinished = [];
+        this._SpriteSetAnimationComplete = [];
 
         //TODO: Need to duplicate old
     }
