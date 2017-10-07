@@ -149,6 +149,7 @@ class ThreeDrawEngine extends DrawEngine
         if(this.Data[Drawn.ID] == null)
         {
             this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
+            this.Data[Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
             let SpriteMaterial;
             if(Drawn.SpriteSets.length > 0)
             {
@@ -165,7 +166,7 @@ class ThreeDrawEngine extends DrawEngine
                         Textures.push(NewTexture);
                     }
                 }
-                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentIndex];
+                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
                 SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
             }
             else SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
@@ -183,8 +184,9 @@ class ThreeDrawEngine extends DrawEngine
         else
         {
             let Sprite:Three.Mesh = this.Data[Drawn.ID];
-            if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet)
+            if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet || this.Data[Drawn.ID + "_CurrentIndex"] != SpriteData.CurrentIndex)
             {
+                this.Data[Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
                 this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
                 let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
                 Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
