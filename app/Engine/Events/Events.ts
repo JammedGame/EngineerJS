@@ -20,6 +20,7 @@ class EventPackage
     private _TimeTick:Function[];
     private _OperationProgress:Function[];
     private _OperationFinished:Function[];
+    private _SpriteSetAnimationComplete:Function[];
     public get Closing() : Function[] { return this._Closing; }
     public get KeyPress() : Function[] { return this._KeyPress; }
     public get KeyDown() : Function[] { return this._KeyDown; }
@@ -35,6 +36,7 @@ class EventPackage
     public get TimeTick() : Function[] { return this._TimeTick; }
     public get OperationProgress() : Function[] { return this._OperationProgress; }
     public get OperationFinished() : Function[] { return this._OperationFinished; }
+    public get SpriteSetAnimationComplete() : Function[] { return this._SpriteSetAnimationComplete; }
     public constructor(Old?:EventPackage)
     {
         this._Closing = [];
@@ -76,6 +78,7 @@ class EventPackage
         if (EventName == "TimeTick") return this.InvokeEvents(this._TimeTick, CurrentGame, Args);
         if (EventName == "OperationProgress") return this.InvokeEvents(this._OperationProgress, CurrentGame, Args);
         if (EventName == "OperationFinished") return this.InvokeEvents(this._OperationFinished, CurrentGame, Args);
+        if (EventName == "SpriteSetAnimationComplete") return this.InvokeEvents(this._SpriteSetAnimationComplete, CurrentGame, Args);
     }
     private InvokeEvents(Events:Function[], CurrentGame:Game, Args) : boolean
     {

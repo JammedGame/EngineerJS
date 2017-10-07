@@ -9,9 +9,12 @@ class Sprite extends DrawObject
 {
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
+    private _BackUpSpriteSet:number;
     private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
+    public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
+    public set BackUpSpriteSet(value:number) { this._BackUpSpriteSet = value; }
     public get CurrentIndex():number { return this._CurrentIndex; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get Paint():Math.Color { return this._Paint; }
@@ -63,7 +66,16 @@ class Sprite extends DrawObject
     {
         this._CurrentIndex++;
         if (this._SpriteSets.length <= 0) this._CurrentIndex = -1;
-        else if (this._CurrentIndex >= this._SpriteSets[this._CurrentSpriteSet].Sprites.length) this._CurrentIndex = 0;
+        else if (this._CurrentIndex >= this._SpriteSets[this._CurrentSpriteSet].Sprites.length)
+        {
+            this.Events.Invoke("SpriteSetAnimationComplete", null, {CurrentSpriteSet:this._CurrentSpriteSet, NextSpriteSet:((this._BackUpSpriteSet!=-1)?this._BackUpSpriteSet:this._CurrentSpriteSet)});
+            if (this._BackUpSpriteSet != -1)
+            {
+                this._CurrentSpriteSet = this._BackUpSpriteSet;
+                this._BackUpSpriteSet = -1;
+            }
+            this._CurrentIndex = 0;
+        }
     }
     public SetSpriteSet(Index:number) : void
     {
