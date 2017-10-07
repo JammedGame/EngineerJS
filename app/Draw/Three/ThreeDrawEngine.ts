@@ -174,7 +174,7 @@ class ThreeDrawEngine extends DrawEngine
             this.Data[Drawn.ID] = Sprite;
             Sprite.visible = SpriteData.Active;
             if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
-            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, SpriteData.Trans.Translation.Z);
             Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Scene.add(Sprite);
@@ -193,14 +193,58 @@ class ThreeDrawEngine extends DrawEngine
             }
             Sprite.visible = SpriteData.Active;
             if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
-            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            else Sprite.position.set(SpriteData.Trans.Translation.X * this._GlobalScale.X, SpriteData.Trans.Translation.Y * this._GlobalScale.Y, SpriteData.Trans.Translation.Z);
             Sprite.scale.set(SpriteData.Trans.Scale.X * this._GlobalScale.X, SpriteData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Sprite.rotation.set(SpriteData.Trans.Rotation.X, SpriteData.Trans.Rotation.Y, SpriteData.Trans.Rotation.Z);
             this._Checked.push(Sprite.uuid);
         }
     }
-    protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    protected LoadTile(Scene:Engine.Scene2D, Drawn:Engine.Tile) : void
     {  
+        if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0)
+        {
+            if(this.Data[Drawn.ID])
+            {
+                this._Scene.remove(this.Data[Drawn.ID]);
+                this.Data[Drawn.ID].geometry.dispose();
+                this.Data[Drawn.ID].material.dispose();
+                this.Data[Drawn.ID] = null;
+            }
+            return;
+        }
+        if(Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0)
+        {
+            if(this.Data[Drawn.ID])
+            {
+                this._Scene.remove(this.Data[Drawn.ID]);
+                this.Data[Drawn.ID].geometry.dispose();
+                this.Data[Drawn.ID].material.dispose();
+                this.Data[Drawn.ID] = null;
+            }
+            return;
+        }
+        if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920)
+        {
+            if(this.Data[Drawn.ID])
+            {
+                this._Scene.remove(this.Data[Drawn.ID]);
+                this.Data[Drawn.ID].geometry.dispose();
+                this.Data[Drawn.ID].material.dispose();
+                this.Data[Drawn.ID] = null;
+            }
+            return;
+        }
+        if(Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
+        {
+            if(this.Data[Drawn.ID])
+            {
+                this._Scene.remove(this.Data[Drawn.ID]);
+                this.Data[Drawn.ID].geometry.dispose();
+                this.Data[Drawn.ID].material.dispose();
+                this.Data[Drawn.ID] = null;
+            }
+            return;
+        }
         let TileData = <Engine.Tile>Drawn;
         if(this.Data[Drawn.ID] == null)
         {
@@ -232,7 +276,7 @@ class ThreeDrawEngine extends DrawEngine
             this.Data[Drawn.ID] = Tile;
             Tile.visible = TileData.Active;
             if(!Drawn.Fixed) Tile.position.set((this._EngineerScene.Trans.Translation.X + TileData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + TileData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
-            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, TileData.Trans.Translation.Z);
             Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Scene.add(Tile);
@@ -244,7 +288,7 @@ class ThreeDrawEngine extends DrawEngine
             let Tile:Three.Mesh = this.Data[Drawn.ID];
             Tile.visible = TileData.Active;
             if(!Drawn.Fixed) Tile.position.set((this._EngineerScene.Trans.Translation.X + TileData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + TileData.Trans.Translation.Y) * this._GlobalScale.Y, 0);
-            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            else Tile.position.set(TileData.Trans.Translation.X * this._GlobalScale.X, TileData.Trans.Translation.Y * this._GlobalScale.Y, TileData.Trans.Translation.Z);
             Tile.scale.set(TileData.Trans.Scale.X * this._GlobalScale.X, TileData.Trans.Scale.Y * this._GlobalScale.Y, 1);
             Tile.rotation.set(TileData.Trans.Rotation.X, TileData.Trans.Rotation.Y, TileData.Trans.Rotation.Z);
             this._Checked.push(Tile.uuid);
