@@ -29,6 +29,7 @@ class Sprite extends DrawObject
         this.DrawType = DrawObjectType.Sprite;
         this._CurrentIndex = 0;
         this._CurrentSpriteSet = 0;
+        this._BackUpSpriteSet = -1;
         if(Old != null)
         {
             this._SpriteSets = Old._SpriteSets;
