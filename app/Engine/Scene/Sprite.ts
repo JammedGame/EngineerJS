@@ -66,7 +66,16 @@ class Sprite extends DrawObject
     {
         this._CurrentIndex++;
         if (this._SpriteSets.length <= 0) this._CurrentIndex = -1;
-        else if (this._CurrentIndex >= this._SpriteSets[this._CurrentSpriteSet].Sprites.length) this._CurrentIndex = 0;
+        else if (this._CurrentIndex >= this._SpriteSets[this._CurrentSpriteSet].Sprites.length)
+        {
+            this.Events.Invoke("SpriteSetAnimationComplete", null, {CurrentSpriteSet:this._CurrentSpriteSet, NextSpriteSet:((this._BackUpSpriteSet!=-1)?this._BackUpSpriteSet:this._CurrentSpriteSet)});
+            if (this._BackUpSpriteSet != -1)
+            {
+                this._CurrentSpriteSet = this._BackUpSpriteSet;
+                this._BackUpSpriteSet = -1;
+            }
+            this._CurrentIndex = 0;
+        }
     }
     public SetSpriteSet(Index:number) : void
     {
