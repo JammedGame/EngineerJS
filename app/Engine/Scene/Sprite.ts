@@ -9,9 +9,12 @@ class Sprite extends DrawObject
 {
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
+    private _BackUpSpriteSet:number;
     private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
+    public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
+    public set BackUpSpriteSet(value:number) { this._BackUpSpriteSet = value; }
     public get CurrentIndex():number { return this._CurrentIndex; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get Paint():Math.Color { return this._Paint; }
