@@ -128,8 +128,8 @@ class Runner
         {
             Util.Log.Event("MousePress");
             Util.Log.Event("MouseDown");
-            this._Current.Events.Invoke("MousePress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
-            this._Current.Events.Invoke("MouseDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
+            this._Current.Events.Invoke("MousePress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+            this._Current.Events.Invoke("MouseDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
         }
     }
     private OnMouseUp(event) : void
@@ -137,19 +137,19 @@ class Runner
         if(!this.CheckObjectMouseEvents(["MouseUp"], event))
         {
             Util.Log.Event("MouseUp");
-            this._Current.Events.Invoke("MouseUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
+            this._Current.Events.Invoke("MouseUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
         }
     }
     private OnMouseWheel(event) : void
     {
         Util.Log.Event("MouseWheel");
-        this._Current.Events.Invoke("MouseWheel", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Delta:event.wheelDelta});
+        this._Current.Events.Invoke("MouseWheel", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Delta:event.wheelDelta, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
     }
     private OnMouseMove(event) : void
     {
         // Spammer
         // Util.Log.Event("MouseMove");
-        this._Current.Events.Invoke("MouseMove", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Location:new Math.Vertex(event.x, event.y, 0)});
+        this._Current.Events.Invoke("MouseMove", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
     }
     private OnMouseRight(event) : void
     {
@@ -183,7 +183,7 @@ class Runner
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
-                        for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button});
+                        for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
                         if(true || Handled)
                         {
                             for(let i = 0; i < EventNames.length; i++) Util.Log.Event(EventNames[i] + " " + Current.ID);

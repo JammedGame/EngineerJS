@@ -83,6 +83,7 @@ class EventPackage
     }
     private InvokeEvents(Events:Function[], CurrentGame:Game, Args) : boolean
     {
+        if(Events.length == 0) return false;
         for(let i = 0; i < Events.length; i++)
         {
             Events[i](CurrentGame, Args);
