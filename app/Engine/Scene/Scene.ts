@@ -1,6 +1,7 @@
 export  { SceneType, Scene };
 
 import * as Data from "./../../Data/Data";
+import * as Util from "./../../Util/Util";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
@@ -59,6 +60,15 @@ class Scene
         // Virtual
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
+    }
+    public RemoveSceneObject(Object:SceneObject) : void
+    {
+        let Index:number = this._Objects.indexOf(Object);
+        if(Index != -1)
+        {
+            this._Objects.splice(Index, 1);
+        }
+        else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
     }
     public GetObjectsWithData(Key:string, Data?:any) : any[]
     {
