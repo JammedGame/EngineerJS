@@ -201,49 +201,22 @@ class ThreeDrawEngine extends DrawEngine
     }
     protected LoadTile(Scene:Engine.Scene2D, Drawn:Engine.Tile) : void
     {  
-        if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0)
+        if(!Drawn.Fixed)
         {
-            if(this.Data[Drawn.ID])
+            if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0 ||
+                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0 ||
+                Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920 ||
+                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
             {
-                this._Scene.remove(this.Data[Drawn.ID]);
-                this.Data[Drawn.ID].geometry.dispose();
-                this.Data[Drawn.ID].material.dispose();
-                this.Data[Drawn.ID] = null;
+                if(this.Data[Drawn.ID])
+                {
+                    this._Scene.remove(this.Data[Drawn.ID]);
+                    this.Data[Drawn.ID].geometry.dispose();
+                    this.Data[Drawn.ID].material.dispose();
+                    this.Data[Drawn.ID] = null;
+                }
+                return;
             }
-            return;
-        }
-        if(Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0)
-        {
-            if(this.Data[Drawn.ID])
-            {
-                this._Scene.remove(this.Data[Drawn.ID]);
-                this.Data[Drawn.ID].geometry.dispose();
-                this.Data[Drawn.ID].material.dispose();
-                this.Data[Drawn.ID] = null;
-            }
-            return;
-        }
-        if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920)
-        {
-            if(this.Data[Drawn.ID])
-            {
-                this._Scene.remove(this.Data[Drawn.ID]);
-                this.Data[Drawn.ID].geometry.dispose();
-                this.Data[Drawn.ID].material.dispose();
-                this.Data[Drawn.ID] = null;
-            }
-            return;
-        }
-        if(Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
-        {
-            if(this.Data[Drawn.ID])
-            {
-                this._Scene.remove(this.Data[Drawn.ID]);
-                this.Data[Drawn.ID].geometry.dispose();
-                this.Data[Drawn.ID].material.dispose();
-                this.Data[Drawn.ID] = null;
-            }
-            return;
         }
         let TileData = <Engine.Tile>Drawn;
         if(this.Data[Drawn.ID] == null)
