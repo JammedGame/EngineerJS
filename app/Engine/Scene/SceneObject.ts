@@ -25,7 +25,6 @@ class SceneObject
     public get Type():SceneObjectType { return this._Type; }
     public set Type(value:SceneObjectType) { this._Type = value; }
     public get Events():EventPackage { return this._Events; }
-    public set Events(value:EventPackage) { this._Events = value; }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:SceneObject)
     {
@@ -46,7 +45,6 @@ class SceneObject
     }
     public Copy() : SceneObject
     {
-        let New:SceneObject = new SceneObject(this);
-        return New;
+        return new SceneObject(this);
     }
 }

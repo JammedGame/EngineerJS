@@ -2,7 +2,7 @@ export  { Scene2D };
 
 import * as Math from "./../../Mathematics/Mathematics";
 
-import { Scene } from "./Scene";
+import { SceneType, Scene } from "./Scene";
 import { SceneObjectType, SceneObject } from "./SceneObject";
 import { DrawObjectType, DrawObject } from "./../Scene/DrawObject";
 import { Sprite } from "./../Scene/Sprite";
@@ -19,7 +19,7 @@ class Scene2D extends Scene
         {
             if(this.Objects[i].Type == SceneObjectType.Drawn)
             {
-                if((<DrawObject>this.Objects[i]).DrawType = DrawObjectType.Sprite)
+                if((<DrawObject>this.Objects[i]).DrawType == DrawObjectType.Sprite)
                 {
                     Sprites.push(<Sprite>this.Objects[i]);
                 }
@@ -37,6 +37,7 @@ class Scene2D extends Scene
         else
         {
             super();
+            this.Type = SceneType.Scene2D;
             this._Trans = new Math.Transformation();
         }
     }
@@ -44,5 +45,17 @@ class Scene2D extends Scene
     {
         let New:Scene2D = new Scene2D(this);
         return New;
+    }
+    public AddSceneObject(Object:SceneObject) : void
+    {
+        // Override
+        if(Object.Type == SceneObjectType.Drawn)
+        {
+            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile)
+            {
+                this.Data[Object.ID] = Object;
+                this.Objects.push(Object);
+            }
+        }
     }
 }

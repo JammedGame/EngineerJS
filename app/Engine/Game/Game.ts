@@ -18,6 +18,7 @@ class Game
     public constructor(Name?:string)
     {
         this._Name = "EngineerJS Game";
+        this._Scenes = [];
         if(Name != null) this._Name = Name;
         this.UpdateName();
     }
@@ -32,4 +33,13 @@ class Game
         let Title:HTMLElement = document.getElementById("title") as HTMLElement;
         Title.innerHTML = this._Name;
     }
+    public AddScene(Scene:Scene) : void
+    {
+        this.Data[Scene.Name] = Scene;
+        this._Scenes.push(Scene);
+    }
+    /// TODO
+    /// Create RemoveScene method for whatever reasons
+    /// TODO
+    /// Create getters similar to ones in Scene (related to Data)
 }

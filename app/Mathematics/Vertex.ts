@@ -87,8 +87,29 @@ class Vertex
     {
         return new Vertex((R * 1.0 + 1) / 256, (G * 1.0 + 1) / 256, (B * 1.0 + 1) / 256);
     }
-    public static Cross(Left:Vertex, Right:Vertex)
+    public static Cross(Left:Vertex, Right:Vertex) : Vertex
     {
         return new Vertex(Left.Y * Right.Z - Left.Z * Right.Y, Left.Z * Right.X - Left.X * Right.Z, Left.X * Right.Y - Left.Y * Right.X);
+    }
+    public static Distance(V1:Vertex, V2:Vertex) : number
+    {
+        let V:Vertex = new Vertex(V1.X - V2.X, V1.Y - V2.Y, V1.Z - V2.Z);
+        return V.Length();
+    }
+    private static CalculateAngle(V1:Vertex, V2:Vertex) : number
+    {
+        let V1V:number = Math.sqrt(V1.X * V1.X + V1.Y * V1.Y + V1.Z * V1.Z);
+        let V2V:number = Math.sqrt(V2.X * V2.X + V2.Y * V2.Y + V2.Z * V2.Z);
+        let UP:number = (V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z);
+        let Cos:number = UP / (V1V * V2V);
+        let Angle = Math.asin(Cos);
+        Angle = (Angle / Math.PI) * 180.0;
+        if(V1.X > V2.X) Angle = 180 - Angle;
+        if(Angle < 0) Angle += 360;
+        return Angle;
+    }
+    public static Angle(V1:Vertex, V2:Vertex) : number
+    {
+        return Vertex.CalculateAngle(new Vertex(0,1,0), new Vertex(V2.X - V1.X, V2.Y - V1.Y, V2.Z - V1.Z));
     }
 }

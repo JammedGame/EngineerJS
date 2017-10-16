@@ -6,7 +6,7 @@ class ThreeJSShaders
         varying vec2 vUv;
         void main()
         {
-            vUv  = uv;
+            vUv  = vec2(1.0 - uv.x, uv.y);
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
         }
         `;
@@ -23,7 +23,7 @@ class ThreeJSShaders
             }
             else
             {
-                gl_FragColor = texture2D(texture, vUv);
+                gl_FragColor = color * texture2D(texture, vUv);
             }
         }
         `;
