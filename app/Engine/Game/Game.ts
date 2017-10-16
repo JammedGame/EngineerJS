@@ -38,4 +38,8 @@ class Game
         this.Data[Scene.Name] = Scene;
         this._Scenes.push(Scene);
     }
+    /// TODO
+    /// Create RemoveScene method for whatever reasons
+    /// TODO
+    /// Create getters similar to ones in Scene (related to Data)
 }

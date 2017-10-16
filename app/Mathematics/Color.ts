@@ -30,4 +30,6 @@ class Color
         New.A = A;
         return New;
     }
+    /// TODO
+    /// Add some static basic colors for easy creation.
 }

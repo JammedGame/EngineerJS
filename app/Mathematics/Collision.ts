@@ -353,6 +353,5 @@ class Collision
     private static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
     {
         return Collision.GetCollisionRectangularWay(Collider, Position);
-        //return Collision.GetCollision4Way(Collider.Position, Position);
     }
 }

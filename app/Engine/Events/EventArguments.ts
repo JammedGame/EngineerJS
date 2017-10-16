@@ -2,12 +2,16 @@ export  { MouseButton, KeyType };
 
 enum MouseButton
 {
+    /// TODO
+    /// Check these codes for mac versions (Safari), as they once again reimplemented hot water.
     Left = 0,
     Middle = 1,
     Right = 2
 }
 enum KeyType
 {
+    /// TODO
+    /// Revise these codes, as they don't seem to be right.
     KEY_CANCEL = 3,
     KEY_HELP = 6,
     KEY_BACK_SPACE = 8,
