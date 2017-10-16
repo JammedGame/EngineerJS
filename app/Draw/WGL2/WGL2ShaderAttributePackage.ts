@@ -1,6 +1,6 @@
 export { WGL2ShaderAttributePackage }
 
-import { ShaderAttributePackage } from "./../ShaderAttributePackage"
+import { ShaderAttributePackage } from "./../ShaderRenderer/ShaderAttributePackage"
 
 class WGL2ShaderAttributePackage extends ShaderAttributePackage
 {

@@ -1,6 +1,6 @@
 export { WGL2ShaderManager }
 
-import { ShaderManager } from "./../ShaderManager";
+import { ShaderManager } from "./../ShaderRenderer/ShaderManager";
 import { WGL2ShaderProgram } from "./WGL2ShaderProgram";
 
 class WGL2ShaderManager extends ShaderManager

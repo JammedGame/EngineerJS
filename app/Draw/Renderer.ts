@@ -8,19 +8,16 @@ enum RenderEnableCap
 }
 class Renderer
 {
-    private _RenderDestination:any;
-    protected _LightsNumber:number;
-    public get RendererDestination():any { return this._RenderDestination; }
-    public set RendererDestination(value:any) { this._RenderDestination = value; }
-    public constructor(Old?:Renderer)
+    protected _Size;
+    public constructor(Old?:Renderer, Canvas?:HTMLCanvasElement)
     {
         if(Old != null)
         {
-            this._LightsNumber = 0;
+            this._Size = Old._Size;
         }
         else
         {
-            this._LightsNumber = 0;
+            this._Size = new Math.Vertex(100,100,0);
         }
     }
     public Copy() : Renderer
@@ -28,13 +25,17 @@ class Renderer
         let New:Renderer = new Renderer(this);
         return New;
     }
-    public ResetLights() : void
+    public SetSize(Size:Math.Vertex)
     {
-        this._LightsNumber = 0;
+        // Virtual
+        this._Size = Size;
     }
-    public SetViewport(Width:number, Height:number) : void { /*Virtual*/ }
-    public Clear() : void { /*Virtual*/ }
-    public ClearColor(Color:number[]) : void { /*Virtual*/ }
+    public SetDepth(Value:boolean)
+    {
+        this.Toggle(RenderEnableCap.Depth, Value);
+    }
+    public Clear(Color:Math.Color) : void { /*Virtual*/ }
+    
     public SetSurface(Color:number[]) : void { /*Virtual*/ }
     public IsMaterialReady(ID:string) : boolean { return false; /*Virtual*/ }
     public SetMaterial(MaterialData:any[], Update:boolean) : void { /*Virtual*/ }
@@ -48,5 +49,7 @@ class Renderer
     public RenderGeometry(Vertices:Math.Vertex[], Normals:Math.Vertex[], TexCoords:Math.Vertex[], Faces:any[], Update:boolean) : void { /*Virtual*/ }
     public PushPreferences() : void { /*Virtual*/ }
     public PopPreferences() : void { /*Virtual*/ }
-    public Toggle(Preference:RenderEnableCap, Value:boolean) : void { /*Virtual*/ }
+
+    protected Toggle(Preference:RenderEnableCap, Value:boolean) : void { /*Virtual*/ }
+    protected ClearColor(Color:number[]) : void { /*Virtual*/ }
 }

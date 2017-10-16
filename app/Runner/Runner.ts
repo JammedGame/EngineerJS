@@ -5,6 +5,7 @@ import * as Engine from "./../Engine/Engine";
 import * as Util from "./../Util/Util";
 import * as Draw from "./../Draw/Draw";
 import * as Three from "./../Draw/Three/Three";
+import * as WGL2 from "./../Draw/WGL2/WGL2";
 
 class Runner
 {
@@ -49,7 +50,12 @@ class Runner
     }
     private EngineInit(EngineType:Draw.DrawEngineType) : void
     {
-        if(EngineType == Draw.DrawEngineType.ThreeJS)
+        if(EngineType == Draw.DrawEngineType.WGL2)
+        {
+            this._DrawEngine = new WGL2.WGL2DrawEngine();
+            this._EngineInit = true;
+        }
+        else if(EngineType == Draw.DrawEngineType.ThreeJS)
         {
             this._DrawEngine = new Three.ThreeDrawEngine();
             this._EngineInit = true;
@@ -96,7 +102,7 @@ class Runner
         {
             // Spammer
             // Util.Log.Event("RenderFrame");
-            this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
+            this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, new Math.Vertex(window.innerWidth, window.innerHeight, 0));
             this._Current.Events.Invoke("RenderFrame", this._Game, {});
         }
         else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");

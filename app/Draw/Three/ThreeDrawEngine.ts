@@ -11,34 +11,33 @@ import { DrawEngine } from "./../DrawEngine";
 class ThreeDrawEngine extends DrawEngine
 {
     private _Checked:string[];
-    private _Target:HTMLCanvasElement;
-    private _Parent:HTMLCanvasElement;
     private _Scene:Three.Scene;
     private _EngineerScene:Engine.Scene2D;
     private _Camera:Three.Camera;
     public constructor(Old?:ThreeDrawEngine, Resolution?:Math.Vertex)
     {
-        super(Old);
+        super(Old, Resolution);
         this._Scene = new Three.Scene();
-        this._GlobalScale = new Math.Vertex(1,1,1);
-        this._GlobalOffset = new Math.Vertex(0,0,0);
-        if(Resolution) this._Resolution = Resolution;
-        else this._Resolution = new Math.Vertex(1920, 1080, 1);
-        this._Target = document.getElementById("canvas") as HTMLCanvasElement;
-        this._Parent = document.getElementById("canvas-parent") as HTMLCanvasElement;
         this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this.Renderer.setPixelRatio( window.devicePixelRatio );
         this.Resize();
     }
-    public Resize()
+    public Resize() : void
     {
+        // Override
         let Width:number = this._Parent.clientWidth;
         let Height:number = this._Parent.clientHeight;
         this.Renderer.setSize( Width, Height );
         this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
     }
+    private DrawThree() : void
+    {
+        this.Renderer.clear();
+        this.Renderer.render(this._Scene, this._Camera);
+    }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
+        // Override
         this._Checked = [];
         if(this._EngineerScene)
         {
@@ -77,74 +76,27 @@ class ThreeDrawEngine extends DrawEngine
             }
         }
     }
-    public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
+    public Draw2DScene(Scene:Engine.Scene2D, Size:Math.Vertex) : void
     {
-        if(this.Data["Width"] == null || this.Data["Width"] != Width || this.Data["Height"] != Height)
+        // Override
+        if(this.Data["Width"] == null || this.Data["Width"] != Size.X || this.Data["Height"] != Size.Y)
         {
-            this.Data["Width"] = Width;
-            this.Data["Height"] = Height;
-            this.Renderer.setSize(Width, Height);
+            this.Data["Width"] = Size.X;
+            this.Data["Height"] = Size.Y;
+            this.Renderer.setSize(Size.X, Size.Y);
         }
         if(this._Camera == null)
         {
-            this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
+            this._Camera = new Three.OrthographicCamera( 0, Size.X, 0, Size.Y, 1, 10 );
             this._Camera.position.z = 5;
         }
         this.Load2DScene(Scene);
         this.Renderer.render( this._Scene, this._Camera );
         Util.Log.Info("Scene2D " + Scene.ID + " drawn.");
     }
-    private DrawThree() : void
-    {
-        this.Renderer.clear();
-        this.Renderer.render(this._Scene, this._Camera);
-    }
-    public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
-    {
-        if(this._Camera == null)
-        {
-            this._Camera = new Three.PerspectiveCamera( 45, Width / Height, 1, 10000 );
-	        this._Camera.position.z = 1000;
-        }
-    }
-    private GenerateSpriteMaterial(Sprite:Engine.Sprite, Texture:Three.Texture) : Three.ShaderMaterial
-    {
-        let SpriteMaterial = new Three.ShaderMaterial
-        (
-            {
-                uniforms:
-                {
-                    index: { type:"i", value:Sprite.Index() },
-                    color: { type:"v4", value:Sprite.Paint.ToArray() },
-                    texture: { type:"tv", value: Texture }
-                },
-                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-            }
-        );
-        SpriteMaterial.transparent = true;
-        return SpriteMaterial;
-    }
-    private GenerateTileMaterial(Tile:Engine.Tile, Texture:Three.Texture) : Three.ShaderMaterial
-    {
-        let TileMaterial = new Three.ShaderMaterial
-        (
-            {
-                uniforms:
-                {
-                    index: { type:"i", value:Tile.Index },
-                    color: { type:"v4", value:Tile.Paint.ToArray() },
-                    texture: { type:"tv", value: Texture }
-                },
-                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-            }
-        );
-        TileMaterial.transparent = true;
-        return TileMaterial;
-    }
     protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {  
+        // Override
         let SpriteData = <Engine.Sprite>Drawn;
         if(this.Data[Drawn.ID] == null)
         {
@@ -201,6 +153,7 @@ class ThreeDrawEngine extends DrawEngine
     }
     protected LoadTile(Scene:Engine.Scene2D, Drawn:Engine.Tile) : void
     {  
+        // Override
         if(!Drawn.Fixed)
         {
             if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0 ||
@@ -266,5 +219,41 @@ class ThreeDrawEngine extends DrawEngine
             Tile.rotation.set((Drawn.Trans.Rotation.X / 180) * 3.14, (Drawn.Trans.Rotation.Y / 180) * 3.14, (Drawn.Trans.Rotation.Z / 180) * 3.14);
             this._Checked.push(Tile.uuid);
         }
+    }
+    private GenerateSpriteMaterial(Sprite:Engine.Sprite, Texture:Three.Texture) : Three.ShaderMaterial
+    {
+        let SpriteMaterial = new Three.ShaderMaterial
+        (
+            {
+                uniforms:
+                {
+                    index: { type:"i", value:Sprite.Index() },
+                    color: { type:"v4", value:Sprite.Paint.ToArray() },
+                    texture: { type:"tv", value: Texture }
+                },
+                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+            }
+        );
+        SpriteMaterial.transparent = true;
+        return SpriteMaterial;
+    }
+    private GenerateTileMaterial(Tile:Engine.Tile, Texture:Three.Texture) : Three.ShaderMaterial
+    {
+        let TileMaterial = new Three.ShaderMaterial
+        (
+            {
+                uniforms:
+                {
+                    index: { type:"i", value:Tile.Index },
+                    color: { type:"v4", value:Tile.Paint.ToArray() },
+                    texture: { type:"tv", value: Texture }
+                },
+                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
+                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
+            }
+        );
+        TileMaterial.transparent = true;
+        return TileMaterial;
     }
 }

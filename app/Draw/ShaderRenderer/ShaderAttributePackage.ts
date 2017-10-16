@@ -1,6 +1,6 @@
 export  { ShaderAttributePackage };
 
-import * as Util from "./../Util/Util";
+import * as Util from "./../../Util/Util";
 
 class ShaderAttributePackage
 {

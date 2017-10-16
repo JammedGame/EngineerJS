@@ -1,6 +1,6 @@
 export { WGL2ShaderProgram }
 
-import { ShaderProgram } from "./../ShaderProgram"
+import { ShaderProgram } from "./../ShaderRenderer/ShaderProgram"
 import { WGL2ShaderAttributePackage } from "./WGL2ShaderAttributePackage"
 import { WGL2ShaderUniformPackage } from "./WGL2ShaderUniformPackage"
 import { WGL2ShaderTexturePackage } from "./WGL2ShaderTexturePackage"

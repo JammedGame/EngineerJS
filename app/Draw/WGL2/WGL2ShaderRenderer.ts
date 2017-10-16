@@ -1,0 +1,65 @@
+export { WGL2ShaderRenderer }
+
+import * as Data from "./../../Data/Data";
+import * as Math from "./../../Mathematics/Mathematics";
+
+import { GLSLShaders } from "./Shaders"; 
+import { ShaderRenderer } from "./../ShaderRenderer/ShaderRenderer"
+import { WGL2ShaderProgram } from "./WGL2ShaderProgram"
+import { WGL2ShaderManager } from "./WGL2ShaderManager"
+
+class WGL2ShaderRenderer extends ShaderRenderer
+{
+    private _GL:any;
+    private _VertexShaderCode:string;
+    private _FragmentShaderCode:string;
+    public constructor(Old?:ShaderRenderer, Canvas?:HTMLCanvasElement)
+    {
+        let GL: any = Canvas.getContext("webgl2") as any;
+        super(Old, Canvas);
+        if(Old)
+        {
+            /// TODO
+            /// Copy constructor;
+        }
+        else
+        {
+            this._GL = GL;
+            this._Manager = new WGL2ShaderManager();
+            GL.enable(GL.DEPTH_TEST);
+            GL.enable(GL.BLEND);
+            this._VertexShaderCode = GLSLShaders.Vertex2D;
+            this._FragmentShaderCode = GLSLShaders.Fragment2D;
+        }
+    }
+    private SetShaders():void
+    {
+        this.SetUpShader("Default", [this._VertexShaderCode, this._FragmentShaderCode, null, null, null ]);
+    }
+    public Clear(Color:Math.Color) : void
+    {
+        // Override
+        this.ClearColor(Color.ToArray());
+        this._GL.clear(this._GL.COLOR_BUFFER_BIT || this._GL.DEPTH_BUFFER_BIT);
+    }
+    protected SetViewport(Size:Math.Vertex) : void
+    {
+        // Override
+        this._GL.viewport(0,0,Size.X,Size.Y);
+    }
+    protected Toggle(Preference:any, Value:boolean) : void
+    {
+        let GL = this._GL;
+        // Override
+        if(Preference == GL.DEPTH)
+        {
+            if (Value) GL.Enable(GL.DEPTH);
+            else GL.Disable(GL.DEPTH);
+        }
+    }
+    protected ClearColor(Color:number[]) : void
+    {
+        // Override
+        this._GL.clearColor(Color[0], Color[1], Color[2], Color[3]);
+    }
+}

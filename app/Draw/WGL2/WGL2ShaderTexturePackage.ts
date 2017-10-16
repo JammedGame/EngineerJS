@@ -1,6 +1,6 @@
 export { WGL2ShaderTexturePackage }
 
-import { ShaderTexturePackage } from "./../ShaderTexturePackage"
+import { ShaderTexturePackage } from "./../ShaderRenderer/ShaderTexturePackage"
 
 class WGL2ShaderTexturePackage extends ShaderTexturePackage
 {

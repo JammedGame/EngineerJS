@@ -2,7 +2,7 @@ export { WGL2ShaderUniformPackage }
 
 import * as Math from "./../../Mathematics/Mathematics";
 
-import { ShaderUniformPackage } from "./../ShaderUniformPackage"
+import { ShaderUniformPackage } from "./../ShaderRenderer/ShaderUniformPackage"
 
 class WGL2ShaderUniformPackage extends ShaderUniformPackage
 {
