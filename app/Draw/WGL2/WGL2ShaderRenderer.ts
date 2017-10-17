@@ -11,9 +11,7 @@ import { WGL2ShaderManager } from "./WGL2ShaderManager"
 class WGL2ShaderRenderer extends ShaderRenderer
 {
     private _GL:any;
-    private _VertexShaderCode:string;
-    private _FragmentShaderCode:string;
-    public constructor(Old?:ShaderRenderer, Canvas?:HTMLCanvasElement)
+    public constructor(Old:ShaderRenderer, Canvas:HTMLCanvasElement)
     {
         let GL: any = Canvas.getContext("webgl2") as any;
         super(Old, Canvas);
@@ -25,16 +23,12 @@ class WGL2ShaderRenderer extends ShaderRenderer
         else
         {
             this._GL = GL;
-            this._Manager = new WGL2ShaderManager();
+            this._Manager = new WGL2ShaderManager(null, Canvas);
             GL.enable(GL.DEPTH_TEST);
             GL.enable(GL.BLEND);
-            this._VertexShaderCode = GLSLShaders.Vertex2D;
-            this._FragmentShaderCode = GLSLShaders.Fragment2D;
+            this._ShaderPool.Vertex["2D"] = GLSLShaders.Vertex2D;
+            this._ShaderPool.Fragment["2D"] = GLSLShaders.Fragment2D;
         }
-    }
-    private SetShaders():void
-    {
-        this.SetUpShader("Default", [this._VertexShaderCode, this._FragmentShaderCode, null, null, null ]);
     }
     public Clear(Color:Math.Color) : void
     {

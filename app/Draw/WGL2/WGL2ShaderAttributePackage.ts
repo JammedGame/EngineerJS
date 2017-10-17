@@ -78,8 +78,8 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
             GL.bindBuffer(GL.ARRAY_BUFFER, this._VertexBufferIndexer);
             return true;
         }
-        GL.deleteBuffers(1, this._VertexBufferIndexer);
-        GL.deleteVertexArrays(1, this._VertexArrayIndexer);
+        //if(this._VertexBufferIndexer != -1) GL.deleteBuffers(1, this._VertexBufferIndexer);
+        //if(this._VertexArrayIndexer != -1) GL.deleteVertexArrays(1, this._VertexArrayIndexer);
         if(this._ManualBufferLines > 0) return this.ActivateAttributesWithManualBuffer(ProgramIndexer);
         let CurrentOffset:number = 0;
         let Data:ArrayBuffer;
@@ -110,13 +110,14 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
                 CurrentDataOffset += this._Size[j];
             }
         }
+        console.log(Data);
         this._BufferLines = BiggestRatioSize;
         if(this._BufferLines == 0) return false;
-        GL.genVertexArrays(1, this._VertexArrayIndexer);
+        this._VertexArrayIndexer = GL.createVertexArray();
         GL.bindVertexArray(this._VertexArrayIndexer);
-        GL.genBuffers(1, this._VertexBufferIndexer);
+        this._VertexBufferIndexer = GL.createBuffer();
         GL.bindBuffer(this._GL.ARRAY_BUFFER, this._VertexBufferIndexer);
-        GL.bufferData(GL.ARRAY_BUFFER, ByteTotalLength, Data, GL.STATIC_DRAW);
+        GL.bufferData(GL.ARRAY_BUFFER, Data, GL.STATIC_DRAW);
         let Attribute:number = 0;
         let Offset:number = 0;
         for (let i = 0; i < this._ID.length; i++)
@@ -124,8 +125,8 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
             Attribute = i;
             let AtributeSize:number = this._Size[i] / 4;
             let LineLength:number = this._BufferLineLength / this._BufferLines;
-            GL.EnableVertexAttribArray(Attribute);
-            GL.VertexAttribPointer(Attribute, AtributeSize, GL.FLOAT, false, this._BufferLineLength, Offset);
+            GL.enableVertexAttribArray(Attribute);
+            GL.vertexAttribPointer(Attribute, AtributeSize, GL.FLOAT, false, this._BufferLineLength, Offset);
             Offset += this._Size[i];
             CurrentOffset += this._Size[i];
         }

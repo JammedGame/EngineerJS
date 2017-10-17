@@ -2,7 +2,8 @@ export { GLSLShaders }
 
 class GLSLShaders
 {
-    public static Vertex2D : string = `
+    public static Vertex2D : string = 
+       `#version 300 es
         uniform mat4 ModelView;
         uniform mat4 Projection;
         in vec3 V_Vertex;
@@ -17,7 +18,11 @@ class GLSLShaders
             gl_Position = Projection * ModelView * vec4(V_Vertex, 1);
         }
         `;
-    public static Fragment2D : string = `
+    public static Fragment2D : string = 
+       `#version 300 es
+        precision highp float;
+        precision highp int;
+        precision highp sampler2DArray;
         uniform int Index;
         uniform vec4 Color;
         uniform mat4 ModelView;
@@ -29,7 +34,12 @@ class GLSLShaders
 
         void main()
         {
-            if(Index == -1)
+            FinalColor = Color;
+        }
+        `;
+}
+/*
+if(Index == -1)
             {
                 FinalColor = Color;
             }
@@ -37,6 +47,4 @@ class GLSLShaders
             {
                 FinalColor  = texture(Textures, vec3(F_TextureUV,Index));
             }
-        }
-        `;
-}
+*/

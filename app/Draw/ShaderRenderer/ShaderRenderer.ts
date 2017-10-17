@@ -8,14 +8,14 @@ import { Renderer } from "./../Renderer";
 import { ShaderManager } from "./ShaderManager";
 import { ShaderProgram, GraphicDrawMode } from "./ShaderProgram";
 import { ShaderUniformPackage } from "./ShaderUniformPackage";
+import { ShaderPool } from "./ShaderPool";
 
 class ShaderRenderer extends Renderer
 {
     private _PushedID:string;
-    private _GridSize:number;
-    private _GridVertices:any;
     private _ImageVertices:any;
     private _ImageUV:any;
+    protected _ShaderPool:ShaderPool;
     protected _Globals:ShaderUniformPackage;
     protected _Manager:ShaderManager;
     public get Manager():ShaderManager { return this._Manager; }
@@ -28,14 +28,14 @@ class ShaderRenderer extends Renderer
             super();
             this._PushedID = Old._PushedID;
             this._Globals = Old._Globals.Copy();
-            this._GridSize = Old._GridSize;
+            this._ShaderPool = Old._ShaderPool;
         }
         else
         {
             super();
             this._PushedID = "";
             this._Globals = new ShaderUniformPackage();
-            this._GridSize = 1;
+            this._ShaderPool = new ShaderPool();
             this._Globals.SetDefinition("CameraPosition", 3 * 4, "vec3");
             this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
             this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
@@ -74,13 +74,13 @@ class ShaderRenderer extends Renderer
         if(this._Manager.Active.TessellationEvaluationCode != null) this._Manager.Active.TessellationEvaluationCode.replace(Replaced, ReplaceWith);
         this._Manager.Active.ReCompile();
     }
-    public SetSurface(Color:number[]) : void
+    public SetColor(Color:Math.Color) : void
     {
         // Override
         if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Manager.Active.Uniforms.SetData("Color", Color);
+        this._Manager.Active.Uniforms.SetData("Color", Color.ToArray());
         if(!this._Globals.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Globals.SetData("Color", Color);
+        this._Globals.SetData("Color", Color.ToArray());
     }
     public IsMaterialReady(ID:string) : boolean
     {
@@ -120,57 +120,18 @@ class ShaderRenderer extends Renderer
         // Override
         this._Globals.SetData("CameraPosition", CameraPosition.ToArray());
     }
-    public Render2DGrid() : void
-    {
-        // Override
-        if (!this.IsMaterialReady("Grid2D"))
-        {
-            let Vertex2D:string = "";
-            let Fragment2D:string = "";
-            this.SetMaterial([["Grid2D", Vertex2D, Fragment2D, null, null, null ], null, null ], true);
-        }
-        else this.SetMaterial([["Grid2D", null, null, null, null, null ], null, null ], false);
-        this.UpdateMaterial();
-        let GridWidth:number = 100;
-        if (this._GridSize == -1)
-        {
-            let Vertices:Math.Vertex[] = [];
-            for (let i = -10; i <= 10; i++)
-            {
-                for (let j = -10; j <= 10; j++)
-                {
-                    Vertices.push(new Math.Vertex(GridWidth * +i, GridWidth * j, 0));
-                    Vertices.push(new Math.Vertex(GridWidth * -i, GridWidth * j, 0));
-                    Vertices.push(new Math.Vertex(GridWidth * i, GridWidth * +j, 0));
-                    Vertices.push(new Math.Vertex(GridWidth * i, GridWidth * -j, 0));
-                }
-            }
-            Vertices.push(new Math.Vertex(-50, -50, 0));
-            Vertices.push(new Math.Vertex(50, -50, 0));
-            Vertices.push(new Math.Vertex(50, -50, 0));
-            Vertices.push(new Math.Vertex(50, 50, 0));
-            Vertices.push(new Math.Vertex(50, 50, 0));
-            Vertices.push(new Math.Vertex(-50, 50, 0));
-            Vertices.push(new Math.Vertex(-50, 50, 0));
-            Vertices.push(new Math.Vertex(-50, -50, 0));
-            this._GridSize = Vertices.length;
-            //this._GridVertices = Util.Converter.ConvertVerticesToByteArray(Vertices, 3);
-        }
-        this.SetSurface([0.3,0.3,0.3,1]);
-        this._Manager.Active.Attributes.SetData("V_Vertex", this._GridSize * 3 * 4, this._GridVertices);
-        this._Manager.Active.Uniforms.SetData("Index", -1);
-        this._Manager.SetDrawMode(GraphicDrawMode.Lines);
-        this._Manager.Draw();
-    }
     public RenderImage(ID:string, Textures:string[], CurrentIndex:number, Update:boolean) : void
     {
         // Override
-        if (!this.IsMaterialReady(ID))
+        
+        if (!this._Manager.ShaderExists(ID))
         {
-            this._Manager.ActivateShader("2D");
-            this.SetMaterial([[ID, this._Manager.Active.VertexShaderCode, this._Manager.Active.FragmentShaderCode, null, null, null ], null, null ], true);
+            this._Manager.AddShader(ID);
+            this._Manager.ActivateShader(ID);
+            this.SetMaterial([[ID, this._ShaderPool.Vertex["2D"], this._ShaderPool.Fragment["2D"], null, null, null ], null, null ], true);
         }
         this.UpdateMaterial();
+        this.SetColor(Math.Color.FromRGBA(255,0,0,255));
         if (this._ImageVertices == null)
         {
             let Vertices:Math.Vertex[] = [];

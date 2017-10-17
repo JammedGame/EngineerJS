@@ -35,8 +35,8 @@ class Renderer
         this.Toggle(RenderEnableCap.Depth, Value);
     }
     public Clear(Color:Math.Color) : void { /*Virtual*/ }
-    
-    public SetSurface(Color:number[]) : void { /*Virtual*/ }
+    public SetColor(Color:Math.Color) : void { /*Virtual*/ }
+
     public IsMaterialReady(ID:string) : boolean { return false; /*Virtual*/ }
     public SetMaterial(MaterialData:any[], Update:boolean) : void { /*Virtual*/ }
     public UpdateMaterial() : void { /*Virtual*/ }

@@ -5,6 +5,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 import { SceneType, Scene } from "./Scene";
 import { SceneObjectType, SceneObject } from "./SceneObject";
 import { DrawObjectType, DrawObject } from "./../Scene/DrawObject";
+import { Tile } from "./../Scene/Tile";
 import { Sprite } from "./../Scene/Sprite";
 
 class Scene2D extends Scene
@@ -26,6 +27,21 @@ class Scene2D extends Scene
             }
         }
         return Sprites;
+    }
+    public get Tiles() : Tile[]
+    {
+        let Tiles:Tile[] = [];
+        for(let i = 0; i < this.Objects.length; i++)
+        {
+            if(this.Objects[i].Type == SceneObjectType.Drawn)
+            {
+                if((<DrawObject>this.Objects[i]).DrawType == DrawObjectType.Tile)
+                {
+                    Tiles.push(<Tile>this.Objects[i]);
+                }
+            }
+        }
+        return Tiles;
     }
     public constructor(Old?:Scene2D)
     {

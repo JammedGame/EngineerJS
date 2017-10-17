@@ -8,44 +8,54 @@ import { WGL2ShaderTexturePackage } from "./WGL2ShaderTexturePackage"
 class WGL2ShaderProgram extends ShaderProgram
 {
     private _GL:any;
-    public constructor(Old?:WGL2ShaderProgram)
+    public constructor(Old:WGL2ShaderProgram, Canvas:HTMLCanvasElement)
     {
-        const CANVAS: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
-        let GL: any = CANVAS.getContext("webgl2") as any;
+        let GL: any = Canvas.getContext("webgl2") as any;
         if(Old != null)
         {
             super(Old);
-            this._Attributes = (<WGL2ShaderAttributePackage>Old._Attributes).Copy();
-            this._Uniforms = (<WGL2ShaderUniformPackage>Old._Uniforms).Copy();
-            this._Textures = (<WGL2ShaderTexturePackage>Old._Textures).Copy();
+            this._GL = GL;
+            this._Attributes = Old._Attributes.Copy();
+            this._Uniforms = Old._Uniforms.Copy();
+            this._Textures = Old._Textures.Copy();
         }
         else
         {
             super();
+            this._GL = GL;
             this._Attributes = new WGL2ShaderAttributePackage();
             this._Uniforms = new WGL2ShaderUniformPackage();
             this._Textures = new WGL2ShaderTexturePackage();
         }
     }
-    public Compile(VertexShaderCode:string, FragmentShaderCode:string, GeometryShaderCode?:string, TesselationControlCode?:string, TesselationEvaluationCode?:string) : boolean
+    private CompileShader(Type:any, ShaderCode:string)
     {
         let GL = this._GL;
+        let Shader = GL.createShader(Type);
+        GL.shaderSource(Shader, ShaderCode);
+        GL.compileShader(Shader);
+        var Log = GL.getShaderInfoLog(Shader);
+        if (Log) { console.log(Log); }
+        return Shader;
+    }
+    public Compile(VertexShaderCode:string, FragmentShaderCode:string, GeometryShaderCode?:string, TesselationControlCode?:string, TesselationEvaluationCode?:string) : boolean
+    {
         // Override
-        GL.deleteProgram(this._ProgramIndexer);
+        let GL = this._GL;
+        if(this._ProgramIndexer != -1) GL.deleteProgram(this._ProgramIndexer);
         this._ProgramIndexer = GL.createProgram();
-        this._VertexShaderIndexer = GL.createShader(GL.VERTEX_SHADER);
-        GL.shaderSource(this._VertexShaderIndexer, VertexShaderCode);
-        GL.compileShader(this._VertexShaderIndexer);
-        this._FragmentShaderIndexer = GL.createShader(GL.FRAGMENT_SHADER);
-        GL.shaderSource(this._FragmentShaderIndexer, FragmentShaderCode);
-        GL.compileShader(this._FragmentShaderIndexer);
+        this._VertexShaderIndexer = this.CompileShader(GL.VERTEX_SHADER, VertexShaderCode);
+        this._FragmentShaderIndexer = this.CompileShader(GL.FRAGMENT_SHADER, FragmentShaderCode);
         GL.attachShader(this._ProgramIndexer, this._VertexShaderIndexer);
         GL.deleteShader(this._VertexShaderIndexer);
         GL.attachShader(this._ProgramIndexer, this._FragmentShaderIndexer);
         GL.deleteShader(this._FragmentShaderIndexer);
         GL.linkProgram(this._ProgramIndexer);
+        var Log = GL.getProgramInfoLog(this._ProgramIndexer);
+        if (Log) { console.log(Log); }
         this.SetShaderCode(VertexShaderCode, FragmentShaderCode);
         this._Compiled = true;
+        console.log(this._ProgramIndexer);
         return true;
     }
     public Activate() : void
@@ -55,8 +65,8 @@ class WGL2ShaderProgram extends ShaderProgram
     }
     public Draw(DrawMode:any, Offset:number) : void
     {
-        let GL = this._GL;
         // Override
+        let GL = this._GL;
         if(this._Compiled)
         {
             GL.useProgram(this._ProgramIndexer);
@@ -64,7 +74,6 @@ class WGL2ShaderProgram extends ShaderProgram
             if (!this._Attributes.Activate(this._ProgramIndexer)) return;
             if (!this._Textures.Activate()) return;
             GL.drawArrays(DrawMode, Offset, this._Attributes.BufferLines);
-            GL.useProgram(0);
         }
     }
 }
