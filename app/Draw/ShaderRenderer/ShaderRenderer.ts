@@ -58,8 +58,8 @@ class ShaderRenderer extends Renderer
         this._Manager.AddShader(ID);
         this._Manager.ActivateShader(ID);
         this._Manager.Active.Attributes.SetDefinition("V_Vertex", 3 * 4, "vec3");
-        if(ShaderCodes[1].indexOf("F_Normal") != -1) this._Manager.Active.Attributes.SetDefinition("V_Normal", 3 * 4, "vec3");
-        if(ShaderCodes[1].indexOf("F_TextureUV") != -1) this._Manager.Active.Attributes.SetDefinition("V_TextureUV", 2 * 4, "vec2");
+        //if(ShaderCodes[1].indexOf("F_Normal") != -1) this._Manager.Active.Attributes.SetDefinition("V_Normal", 3 * 4, "vec3");
+        //if(ShaderCodes[1].indexOf("F_TextureUV") != -1) this._Manager.Active.Attributes.SetDefinition("V_TextureUV", 2 * 4, "vec2");
         this._Manager.CompileShader(ID, ShaderCodes[0], ShaderCodes[1], ShaderCodes[2], ShaderCodes[3], ShaderCodes[4]);
     }
     public RefreshActiveShader(Name:string, OldValue:string, NewValue:string) : void
@@ -151,8 +151,9 @@ class ShaderRenderer extends Renderer
             UV.push(new Math.Vertex(1, 1, 0));
             this._ImageUV = Util.Convert.VerticesToByteArray(UV, 2);
         }
+        this._Manager.Active.Attributes.BufferLines = 6;
         this._Manager.Active.Attributes.SetData("V_Vertex", 6 * 3 * 4, this._ImageVertices);
-        this._Manager.Active.Attributes.SetData("V_TextureUV", 6 * 2 * 4, this._ImageUV);
+        //this._Manager.Active.Attributes.SetData("V_TextureUV", 6 * 2 * 4, this._ImageUV);
         if (!this._Manager.Active.Uniforms.Exists("Index")) this._Manager.Active.Uniforms.SetDefinition("Index", 4, "int");
         this._Manager.Active.Uniforms.SetData("Index", CurrentIndex);
         this._Manager.SetDrawMode(GraphicDrawMode.Triangles);

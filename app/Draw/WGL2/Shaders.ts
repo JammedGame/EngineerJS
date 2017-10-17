@@ -6,8 +6,8 @@ class GLSLShaders
        `#version 300 es
         uniform mat4 ModelView;
         uniform mat4 Projection;
-        in vec3 V_Vertex;
-        in vec2 V_TextureUV;
+        layout(location = 0) in vec3 V_Vertex;
+        layout(location = 12) in vec2 V_TextureUV;
         out vec3 F_Vertex;
         out vec2 F_TextureUV;
 

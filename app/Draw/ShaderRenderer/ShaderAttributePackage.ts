@@ -4,57 +4,40 @@ import * as Util from "./../../Util/Util";
 
 class ShaderAttributePackage
 {
-    protected _BufferExists:boolean;
+    protected _Activated:boolean;
     protected _DataChanged:boolean;
     protected _AttributesBound:boolean;
+    protected _VertexArray:number;
     protected _BufferLines:number;
     protected _BufferLineLength:number;
-    protected _VertexArrayIndexer:number;
-    protected _VertexBufferIndexer:number;
-    protected _ManualBufferLines:number;
-    protected _ManualDataArray:ArrayBuffer;
-    protected _Size:number[];
-    protected _DataSize:number[];
-    protected _ID:string[];
-    protected _Type:string[];
-    protected _Data:ArrayBuffer[];
-    public get BufferExists():boolean { return this._BufferExists; }
-    public set BufferExists(value:boolean) { this._BufferExists = value; }
+    protected _Entries:ShaderAttributeEntry[];
     public get BufferLines():number { return this._BufferLines; }
     public set BufferLines(value:number) { this._BufferLines = value; }
     public constructor(Old?:ShaderAttributePackage)
     {
         if(Old != null)
         {
+            this._Activated = false;
             this._DataChanged = true;
             this._AttributesBound = Old._AttributesBound;
-            this._BufferLines = Old._BufferLines;
+            this._VertexArray = Old._VertexArray;
             this._BufferLineLength = Old._BufferLineLength;
-            this._VertexArrayIndexer = Old._VertexArrayIndexer;
-            this._VertexBufferIndexer = Old._VertexBufferIndexer;
-            this._ManualBufferLines = Old._ManualBufferLines;
-            this._ManualDataArray = new ArrayBuffer(Old._ManualDataArray.byteLength);
-            this._ManualDataArray = Old._ManualDataArray.slice(0);
-            this._Size = [];
-            this._DataSize = [];
-            this._ID = [];
-            this._Type = [];
-            this._Data = [];
+            this._Entries = [];
+            for(let i = 0; i < Old._Entries.length; i++) this._Entries.push(Old._Entries[i].Copy());
         }
         else
         {
+            this._Activated = false;
             this._DataChanged = true;
-            this._Size = [];
-            this._DataSize = [];
-            this._ID = [];
-            this._Type = [];
-            this._Data = [];
+            this._AttributesBound = false;
+            this._VertexArray = null;
+            this._BufferLineLength = 0;
+            this._Entries = [];
         }
     }
     public Copy() : ShaderAttributePackage
     {
-        let New:ShaderAttributePackage = new ShaderAttributePackage(this);
-        return New;
+        return new ShaderAttributePackage(this);
     }
     public SetDefinition(ID:string, Size:number, Type:string) : boolean
     {
@@ -62,11 +45,8 @@ class ShaderAttributePackage
         if(this._AttributesBound) return false;
         let Index:number = this.FindIndex(ID);
         if(Index != -1) return false;
-        this._ID.push(ID);
-        this._Type.push(Type);
-        this._Size.push(Size);
-        this._DataSize.push(0);
-        this._Data.push(null);
+        let NewEntry = new ShaderAttributeEntry(null, ID, Size, Type);
+        this._Entries.push(NewEntry);
         return true;
     }
     public SetData(ID:string, DataSize:number, Data:ArrayBuffer) : boolean
@@ -74,8 +54,8 @@ class ShaderAttributePackage
         // Virtual
         let Index:number = this.FindIndex(ID);
         if(Index == -1) return false;
-        this._Data[Index] = Data;
-        this._DataSize[Index] = DataSize;
+        this._Entries[Index].Data = Data;
+        this._Entries[Index].DataSize = DataSize;
         this._DataChanged = true;
         return true;
     }
@@ -84,11 +64,7 @@ class ShaderAttributePackage
         // Virtual
         let Index:number = this.FindIndex(ID);
         if(Index == -1) return false;
-        this._ID.splice(Index, 1);
-        this._Type.splice(Index, 1);
-        this._Size.splice(Index, 1);
-        this._DataSize.splice(Index, 1);
-        this._Data.splice(Index, 1);
+        this._Entries.splice(Index, 1);
         return true;
     }
     public Exists(ID:string) : boolean
@@ -101,28 +77,72 @@ class ShaderAttributePackage
     {
         // Virtual
         this._AttributesBound = false;
-        for(let i = 0; i < this._ID.length; i++)
+        for(let i = 0; i < this._Entries.length; i++)
         {
-            this._Data[i] = null;
-            this._DataSize[i] = 0;
+            this._Entries[i].Data = null;
+            this._Entries[i].DataSize = 0;
         }
     }
-    public SetDataManually(BufferLines:number, Data:any)
-    {
-        // Virtual
-        this._ManualBufferLines = BufferLines;
-        this._ManualDataArray = Data;
-    }
-    protected ActivateAttributesWithManualBuffer(ProgramIndexer:number) : boolean  { return false; /*Virtual*/ }
-    public Bind(Program_Indexer:number) : void { /*Virtual*/ }
-    public Activate(Program_Indexer:number) : boolean { return false; /*Virtual*/ }
     private FindIndex(ID:string):number
     {
         let Index:number = -1;
-        for(let i = 0; i < this._ID.length; i++)
+        for(let i = 0; i < this._Entries.length; i++)
         {
-            if(this._ID[i] == ID) Index = i;
+            if(this._Entries[i].ID == ID) Index = i;
         }
         return Index;
+    }
+    // Abstract
+    public Bind(Program_Indexer:number) : void { /*Virtual*/ }
+    public Activate(Program_Indexer:number) : boolean { return false; /*Virtual*/ }
+    protected CreateBuffer(BufferData:Float32Array) : any { return null; /*Virtual*/ }
+}
+class ShaderAttributeEntry
+{
+    private _Size:number;
+    private _DataSize:number;
+    private _ID:string;
+    private _Type:string;
+    private _Data:any;
+    private _Buffer:any;
+    public get Size():number { return this._Size; }
+    public set Size(value:number) { this._Size = value; }
+    public get DataSize():number { return this._DataSize; }
+    public set DataSize(value:number) { this._DataSize = value; }
+    public get ID():string { return this._ID; }
+    public set ID(value:string) { this._ID = value; }
+    public get Type():string { return this._Type; }
+    public set Type(value:string) { this._Type = value; }
+    public get Data():any { return this._Data; }
+    public set Data(value:any) { this._Data = value; }
+    public get Buffer():any { return this._Buffer; }
+    public set Buffer(value:any) { this._Buffer = value; }
+    public constructor(Old?:ShaderAttributeEntry, ID?:string, Size?:number, Type?:string)
+    {
+        if(Old != null)
+        {
+            this._Size = Old._Size;
+            this._DataSize = Old._DataSize;
+            this._ID = Old._ID;
+            this._Type = Old._Type;
+            this._Data = Old._Data.slice(0);
+            this._Buffer = null;
+        }
+        else
+        {
+            if(Size) this._Size = Size;
+            else this._Size = 0;
+            if(ID) this._ID = ID;
+            else this._ID = "";
+            if(Type) this._Type = Type;
+            else this._Type = "none";
+            this._DataSize = 0;
+            this._Data = null;
+            this._Buffer = null;
+        }
+    }
+    public Copy() : ShaderAttributeEntry
+    {
+        return new ShaderAttributeEntry(this);
     }
 }
