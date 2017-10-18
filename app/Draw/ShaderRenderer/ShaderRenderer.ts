@@ -36,7 +36,7 @@ class ShaderRenderer extends Renderer
             this._PushedID = "";
             this._Globals = new ShaderUniformPackage();
             this._ShaderPool = new ShaderPool();
-            this._Globals.SetDefinition("CameraPosition", 3 * 4, "vec3");
+            //this._Globals.SetDefinition("CameraPosition", 3 * 4, "vec3");
             this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
             this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
         }

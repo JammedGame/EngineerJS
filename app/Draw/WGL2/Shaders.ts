@@ -15,7 +15,7 @@ class GLSLShaders
         {
             F_Vertex = V_Vertex;
             F_TextureUV = V_TextureUV;
-            gl_Position = Projection * ModelView * vec4(V_Vertex, 1);
+            gl_Position = vec4(V_Vertex, 1);
         }
         `;
     public static Fragment2D : string = 
@@ -39,6 +39,7 @@ class GLSLShaders
         `;
 }
 /*
+gl_Position = Projection * ModelView * vec4(V_Vertex, 1);
 if(Index == -1)
             {
                 FinalColor = Color;

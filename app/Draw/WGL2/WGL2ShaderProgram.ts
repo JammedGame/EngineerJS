@@ -55,7 +55,6 @@ class WGL2ShaderProgram extends ShaderProgram
         if (Log) { console.log(Log); }
         this.SetShaderCode(VertexShaderCode, FragmentShaderCode);
         this._Compiled = true;
-        console.log(this._ProgramIndexer);
         return true;
     }
     public Activate() : void

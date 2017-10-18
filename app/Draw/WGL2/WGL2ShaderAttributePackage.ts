@@ -31,6 +31,7 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
             this._GL.bindAttribLocation(ProgramIndexer, i, this._Entries[i].ID);
             this._BufferLineLength += this._Entries[i].Size;
         }
+        this._AttributesBound = true;
     }
     public ClearData() : void
     {
@@ -65,7 +66,17 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
             GL.bindVertexArray(this._VertexArray);
             return true;
         }
-        if(this._Activated) this.ClearData();
+        if(this._Activated)
+        {
+            this._Activated = false;
+            for(let i = 0; i < this._Entries.length; i++)
+            {
+                if(!this._Entries[i].Buffer) continue;
+                GL.deleteBuffer(this._Entries[i].Buffer);
+                this._Entries[i].Buffer = null;
+            }
+            GL.deleteVertexArray(this._VertexArray);
+        }
         for(let i = 0; i < this._Entries.length; i++)
         {
             this._Entries[i].Buffer = this.CreateBuffer(this._Entries[i].Data);

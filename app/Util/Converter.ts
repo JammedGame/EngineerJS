@@ -13,7 +13,7 @@ class Convert
         {
             NewArrayBuffer.push(Vertices[i].X);
             if(Relevant > 1) NewArrayBuffer.push(Vertices[i].Y);
-            else if(Relevant > 2) NewArrayBuffer.push(Vertices[i].Z);
+            if(Relevant > 2) NewArrayBuffer.push(Vertices[i].Z);
         }
         return new Float32Array(NewArrayBuffer);
     }
