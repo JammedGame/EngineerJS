@@ -1,6 +1,6 @@
 {
   "name": "engineer-js-test",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "description": "Test version of web renderer for engineer game engine.",
   "main": "build/engineer.js",
   "types": "build/engineer-js.d.ts",
