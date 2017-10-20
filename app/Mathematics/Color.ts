@@ -32,4 +32,7 @@ class Color
     }
     /// TODO
     /// Add some static basic colors for easy creation.
+    public static Empty = Color.FromRGBA(0,0,0,0);
+    public static Black = Color.FromRGBA(0,0,0,255);
+    public static White = Color.FromRGBA(255,255,255,255);
 }
