@@ -184,12 +184,17 @@ class ThreeDrawEngine extends DrawEngine
         else
         {
             let Sprite:Three.Mesh = this.Data[Drawn.ID];
-            if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet || this.Data[Drawn.ID + "_CurrentIndex"] != SpriteData.CurrentIndex)
+            if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet)
             {
-                this.Data[Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
                 this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
                 let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
-                Sprite.material = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
+                Sprite.material["uniforms"].texture.value = Textures[SpriteData.CurrentIndex];
+            }
+            else if(this.Data[Drawn.ID + "_CurrentIndex"] != SpriteData.CurrentIndex)
+            {
+                this.Data[Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
+                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
+                Sprite.material["uniforms"].texture.value = Textures[SpriteData.CurrentIndex];
             }
             Sprite.visible = SpriteData.Active;
             if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, SpriteData.Trans.Translation.Z);

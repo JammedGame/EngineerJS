@@ -84,6 +84,8 @@ class Runner
             }
         }
     }
+    /// TODO
+    /// Export events to separate class.
     private OnRenderFrame() : void
     {
         if(this._Stop) return;

@@ -25,15 +25,17 @@
   },
   "homepage": "https://github.com/ShadySolutions/EngineerJS#readme",
   "devDependencies": {
-    "typescript": "^2.4.1",
-    "webpack": "^3.1.0",
-    "webpack-dev-server": "^2.5.0"
+    "typescript": "^2.5.3",
+    "webpack": "^3.7.1",
+    "webpack-dev-server": "^2.9.2"
   },
   "dependencies": {
-    "@types/howler": "^2.0.2",
-    "@types/three": "^0.84.15",
-    "howler": "^2.0.4",
+    "@types/howler": "^2.0.5",
+    "@types/jimp": "^0.2.1",
+    "@types/three": "^0.84.27",
+    "howler": "^2.0.5",
+    "jimp": "^0.2.28",
     "three": "^0.86.0",
-    "ts-loader": "^2.2.2"
+    "ts-loader": "^2.3.7"
   }
 }
