@@ -185,7 +185,7 @@ class Runner
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
-                        for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+                        for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Sender:Current, Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
                         if(true || Handled)
                         {
                             for(let i = 0; i < EventNames.length; i++) Util.Log.Event(EventNames[i] + " " + Current.ID);

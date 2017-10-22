@@ -1,5 +1,5 @@
 import { Uuid } from "./Uuid";
-import { ImageContainer } from "./ImageContainer";
+import { Image } from "./Image";
 
 class Reader
 {
@@ -22,4 +22,4 @@ class Reader
     }
 }
 
-export  { Reader, Uuid, /*DataStream,*/ ImageContainer };
+export  { Reader, Uuid, Image };
