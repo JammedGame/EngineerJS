@@ -75,12 +75,13 @@ class Runner
         if (this._Current.Type == Engine.SceneType.Scene2D)
         {
             let Current2DScene:Engine.Scene2D  = <Engine.Scene2D>this._Current;
-            for (let i = 0; i < Current2DScene.Sprites.length; i++)
+            let SceneSprites:Engine.Sprite[] = Current2DScene.Sprites;
+            for (let i = 0; i < SceneSprites.length; i++)
             {
-                if (Current2DScene.Sprites[i].SpriteSets.length == 0) continue;
+                if (SceneSprites[i].SpriteSets.length == 0) continue;
                 let FrameUpdateRate:number = this._FrameUpdateRate;
-                if (Current2DScene.Sprites[i].SpriteSets[Current2DScene.Sprites[i].CurrentSpriteSet].Seed != -1) FrameUpdateRate = Current2DScene.Sprites[i].SpriteSets[Current2DScene.Sprites[i].CurrentSpriteSet].Seed;
-                if (this._Seed % FrameUpdateRate == 0) Current2DScene.Sprites[i].RaiseIndex();
+                if (SceneSprites[i].SpriteSets[SceneSprites[i].CurrentSpriteSet].Seed != -1) FrameUpdateRate = SceneSprites[i].SpriteSets[SceneSprites[i].CurrentSpriteSet].Seed;
+                if (this._Seed % FrameUpdateRate == 0) SceneSprites[i].RaiseIndex();
             }
         }
     }
