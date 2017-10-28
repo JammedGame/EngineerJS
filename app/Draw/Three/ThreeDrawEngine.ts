@@ -224,9 +224,10 @@ class ThreeDrawEngine extends DrawEngine
             }
         }
         let TileData = <Engine.Tile>Drawn;
-        if(this.Data[Drawn.ID] == null)
+        if(this.Data[Drawn.ID] == null || TileData.Modified)
         {
             let TileMaterial;
+            TileData.Modified = false;
             if(this.Data[TileData.Collection.ID + "_Tex"] == null)
             {
                 if(TileData.Collection.Images.length > 0)
