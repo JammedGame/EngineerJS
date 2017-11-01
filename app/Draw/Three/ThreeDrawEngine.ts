@@ -143,7 +143,7 @@ class ThreeDrawEngine extends DrawEngine
         TileMaterial.transparent = true;
         return TileMaterial;
     }
-    protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
     {  
         let SpriteData = <Engine.Sprite>Drawn;
         if(this.Data[Drawn.ID] == null)
@@ -153,20 +153,23 @@ class ThreeDrawEngine extends DrawEngine
             let SpriteMaterial;
             if(Drawn.SpriteSets.length > 0)
             {
-                for(let i = 0; i < Drawn.SpriteSets.length; i++)
+                if(this.Data[Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"] == null)
                 {
-                    let TextureLoader = new Three.TextureLoader();
-                    let Textures : Three.Texture[] = [];
-                    this.Data[Drawn.ID + "_Tex_" + i] = Textures;
-                    let TextureUrls : string[] = SpriteData.GetSprites(i);
-                    for(let j = 0; j < TextureUrls.length; j++)
+                    for(let i = 0; i < Drawn.SpriteSets.length; i++)
                     {
-                        let NewTexture = TextureLoader.load(TextureUrls[j]);
-                        NewTexture.flipY = false;
-                        Textures.push(NewTexture);
+                        let TextureLoader = new Three.TextureLoader();
+                        let Textures : Three.Texture[] = [];
+                        this.Data[Drawn.SpriteSets[i].ID + "_Tex"] = Textures;
+                        let TextureUrls : string[] = SpriteData.GetSprites(i);
+                        for(let j = 0; j < TextureUrls.length; j++)
+                        {
+                            let NewTexture = TextureLoader.load(TextureUrls[j]);
+                            NewTexture.flipY = false;
+                            Textures.push(NewTexture);
+                        }
                     }
                 }
-                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
+                let Textures : Three.Texture[] = this.Data[Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
             }
             else SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
@@ -187,14 +190,16 @@ class ThreeDrawEngine extends DrawEngine
             if(this.Data[Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet)
             {
                 this.Data[Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
-                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
+                let Textures : Three.Texture[] = this.Data[Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 Sprite.material["uniforms"].texture.value = Textures[SpriteData.CurrentIndex];
+                Sprite.material["uniforms"].color.value = SpriteData.Paint.ToArray();
             }
             else if(this.Data[Drawn.ID + "_CurrentIndex"] != SpriteData.CurrentIndex)
             {
                 this.Data[Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
-                let Textures : Three.Texture[] = this.Data[Drawn.ID + "_Tex_" + Drawn.CurrentSpriteSet];
+                let Textures : Three.Texture[] = this.Data[Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 Sprite.material["uniforms"].texture.value = Textures[SpriteData.CurrentIndex];
+                Sprite.material["uniforms"].color.value = SpriteData.Paint.ToArray();
             }
             Sprite.visible = SpriteData.Active;
             if(!Drawn.Fixed) Sprite.position.set((this._EngineerScene.Trans.Translation.X + SpriteData.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + SpriteData.Trans.Translation.Y) * this._GlobalScale.Y, SpriteData.Trans.Translation.Z);
