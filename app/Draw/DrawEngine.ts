@@ -31,6 +31,10 @@ class DrawEngine
         let New:DrawEngine = new DrawEngine(this);
         return New;
     }
+    public UpdateResolution(Resolution:Math.Vertex)
+    {
+        // Virtual
+    }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
         // Virtual

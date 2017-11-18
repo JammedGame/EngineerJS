@@ -42,16 +42,20 @@ class Runner
         }
         Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
     }
+    public SetResolution(Resolution:Math.Vertex)
+    {
+        this._DrawEngine.UpdateResolution(Resolution);
+    }
     private Run() : void
     {
         this._Stop = false;
         this.OnRenderFrame();
     }
-    private EngineInit(EngineType:Draw.DrawEngineType) : void
+    private EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     {
         if(EngineType == Draw.DrawEngineType.ThreeJS)
         {
-            this._DrawEngine = new Three.ThreeDrawEngine();
+            this._DrawEngine = new Three.ThreeDrawEngine(null, Resolution);
             this._EngineInit = true;
         }
         else this._EngineInit = false;

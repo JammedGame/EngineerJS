@@ -35,7 +35,13 @@ class ThreeDrawEngine extends DrawEngine
         let Width:number = this._Parent.clientWidth;
         let Height:number = this._Parent.clientHeight;
         this.Renderer.setSize( Width, Height );
-        this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
+        this._GlobalScale = new Math.Vertex(Width / this.Resolution.Y, Height / this.Resolution.Y, 1);
+    }
+    public UpdateResolution(Resolution:Math.Vertex)
+    {
+        // Override
+        this._Resolution = Resolution;
+        this.Resize();
     }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
