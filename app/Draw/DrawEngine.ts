@@ -12,6 +12,7 @@ class DrawEngine
 {
     private _Matrix:Math.MatrixTransformer;
     private _Renderer:any;
+    protected _FixedSize:boolean;
     protected _GlobalScale:Math.Vertex;
     protected _GlobalOffset:Math.Vertex;
     protected _Resolution:Math.Vertex;
@@ -23,6 +24,7 @@ class DrawEngine
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:DrawEngine)
     {
+        this._FixedSize = false;
         Util.Log.Print("EngineerJS Version " + Engine.Settings.Version);
         this._Matrix = new Math.MatrixTransformer();
     }
@@ -31,9 +33,11 @@ class DrawEngine
         let New:DrawEngine = new DrawEngine(this);
         return New;
     }
-    public UpdateResolution(Resolution:Math.Vertex)
+    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     {
         // Virtual
+        this._Resolution = Resolution;
+        if(FixedSize != null) this._FixedSize = FixedSize;
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {

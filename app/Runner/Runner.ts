@@ -16,6 +16,7 @@ class Runner
     private _Next:Engine.Scene;
     private _Game:Engine.Game;
     private _DrawEngine:Draw.DrawEngine;
+    private _Canvas:HTMLCanvasElement;
     public get Game():any { return this._Game; }
     public Data: { [key: string]:any; } = {};
     public constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
@@ -25,6 +26,7 @@ class Runner
         this._Seed = 0;
         this._FrameUpdateRate = 6;
         this._Game = Game;
+        this._Canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.EngineInit(EngineType);
         this.AttachEvents();
     }
@@ -42,9 +44,9 @@ class Runner
         }
         Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
     }
-    public SetResolution(Resolution:Math.Vertex)
+    public SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     {
-        this._DrawEngine.UpdateResolution(Resolution);
+        this._DrawEngine.UpdateResolution(Resolution, FixedSize);
     }
     private Run() : void
     {
@@ -66,11 +68,11 @@ class Runner
         document.addEventListener("keypress", this.OnKeyPress.bind(this), false);
         document.addEventListener("keydown", this.OnKeyDown.bind(this), false);
         document.addEventListener("keyup", this.OnKeyUp.bind(this), false);
-        document.addEventListener("mousedown", this.OnMouseDown.bind(this), false);
-        document.addEventListener("mouseup", this.OnMouseUp.bind(this), false);
-        document.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
-        document.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
-        document.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
+        this._Canvas.addEventListener("mousedown", this.OnMouseDown.bind(this), false);
+        this._Canvas.addEventListener("mouseup", this.OnMouseUp.bind(this), false);
+        this._Canvas.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
+        this._Canvas.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
+        this._Canvas.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
         window.addEventListener("resize", this.OnResize.bind(this), false);
     }
     private UpdateScene() : void

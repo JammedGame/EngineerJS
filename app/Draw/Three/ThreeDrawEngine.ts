@@ -34,13 +34,25 @@ class ThreeDrawEngine extends DrawEngine
     {
         let Width:number = this._Parent.clientWidth;
         let Height:number = this._Parent.clientHeight;
-        this.Renderer.setSize( Width, Height );
-        this._GlobalScale = new Math.Vertex(Width / this.Resolution.Y, Height / this.Resolution.Y, 1);
+        if(!this._FixedSize)
+        {
+            this.Renderer.setSize( Width, Height );
+            this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
+            this._Camera = new Three.OrthographicCamera( 0, Width / this.Resolution.X, 0, Height / this.Resolution.Y, 1, 10 );
+            this._Camera.position.z = 5;
+        }
+        else
+        {
+            this.Renderer.setSize( this.Resolution.X, this.Resolution.Y );
+            this._GlobalScale = new Math.Vertex(1, 1, 1);
+            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 10 );
+            this._Camera.position.z = 5;
+        }
     }
-    public UpdateResolution(Resolution:Math.Vertex)
+    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     {
         // Override
-        this._Resolution = Resolution;
+        super.UpdateResolution(Resolution, FixedSize);
         this.Resize();
     }
     public Load2DScene(Scene:Engine.Scene2D) : void
@@ -89,12 +101,12 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Data["Width"] = Width;
             this.Data["Height"] = Height;
-            this.Renderer.setSize(Width, Height);
+            //this.Renderer.setSize(Width, Height);
         }
         if(this._Camera == null)
         {
-            this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
-            this._Camera.position.z = 5;
+            //this._Camera = new Three.OrthographicCamera( 0, Width, 0, Height, 1, 10 );
+            //this._Camera.position.z = 5;
         }
         this.Load2DScene(Scene);
         this.Renderer.render( this._Scene, this._Camera );
