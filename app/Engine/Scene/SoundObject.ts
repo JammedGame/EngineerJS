@@ -58,4 +58,23 @@ class SoundObject extends SceneObject
     {
         this._Sound.play();
     }
+    public Serialize() : any
+    {
+        // Override
+        let SO = super.Serialize();
+        SO.Autoplay = this._Autoplay;
+        SO.Looped = this._Looped;
+        SO.Volume = this._Volume;
+        SO.Url = this._Url;
+        return SO;
+    }
+    public Deserialize(Data) : void
+    {
+        // Override
+        super.Deserialize(Data);
+        this._Autoplay = Data.Autoplay;
+        this._Looped = Data.Looped;
+        this._Volume = Data.Volume;
+        this.GenerateSound();
+    }
 }

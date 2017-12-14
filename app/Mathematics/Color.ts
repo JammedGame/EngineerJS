@@ -30,6 +30,24 @@ class Color
         New.A = A;
         return New;
     }
+    public Serialize() : any
+    {
+        let C = 
+        {
+            R: this.R,
+            G: this.G,
+            B: this.B,
+            A: this.A
+        };
+        return C;
+    }
+    public Deserialize(Data:any) : void
+    {
+        this.R = Data.R;
+        this.G = Data.G;
+        this.B = Data.B;
+        this.A = Data.A;
+    }
     /// TODO
     /// Add some static basic colors for easy creation.
     public static Empty = Color.FromRGBA(0,0,0,0);

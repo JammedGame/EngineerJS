@@ -38,6 +38,10 @@ class Game
         this.Data[Scene.Name] = Scene;
         this._Scenes.push(Scene);
     }
+    public ContainsScene(Name:string)
+    {
+        return !!this.Data[Name];
+    }
     /// TODO
     /// Create RemoveScene method for whatever reasons
     /// TODO

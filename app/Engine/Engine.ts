@@ -9,5 +9,6 @@ import { Scene2D } from "./Scene/Scene2D";
 import { SceneObjectType, SceneObject } from "./Scene/SceneObject";
 import { SoundObject } from "./Scene/SoundObject";
 import { Settings, Quality } from "./Settings";
+import { Deserializer } from "./Scene/Deserializer";
 
-export { DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, KeyType, EventPackage, Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality };
+export { DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, KeyType, EventPackage, Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Deserializer };

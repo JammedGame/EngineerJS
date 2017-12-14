@@ -11,8 +11,6 @@ import { DrawEngine } from "./../DrawEngine";
 class ThreeDrawEngine extends DrawEngine
 {
     private _Checked:string[];
-    private _Target:HTMLCanvasElement;
-    private _Parent:HTMLCanvasElement;
     private _Scene:Three.Scene;
     private _EngineerScene:Engine.Scene2D;
     private _Camera:Three.Camera;
@@ -24,8 +22,8 @@ class ThreeDrawEngine extends DrawEngine
         this._GlobalOffset = new Math.Vertex(0,0,0);
         if(Resolution) this._Resolution = Resolution;
         else this._Resolution = new Math.Vertex(1920, 1080, 1);
-        this._Target = document.getElementById("canvas") as HTMLCanvasElement;
-        this._Parent = document.getElementById("canvas-parent") as HTMLCanvasElement;
+        this._Target = document.getElementById("canvas");
+        this._Parent = document.getElementById("canvas-parent");
         this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this.Renderer.setPixelRatio( window.devicePixelRatio );
         this.Resize();

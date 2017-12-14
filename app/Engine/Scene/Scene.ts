@@ -6,6 +6,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
 import { SceneObject } from "./SceneObject";
+import { Deserializer } from "./Deserializer";
 
 enum SceneType
 {
@@ -85,5 +86,37 @@ class Scene
             }
         }
         return Objects;
+    }
+    public Serialize() : any
+    {
+        // Virtual
+        let S =
+        {
+            ID: this._ID,
+            Name: this._Name,
+            Type: <number>this._Type,
+            BackColor: this._BackColor.Serialize(),
+            Objects: [],
+            Data: this.Data
+        };
+        for(let i in this._Objects)
+        {
+            S.Objects.push(this._Objects[i].Serialize());
+        }
+        return S;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Virtual
+        this._ID = Data.ID;
+        this._Name = Data.Name;
+        this._Type = <SceneType> Data.Type;
+        this._BackColor.Deserialize(Data.BackColor);
+        this._Objects = [];
+        this.Data = Data.Data;
+        for(let i in Data.Objects)
+        {
+            this._Objects.push(Deserializer.DeserializeSceneObject(Data.Objects[i]));
+        }
     }
 }

@@ -53,4 +53,24 @@ class DrawObject extends SceneObject
         let New:DrawObject = new DrawObject(this);
         return New;
     }
+    public Serialize() : any
+    {
+        // Override
+        let DO = super.Serialize();
+        DO.Fixed = this._Fixed;
+        DO.Active = this._Active;
+        DO.DrawType = <number>this._DrawType;
+        DO.Transformations = this._Trans.Serialize();
+        return DO;
+    }
+    public Deserialize(Data) : void
+    {
+        // Override
+        super.Deserialize(Data);
+        this._Fixed = Data.Fixed;
+        this._Active = Data.Active;
+        this._DrawType = <DrawObjectType>Data.DrawType;
+        this._Trans = new Math.Transformation();
+        this._Trans.Deserialize(Data.Transformations);
+    }
 }

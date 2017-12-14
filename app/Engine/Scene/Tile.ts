@@ -44,6 +44,30 @@ class Tile extends DrawObject
     {
         return new Tile(this);
     }
+    public Serialize() : any
+    {
+        // Override
+        let T = super.Serialize();
+        T.Paint = this._Paint.Serialize();
+        T.Collection = this._Collection.Serialize();
+        T.SubTiles = [];
+        for(let i in this._SubTiles)
+        {
+            T.SubTiles.push(this._SubTiles[i].Serialize());
+        }
+        return T;
+    }
+    public Deserialize(Data) : void
+    {
+        // Override
+        this._Paint.Deserialize(Data.Paint);
+        this._Collection.Deserialize(Data.Collection);
+        for(let i in Data.SubTiles)
+        {
+            let ST:Tile = new Tile();
+            ST.Deserialize(Data.SubTiles[i]);
+        }
+    }
 }
 class TileCollection
 {
@@ -69,5 +93,19 @@ class TileCollection
     public Copy() : TileCollection
     {
         return new TileCollection(this);
+    }
+    public Serialize() : any
+    {
+        let TC =
+        {
+            ID: this._ID,
+            Images: this._Images
+        };
+        return TC;
+    }
+    public Deserialize(Data) : void
+    {
+        this._ID = Data.ID;
+        this._Images = Data.Images;
     }
 }

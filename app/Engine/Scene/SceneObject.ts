@@ -47,4 +47,24 @@ class SceneObject
     {
         return new SceneObject(this);
     }
+    public Serialize() : any
+    {
+        // Virtual
+        let SO =
+        {
+            ID: this._ID,
+            Name: this._Name,
+            Type: <number> this._Type,
+            Data: this.Data
+        };
+        return SO;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Virtual
+        this._ID = Data.ID;
+        this._Name = Data.Name;
+        this._Type = <SceneObjectType>Data.Type;
+        this.Data = Data.Data;
+    }
 }

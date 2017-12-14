@@ -33,4 +33,20 @@ class Transformation
         let New:Transformation = new Transformation(this);
         return New;
     }
+    public Serialize() : any
+    {
+        let T =
+        {
+            Translation: this._Translation.Serialize(),
+            Rotation: this._Rotation.Serialize(),
+            Scale: this._Scale.Serialize()
+        };
+        return T;
+    }
+    public Deserialize(Data) : void
+    {
+        this._Translation = new Vertex(Data.Translation.X, Data.Translation.Y, Data.Translation.Z);
+        this._Rotation = new Vertex(Data.Rotation.X, Data.Rotation.Y, Data.Rotation.Z);
+        this._Scale = new Vertex(Data.Scale.X, Data.Scale.Y, Data.Scale.Z);
+    }
 }
