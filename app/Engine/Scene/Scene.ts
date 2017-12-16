@@ -97,13 +97,24 @@ class Scene
             Type: <number>this._Type,
             BackColor: this._BackColor.Serialize(),
             Objects: [],
-            Data: this.Data
+            Data: {}
         };
         for(let i in this._Objects)
         {
             S.Objects.push(this._Objects[i].Serialize());
         }
         return S;
+    }
+    public SerializeData(Data:any)
+    {
+        let NewData = {};
+        for(let key in Data)
+        {
+            if(key.startsWith("EDITOR_")) continue;
+            if(key.startsWith("TOYBOX_")) continue;
+            NewData[key] = Data;
+        }
+        return NewData;
     }
     public Deserialize(Data:any) : void
     {
@@ -116,7 +127,7 @@ class Scene
         this.Data = Data.Data;
         for(let i in Data.Objects)
         {
-            this._Objects.push(Deserializer.DeserializeSceneObject(Data.Objects[i]));
+            this.AddSceneObject(Deserializer.DeserializeSceneObject(Data.Objects[i]));
         }
     }
 }

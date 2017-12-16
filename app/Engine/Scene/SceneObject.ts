@@ -55,9 +55,20 @@ class SceneObject
             ID: this._ID,
             Name: this._Name,
             Type: <number> this._Type,
-            Data: this.Data
+            Data: this.SerializeData(this.Data)
         };
         return SO;
+    }
+    public SerializeData(Data:any)
+    {
+        let NewData = {};
+        for(let key in Data)
+        {
+            if(key.startsWith("EDITOR_")) continue;
+            if(key.startsWith("TOYBOX_")) continue;
+            NewData[key] = Data;
+        }
+        return NewData;
     }
     public Deserialize(Data:any) : void
     {

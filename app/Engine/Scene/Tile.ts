@@ -60,6 +60,7 @@ class Tile extends DrawObject
     public Deserialize(Data) : void
     {
         // Override
+        super.Deserialize(Data);
         this._Paint.Deserialize(Data.Paint);
         this._Collection.Deserialize(Data.Collection);
         for(let i in Data.SubTiles)
