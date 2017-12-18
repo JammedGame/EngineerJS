@@ -53,6 +53,60 @@ class ThreeDrawEngine extends DrawEngine
         super.UpdateResolution(Resolution, FixedSize);
         this.Resize();
     }
+    private CreateGrid(Snap:number)
+    {
+        if(!this.Data["TOYBOX_GRID_LINE_MAIN"])
+        {
+            this.Data["TOYBOX_GRID_LINE_MAIN"] = new Three.LineBasicMaterial({ color: 0x888888 });
+            this.Data["TOYBOX_GRID_LINE_SIDE"] = new Three.LineBasicMaterial({ color: 0x333333 });
+        }
+        if(this.Data["TOYBOX_GRID_LINES"])
+        {
+            for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].lenght; i++)
+            {
+                this._Scene.remove(this.Data["TOYBOX_GRID_LINES"][i]);
+            }
+        }
+        this.Data["TOYBOX_GRID_LINES"] = [];
+        for(let i = -5; i <= 5; i++)
+        {
+            if(i == 0) continue;
+            let HorizontalLineGeometry = new Three.Geometry();
+            HorizontalLineGeometry.vertices.push(new Three.Vector3(-5 * Snap, i * Snap, -0.5));
+            HorizontalLineGeometry.vertices.push(new Three.Vector3(5 * Snap, i * Snap, -0.5));
+            let HorizontalLine = new Three.Line(HorizontalLineGeometry, this.Data["TOYBOX_GRID_LINE_SIDE"]);
+            this._Scene.add(HorizontalLine);
+            this.Data["TOYBOX_GRID_LINES"].push(HorizontalLine);
+            let VerticalLineGeometry = new Three.Geometry();
+            VerticalLineGeometry.vertices.push(new Three.Vector3(i * Snap, -5 * Snap, -0.5));
+            VerticalLineGeometry.vertices.push(new Three.Vector3(i * Snap, 5 * Snap, -0.5));
+            let VerticalLine = new Three.Line(VerticalLineGeometry, this.Data["TOYBOX_GRID_LINE_SIDE"]);
+            this._Scene.add(VerticalLine);
+            this.Data["TOYBOX_GRID_LINES"].push(VerticalLine);
+        }
+        let HorizontalLineGeometry = new Three.Geometry();
+        HorizontalLineGeometry.vertices.push(new Three.Vector3(-5 * Snap, 0, -0.5));
+        HorizontalLineGeometry.vertices.push(new Three.Vector3(5 * Snap, 0, -0.5));
+        let HorizontalLine = new Three.Line(HorizontalLineGeometry, this.Data["TOYBOX_GRID_LINE_MAIN"]);
+        this._Scene.add(HorizontalLine);
+        this.Data["TOYBOX_GRID_LINES"].push(HorizontalLine);
+        let VerticalLineGeometry = new Three.Geometry();
+        VerticalLineGeometry.vertices.push(new Three.Vector3(0, -5 * Snap, -0.5));
+        VerticalLineGeometry.vertices.push(new Three.Vector3(0, 5 * Snap, -0.5));
+        let VerticalLine = new Three.Line(VerticalLineGeometry, this.Data["TOYBOX_GRID_LINE_MAIN"]);
+        this._Scene.add(VerticalLine);
+        this.Data["TOYBOX_GRID_LINES"].push(VerticalLine);
+    }
+    private UpdateGrid()
+    {
+        if(this.Data["TOYBOX_GRID_LINES"])
+        {
+            for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].length; i++)
+            {
+                this.Data["TOYBOX_GRID_LINES"][i].position.set(this._EngineerScene.Trans.Translation.X * this._GlobalScale.X, this._EngineerScene.Trans.Translation.Y * this._GlobalScale.Y, 0);
+            }
+        }
+    }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         // Override
@@ -64,6 +118,15 @@ class ThreeDrawEngine extends DrawEngine
         this._EngineerScene = Scene;
         this._EngineerScene.Events.Resize.push(this.Resize.bind(this));
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
+        if(this._EngineerScene.Data["EDITOR_GRID"] == "Classic" && !this.Data["TOYBOX_GRID"])
+        {
+            this.CreateGrid(100);
+            this.Data["TOYBOX_GRID"] = true;
+        }
+        if(this._EngineerScene.Data["EDITOR_GRID"] != null)
+        {
+            this.UpdateGrid();
+        }
         for(let i = 0; i < Scene.Objects.length; i++)
         {
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
@@ -86,6 +149,10 @@ class ThreeDrawEngine extends DrawEngine
             for(let i = 0; i < this._Checked.length; i++)
             {
                 if(this._Checked[i] == Sprite.uuid) Found = true;
+            }
+            for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].length; i++)
+            {
+                if(this.Data["TOYBOX_GRID_LINES"][i].uuid == Sprite.uuid) Found = true;
             }
             if(!Found)
             {
@@ -122,12 +189,14 @@ class ThreeDrawEngine extends DrawEngine
     }
     private GenerateSpriteMaterial(Sprite:Engine.Sprite, Texture:Three.Texture) : Three.ShaderMaterial
     {
+        let Index = Sprite.Index();
+        if(Sprite.SpriteSets.length == 0) Index = -1;
         let SpriteMaterial = new Three.ShaderMaterial
         (
             {
                 uniforms:
                 {
-                    index: { type:"i", value:Sprite.Index() },
+                    index: { type:"i", value:Index },
                     color: { type:"v4", value:Sprite.Paint.ToArray() },
                     texture: { type:"tv", value: Texture }
                 },
@@ -259,7 +328,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             let TileMaterial;
             TileData.Modified = false;
-            if(this.Data["TOYBOX_" + TileData.Collection.ID + "_Tex"] == null)
+            if(this.Data["TOYBOX_" + TileData.Collection.ID + "_Tex"] == null || TileData.Modified)
             {
                 if(TileData.Collection.Images.length > 0)
                 {
