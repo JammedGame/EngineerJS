@@ -1,6 +1,6 @@
-export  { Buffer };
+export  { BufferUtil };
 
-class Buffer
+class BufferUtil
 {
     public static Append(Buffer1:ArrayBuffer, Buffer2:ArrayBuffer)
     {

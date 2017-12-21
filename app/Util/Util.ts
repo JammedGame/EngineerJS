@@ -1,7 +1,7 @@
 import { Convert } from "./Converter";
-import { Collision } from "./Collision";
-import { SceneObject } from "./SceneObject";
-import { Buffer } from "./Buffer";
+import { CollisionUtil } from "./Collision";
+import { SceneObjectUtil } from "./SceneObject";
+import { BufferUtil } from "./Buffer";
 import { Log } from "./Log";
 
-export { Convert, Collision, Buffer, Log };
+export { Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log };

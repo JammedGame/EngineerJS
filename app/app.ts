@@ -19,6 +19,11 @@ import { Transformation } from "./Mathematics/Transformation"
 import { MatrixMode, Matrix, MatrixTransformer } from "./Mathematics/MatrixTransformer"
 import { Color } from "./Mathematics/Color"
 import { Collision, CollisionType, CollisionValue, ColliderObject } from "./Mathematics/Collision"
+import { Convert } from "./Util/Converter";
+import { CollisionUtil } from "./Util/Collision";
+import { SceneObjectUtil } from "./Util/SceneObject";
+import { BufferUtil } from "./Util/Buffer";
+import { Log } from "./Util/Log";
 import { Runner } from "./Runner/Runner";
 
 export
@@ -29,5 +34,6 @@ export
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,
-    Runner
+    Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
+    Runner,
 };
