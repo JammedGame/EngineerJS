@@ -122,6 +122,39 @@ class Sprite extends DrawObject
         if(this._SpriteSets.length == 0) return [];
         return this._SpriteSets[Set].Sprites;
     }
+    public Serialize() : any
+    {
+        // Override
+        let S = super.Serialize();
+        S.Paint = this._Paint.Serialize();
+        S.SpriteSets = [];
+        for(let i in this._SpriteSets)
+        {
+            S.SpriteSets.push(this._SpriteSets[i].Serialize());
+        }
+        S.SubSprites = [];
+        for(let i in this._SubSprites)
+        {
+            S.SubSprites.push(this._SubSprites[i].Serialize());
+        }
+        return S;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Override
+        super.Deserialize(Data);
+        this._Paint.Deserialize(Data.Paint);
+        for(let i in Data.SpriteSets)
+        {
+            let SS:SpriteSet = new SpriteSet();
+            SS.Deserialize(Data.SpriteSets[i]);
+        }
+        for(let i in Data.SubSprites)
+        {
+            let SS:Sprite = new Sprite();
+            SS.Deserialize(Data.SubSprites[i]);
+        }
+    }
 }
 class SpriteSet
 {
@@ -160,4 +193,22 @@ class SpriteSet
         let New:SpriteSet = new SpriteSet(this);
         return New;
     }
+    public Serialize() : any
+    {
+        let SS = 
+        {
+            ID: this._ID,
+            Name: this._Name,
+            Seed: this._Seed,
+            Sprites: this._Sprites
+        };
+        return SS;
+    }
+    public Deserialize(Data:any) : void
+    {
+        this._ID = Data.ID;
+        this._Name = Data.Name;
+        this._Seed = Data.Seed;
+        this._Sprites = Data.Sprites;
+    } 
 }

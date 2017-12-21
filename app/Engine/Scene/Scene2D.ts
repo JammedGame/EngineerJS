@@ -58,4 +58,17 @@ class Scene2D extends Scene
             }
         }
     }
+    public Serialize() : any
+    {
+        // Override
+        let S2D = super.Serialize();
+        S2D.Transformations = this._Trans.Serialize();
+        return S2D;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Override
+        super.Deserialize(Data);
+        this._Trans.Deserialize(Data.Transformations);
+    }
 }
