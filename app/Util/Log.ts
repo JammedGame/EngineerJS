@@ -7,7 +7,7 @@ class Log
     public static LogError:boolean = true;
     public static LogWarning:boolean = true;
     public static LogEvent:boolean = false;
-    public static Print(Message:any)
+    public static Print(Message:any) : void
     {
         if(!Log.LogPrint) return;
         console.log(" - - - ");
@@ -15,7 +15,7 @@ class Log
         console.info(Message);
         console.log(" - - - ");
     };
-    public static Info(Message:any)
+    public static Info(Message:any) : void
     {
         if(!Log.LogInfo) return;
         console.log(" - - - ");
@@ -23,7 +23,7 @@ class Log
         console.info(Message);
         console.log(" - - - ");
     };
-    public static Error(Message:any)
+    public static Error(Message:any) : void
     {
         if(!Log.LogError) return;
         console.log(" - - - ");
@@ -31,7 +31,7 @@ class Log
         console.error(Message);
         console.log(" - - - ");
     };
-    public static Warning(Message:any)
+    public static Warning(Message:any) : void
     {
         if(!Log.LogWarning) return;
         console.log(" - - - ");
@@ -39,7 +39,7 @@ class Log
         console.warn(Message);
         console.log(" - - - ");
     };
-    public static Event(Message:any)
+    public static Event(Message:any) : void
     {
         if(!Log.LogEvent) return;
         console.log(" - - - ");

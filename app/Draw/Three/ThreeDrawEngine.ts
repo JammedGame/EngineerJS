@@ -150,9 +150,12 @@ class ThreeDrawEngine extends DrawEngine
             {
                 if(this._Checked[i] == Sprite.uuid) Found = true;
             }
-            for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].length; i++)
+            if(this.Data["TOYBOX_GRID"] != null)
             {
-                if(this.Data["TOYBOX_GRID_LINES"][i].uuid == Sprite.uuid) Found = true;
+                for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].length; i++)
+                {
+                    if(this.Data["TOYBOX_GRID_LINES"][i].uuid == Sprite.uuid) Found = true;
+                }
             }
             if(!Found)
             {

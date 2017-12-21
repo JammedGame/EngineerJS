@@ -1,15 +1,15 @@
-export  { Collision };
+export  { CollisionUtil };
 
 import * as Data from "./../Data/Data";
 import * as Engine from "./../Engine/Engine";
 import * as Math from "./../Mathematics/Mathematics";
 
-class Collision
+class CollisionUtil
 {
     public static Check(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
     {
-        let Collider1:Math.ColliderObject = Collision.CreateColliderObject(Object1);
-        let Collider2:Math.ColliderObject = Collision.CreateColliderObject(Object2);
+        let Collider1:Math.ColliderObject = CollisionUtil.CreateColliderObject(Object1);
+        let Collider2:Math.ColliderObject = CollisionUtil.CreateColliderObject(Object2);
         return Math.Collision.Check(Collider1, Collider2);
     }
     public static CreateColliderObject(Object:Engine.DrawObject) : Math.ColliderObject
@@ -31,8 +31,8 @@ class Collision
         for(let i = 0; i < Colliders.length; i++)
         {
             if(Object.ID == Colliders[i].ID) continue;
-            let Collider1 = Collision.CreateColliderObject(Object);
-            let Collider2 = Collision.CreateColliderObject(Colliders[i]);
+            let Collider1 = CollisionUtil.CreateColliderObject(Object);
+            let Collider2 = CollisionUtil.CreateColliderObject(Colliders[i]);
             let CollisionValue = Math.Collision.Check(Collider1, Collider2);
             if(CollisionValue.Collision)
             {

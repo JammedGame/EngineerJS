@@ -1,10 +1,10 @@
-export  { SceneObject };
+export  { SceneObjectUtil };
 
 import * as Data from "./../Data/Data";
 import * as Engine from "./../Engine/Engine";
 import * as Math from "./../Mathematics/Mathematics";
 
-class SceneObject
+class SceneObjectUtil
 {
     public static CreateSprite(Name?:string, Images?:string[], Position?:Math.Vertex, Size?:Math.Vertex) : Engine.Sprite
     {
