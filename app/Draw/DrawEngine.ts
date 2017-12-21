@@ -35,7 +35,7 @@ class DrawEngine
         let New:DrawEngine = new DrawEngine(this);
         return New;
     }
-    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean)
+    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean) : void
     {
         // Virtual
         this._Resolution = Resolution;

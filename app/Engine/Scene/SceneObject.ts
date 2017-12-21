@@ -4,6 +4,7 @@ import * as Data from "./../../Data/Data";
 import * as Mathematics from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
+import { Serialization } from "./../../Data/Serialization";
 
 enum SceneObjectType
 {
@@ -55,20 +56,9 @@ class SceneObject
             ID: this._ID,
             Name: this._Name,
             Type: <number> this._Type,
-            Data: this.SerializeData(this.Data)
+            Data: Serialization.CleanData(this.Data)
         };
         return SO;
-    }
-    public SerializeData(Data:any)
-    {
-        let NewData = {};
-        for(let key in Data)
-        {
-            if(key.startsWith("EDITOR_")) continue;
-            if(key.startsWith("TOYBOX_")) continue;
-            NewData[key] = Data;
-        }
-        return NewData;
     }
     public Deserialize(Data:any) : void
     {

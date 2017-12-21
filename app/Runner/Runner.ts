@@ -131,19 +131,19 @@ class Runner
     private OnKeyPress(event) : void
     {
         Util.Log.Event("KeyPress");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyPress", this._Game, this.PackEventArgs(event));
     }
     private OnKeyDown(event) : void
     {
         Util.Log.Event("KeyDown");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyDown", this._Game, this.PackEventArgs(event));
     }
     private OnKeyUp(event) : void
     {
         Util.Log.Event("KeyUp");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
+        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyUp", this._Game, this.PackEventArgs(event));
     }
     private OnMouseDown(event) : void

@@ -6,7 +6,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
 import { SceneObject } from "./SceneObject";
-import { Deserializer } from "./Deserializer";
+import { Serialization } from "./../../Data/Serialization";
 
 enum SceneType
 {
@@ -105,17 +105,6 @@ class Scene
         }
         return S;
     }
-    public SerializeData(Data:any)
-    {
-        let NewData = {};
-        for(let key in Data)
-        {
-            if(key.startsWith("EDITOR_")) continue;
-            if(key.startsWith("TOYBOX_")) continue;
-            NewData[key] = Data;
-        }
-        return NewData;
-    }
     public Deserialize(Data:any) : void
     {
         // Virtual
@@ -127,7 +116,7 @@ class Scene
         this.Data = Data.Data;
         for(let i in Data.Objects)
         {
-            this.AddSceneObject(Deserializer.DeserializeSceneObject(Data.Objects[i]));
+            this.AddSceneObject(Serialization.DeserializeSceneObject(Data.Objects[i]));
         }
     }
 }
