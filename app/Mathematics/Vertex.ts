@@ -75,6 +75,13 @@ class Vertex
         this.Scalar(Divider);
         return this;
     }
+    public Absolute() : Vertex
+    {
+        this.X = Math.abs(this.X);
+        this.Y = Math.abs(this.Y);
+        this.Z = Math.abs(this.Z);
+        return this;
+    }
     public ToArray() : number[]
     {
         return [this.X, this.Y, this.Z];
@@ -111,5 +118,15 @@ class Vertex
     public static Angle(V1:Vertex, V2:Vertex) : number
     {
         return Vertex.CalculateAngle(new Vertex(0,1,0), new Vertex(V2.X - V1.X, V2.Y - V1.Y, V2.Z - V1.Z));
+    }
+    public Serialize() : any
+    {
+        let V = 
+        {
+            X: this.X,
+            Y: this.Y,
+            Z: this.Z
+        };
+        return V;
     }
 }
