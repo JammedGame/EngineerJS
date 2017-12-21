@@ -8,7 +8,7 @@ enum Quality
 }
 class Settings
 {
-    public static Version:string = "0.0.34";
+    public static Version:string = "0.0.35";
     public static LibPath:string = "/Resources/";
     public static Graphics:Quality = Quality.High;
 }
