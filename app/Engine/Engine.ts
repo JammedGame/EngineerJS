@@ -10,4 +10,4 @@ import { SceneObjectType, SceneObject } from "./Scene/SceneObject";
 import { SoundObject } from "./Scene/SoundObject";
 import { Settings, Quality } from "./Settings";
 
-export { DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage, Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Deserializer };
+export { DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage, Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality };
