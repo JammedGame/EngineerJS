@@ -118,6 +118,7 @@ class Runner
             MouseButton:<Engine.MouseButton>event.button,
             Location:this._DrawEngine.TransformToCanvas(event.offsetX, event.offsetY),
             Delta:event.wheelDelta,
+            KeyCode:event.keyCode,
             Width:window.innerWidth,
             Height:window.innerHeight
         }
@@ -131,19 +132,16 @@ class Runner
     private OnKeyPress(event) : void
     {
         Util.Log.Event("KeyPress");
-        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyPress", this._Game, this.PackEventArgs(event));
     }
     private OnKeyDown(event) : void
     {
         Util.Log.Event("KeyDown");
-        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyDown", this._Game, this.PackEventArgs(event));
     }
     private OnKeyUp(event) : void
     {
         Util.Log.Event("KeyUp");
-        let KeyCode = event.keyCode;
         this._Current.Events.Invoke("KeyUp", this._Game, this.PackEventArgs(event));
     }
     private OnMouseDown(event) : void
