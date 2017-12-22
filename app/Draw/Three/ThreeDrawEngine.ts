@@ -36,7 +36,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Renderer.setSize( Width, Height );
             this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
-            this._Camera = new Three.OrthographicCamera( 0, Width / this.Resolution.X, 0, Height / this.Resolution.Y, 1, 10 );
+            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 10 );
             this._Camera.position.z = 5;
         }
         else
@@ -260,7 +260,7 @@ class ThreeDrawEngine extends DrawEngine
     {  
         // Override
         let SpriteData = <Engine.Sprite>Drawn;
-        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
+        if(this.Data["TOYBOX_" + Drawn.ID] == null)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
@@ -278,12 +278,12 @@ class ThreeDrawEngine extends DrawEngine
         }
         else
         {
+            let Sprite:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
             if(Drawn.Modified)
             {
-                this.LoadSpriteMaterial(Scene, Drawn);
+                Sprite.material = this.LoadSpriteMaterial(Scene, Drawn);
                 Drawn.Modified = false;
             }
-            let Sprite:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
             if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != SpriteData.CurrentSpriteSet)
             {
                 this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
