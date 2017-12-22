@@ -35,8 +35,8 @@ class ThreeDrawEngine extends DrawEngine
         if(!this._FixedSize)
         {
             this.Renderer.setSize( Width, Height );
-            this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
-            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 10 );
+            this._GlobalScale = new Math.Vertex(this.Resolution.X / Width, this.Resolution.Y / Height, 1);
+            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X * this._GlobalScale.X, 0, this.Resolution.Y * this._GlobalScale.Y, 1, 10 );
             this._Camera.position.z = 5;
         }
         else
