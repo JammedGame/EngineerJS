@@ -260,7 +260,7 @@ class ThreeDrawEngine extends DrawEngine
     {  
         // Override
         let SpriteData = <Engine.Sprite>Drawn;
-        if(this.Data["TOYBOX_" + Drawn.ID] == null)
+        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = SpriteData.CurrentSpriteSet;
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = SpriteData.CurrentIndex;
