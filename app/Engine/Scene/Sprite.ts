@@ -32,11 +32,12 @@ class Sprite extends DrawObject
         this._BackUpSpriteSet = -1;
         if(Old != null)
         {
-            this._SpriteSets = Old._SpriteSets;
+            this._SpriteSets = [];
+            for(let i = 0; i < Old._SpriteSets.length; i++) this._SpriteSets.push(Old._SpriteSets[i].Copy());
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
             this.Trans.Scale = Old.Trans.Scale.Copy();
-            this._Paint = Old._Paint;
+            this._Paint = Old._Paint.Copy();
         }
         else
         {
