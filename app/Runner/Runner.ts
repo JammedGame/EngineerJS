@@ -197,11 +197,11 @@ class Runner
                 {
                     let Current:Engine.DrawObject = <Engine.DrawObject>this._Current.Objects[i];
                     let Trans:Math.Vertex = Current.Trans.Translation;
-                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 0);
+                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
                     let Scale:Math.Vertex = Current.Trans.Scale;
                     let X:number = event.offsetX;
                     let Y:number = event.offsetY;
-                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 1);
+                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 1);
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
