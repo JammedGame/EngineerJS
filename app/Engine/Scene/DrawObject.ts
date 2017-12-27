@@ -8,7 +8,8 @@ enum DrawObjectType
 {
     Undefined = 0,
     Sprite = 1,
-    Tile = 2
+    Tile = 2,
+    Light = 3
 }
 class DrawObject extends SceneObject
 {

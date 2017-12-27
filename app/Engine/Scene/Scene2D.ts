@@ -45,7 +45,7 @@ class Scene2D extends Scene
         // Override
         if(Object.Type == SceneObjectType.Drawn)
         {
-            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile)
+            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile || (<DrawObject>Object).DrawType == DrawObjectType.Light)
             {
                 this.Data[Object.ID] = Object;
                 this.Objects.push(Object);

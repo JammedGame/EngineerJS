@@ -31,7 +31,7 @@ class Tile extends DrawObject
         {
             this._Index = Old._Index;
             this._Collection = Old._Collection;
-            this._Paint = Old._Paint;
+            this._Paint = Old._Paint.Copy();
         }
         else
         {
