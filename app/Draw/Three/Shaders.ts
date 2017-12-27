@@ -67,23 +67,25 @@ class ThreeJSShaders
                 finalColor = color * texture2D(texture, vUv);
             }
             vec3 SurfacePosition = vPosition;
+            vec3 finalLight = vec3(0.3,0.3,0.3);
             for(int i = 0; i < MAX_LIGHTS; i++)
             {
                 if(intensities[i] > 0.0)
                 {
                     vec3 lightLocation = locations[i];
                     vec3 distance = lightLocation - SurfacePosition;
-                    vec3 surfaceToCamera = normalize(lightLocation - SurfacePosition);
+                    vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
                     distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
                     float distanceToLight = length(distance);
                     float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
                     vec4 normalCoded = texture2D(normalMap, vUv);
                     vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
-                    float shot = 1.0 - length(surfaceToCamera - normal);
-                    finalColor = finalColor * lightColors[i];
-                    finalColor = vec4(finalColor.rgb * currentAttenuation * shot, finalColor.a);
+                    float shot = length(surfaceToCamera - normal);
+                    currentAttenuation = intensities[i] * currentAttenuation * shot;
+                    finalLight = vec3(finalLight + currentAttenuation * lightColors[i].rgb);
                 }
             }
+            finalColor = vec4(finalLight * finalColor.rgb, finalColor.a);
             gl_FragColor = finalColor;
         }
         `;
