@@ -5,7 +5,8 @@ import * as Util from "./../../Util/Util";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
-import { SceneObject } from "./SceneObject";
+import { SceneObject, SceneObjectType } from "./SceneObject";
+import { DrawObject, DrawObjectType } from "./DrawObject";
 import { Serialization } from "./../../Data/Serialization";
 
 enum SceneType
@@ -87,6 +88,21 @@ class Scene
         }
         return Objects;
     }
+    public GetObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    {  
+        let Objects:any[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn)  
+            {  
+                if((<DrawObject>this.Objects[i]).DrawType == Type)  
+                {  
+                    Objects.push(this.Objects[i]);  
+                }  
+            }  
+        }  
+        return Objects;  
+    }  
     public Serialize() : any
     {
         // Virtual
