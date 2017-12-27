@@ -60,6 +60,12 @@ class LightAttenuation
     private _Constant:number;
     private _Linear:number;
     private _Quadratic:number;
+    public get Constant():number { return this._Constant; }
+    public set Constant(value:number) { this._Constant = value; }
+    public get Linear():number { return this._Linear; }
+    public set Linear(value:number) { this._Linear = value; }
+    public get Quadratic():number { return this._Quadratic; }
+    public set Quadratic(value:number) { this._Quadratic = value; }
     public constructor(Old?:LightAttenuation, Constant?:number, Linear?:number, Quadratic?:number)
     {
         if(Old != null)

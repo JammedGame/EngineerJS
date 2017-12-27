@@ -108,6 +108,28 @@ export class Sprite extends DrawObject
     Deserialize(Data:any) : void
 }
 
+export class LitSprite extends Sprite
+{
+    NormalSets:SpriteSet[];
+    constructor(Old?:LitSprite);
+}
+
+export class LightAttenuation
+{
+    Constant:number;
+    Linear:number;
+    Quadratic:number;
+    constructor(Old?:LightAttenuation, Constant?:number, Linear?:number, Quadratic?:number);
+}
+
+export class Light extends DrawObject
+{
+    Intensity:number;
+    Paint:Math.Color;
+    Attenuation:LightAttenuation;
+    constructor(Old?:Light);
+}
+
 export class TileCollection
 {
     ID:string;
