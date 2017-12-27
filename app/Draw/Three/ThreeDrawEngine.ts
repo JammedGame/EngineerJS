@@ -211,9 +211,44 @@ class ThreeDrawEngine extends DrawEngine
                         Textures.push(NewTexture);
                     }
                 }
+                if(Drawn.SpriteType == Engine.SpriteType.Lit)
+                {
+                    let LitDrawn = <Engine.LitSprite>Drawn;
+                    for(let i = 0; i < LitDrawn.NormalSets.length; i++)
+                    {
+                        let TextureLoader = new Three.TextureLoader();
+                        let Textures : Three.Texture[] = [];
+                        this.Data["TOYBOX_" + LitDrawn.NormalSets[i].ID + "_Normal"] = Textures;
+                        let TextureUrls : string[] = LitDrawn.GetNormalSprites(i);
+                        for(let j = 0; j < TextureUrls.length; j++)
+                        {
+                            let NewTexture = TextureLoader.load(TextureUrls[j]);
+                            NewTexture.flipY = false;
+                            Textures.push(NewTexture);
+                        }
+                    }
+                }
             }
-            let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
-            SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, [Textures[SpriteData.CurrentIndex]]);
+            if(Drawn.SpriteType == Engine.SpriteType.Default)
+            {
+                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
+                SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, [Textures[SpriteData.CurrentIndex]]);
+            }
+            else if(Drawn.SpriteType == Engine.SpriteType.Lit)
+            {
+                let LitDrawn = <Engine.LitSprite>Drawn;
+                if(LitDrawn.SpriteSets.length != LitDrawn.NormalSets.length)
+                {
+                    Util.Log.Warning("LitSprite Sets length mismatch.");
+                    SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, null);
+                }
+                else
+                {
+                    let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
+                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + LitDrawn.NormalSets[Drawn.CurrentSpriteSet].ID + "_Normal"];
+                    SpriteMaterial = ThreeMaterialGenerator.GenerateLitSpriteMaterial(this._EngineerScene, LitDrawn, [Textures[SpriteData.CurrentIndex], Normals[SpriteData.CurrentIndex]]);
+                }
+            }
         }
         else SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, null);
         return SpriteMaterial;

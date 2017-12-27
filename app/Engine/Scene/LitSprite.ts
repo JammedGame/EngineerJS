@@ -20,4 +20,9 @@ class LitSprite extends Sprite
             this._NormalSets = [];
         }
     }
+    public GetNormalSprites(Set:number) : string[]
+    {
+        if(this._NormalSets.length == 0) return [];
+        return this._NormalSets[Set].Sprites;
+    }
 }

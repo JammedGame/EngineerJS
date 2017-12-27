@@ -8,6 +8,7 @@ import { EventPackage } from "./../Events/Events";
 import { SceneObject, SceneObjectType } from "./SceneObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
 import { Serialization } from "./../../Data/Serialization";
+import { Light } from "./Light";
 
 enum SceneType
 {
@@ -20,6 +21,7 @@ class Scene
     private _Name:string;
     private _Type:SceneType;
     private _BackColor:Math.Color;
+    private _AmbientColor:Math.Color;
     private _Events:EventPackage;
     private _Objects:SceneObject[];
     public get ID():string { return this._ID; }
@@ -29,9 +31,19 @@ class Scene
     public set Type(value:SceneType) { this._Type = value; }
     public get BackColor():Math.Color { return this._BackColor; }
     public set BackColor(value:Math.Color) { this._BackColor = value; }
+    public get AmbientColor():Math.Color { return this._AmbientColor; }
+    public set AmbientColor(value:Math.Color) { this._AmbientColor = value; }
     public get Events():EventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
+    public get Lights() : Light[]
+    {
+        return this.GetObjectsWithDrawType(DrawObjectType.Light);
+    }
+    public get ActiveLights() : Light[]
+    {
+        return this.GetActiveObjectsWithDrawType(DrawObjectType.Light);
+    }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:Scene)
     {
@@ -49,6 +61,7 @@ class Scene
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._BackColor = Math.Color.FromRGBA(40,40,40,255);
+            this._AmbientColor = Math.Color.FromRGBA(50,50,50,255);
             this._Events = new EventPackage();
             this._Objects = [];
         }
@@ -96,6 +109,21 @@ class Scene
             if(this.Objects[i].Type == SceneObjectType.Drawn)  
             {  
                 if((<DrawObject>this.Objects[i]).DrawType == Type)  
+                {  
+                    Objects.push(this.Objects[i]);  
+                }  
+            }  
+        }  
+        return Objects;  
+    }  
+    public GetActiveObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    {  
+        let Objects:any[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn && (<DrawObject>this.Objects[i]).Active)  
+            {  
+                if((<DrawObject>this.Objects[i]).DrawType == Type)
                 {  
                     Objects.push(this.Objects[i]);  
                 }  
