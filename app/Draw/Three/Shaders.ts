@@ -35,7 +35,7 @@ class ThreeJSShaders
         void main()
         {
             vUv  = vec2(1.0 - uv.x, uv.y);
-            vPosition = position.xyz;
+            vPosition = (projectionMatrix * modelViewMatrix * vec4( position, 1.0 )).xyz;
             vModelView = modelViewMatrix;
             vProjection = projectionMatrix;
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
@@ -61,26 +61,26 @@ class ThreeJSShaders
 
         void main()
         {
-            if(index == -1)
+            vec4 finalColor = color;
+            if(index != -1)
             {
-                gl_FragColor = color;
+                finalColor = color * texture2D(texture, vUv);
             }
-            else
+            vec3 SurfacePosition = vPosition;
+            for(int i = 0; i < MAX_LIGHTS; i++)
             {
-                vec4 finalColor = color * texture2D(texture, vUv);
-                vec3 SurfacePosition = vec3(vProjection * vModelView * vec4(vPosition, 1));
-                for(int i = 0; i < MAX_LIGHTS; i++)
+                if(intensities[i] > 0.0)
                 {
-                    if(intensities[i] > 0.0)
-                    {
-                        float distanceToLight = length(locations[i] - SurfacePosition);
-                        float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
-                        finalColor = finalColor * lightColors[i];
-                        finalColor = vec4(finalColor.rgb * currentAttenuation, finalColor.a);
-                    }
+                    vec3 lightLocation = locations[i];
+                    vec3 distance = lightLocation - SurfacePosition;
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
+                    float distanceToLight = length(distance);
+                    float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
+                    finalColor = finalColor * lightColors[i];
+                    finalColor = vec4(finalColor.rgb * currentAttenuation, finalColor.a);
                 }
-                gl_FragColor = finalColor;
             }
+            gl_FragColor = finalColor;
         }
         `;
 }

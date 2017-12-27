@@ -56,7 +56,7 @@ class ThreeMaterialGenerator
         let Lights:Engine.Light[] = Scene.ActiveLights;
         for(let i = 0; i < Lights.length && i < TOYBOX_MAX_LIGHTS; i++)
         {
-            Locations.push(this.Vec3FromData(Lights[i].Trans.Translation.ToArray()));
+            Locations.push(Lights[i].Data["TOYBOX_"+Lights[i].ID+"_Light"]);
             Intensities.push(Lights[i].Intensity / 100);
             Attenuations.push(this.Vec4FromData(Lights[i].Attenuation.ToVertex().ToArray()));
             LightColors.push(this.Vec4FromData(Lights[i].Paint.ToArray()));
@@ -79,7 +79,6 @@ class ThreeMaterialGenerator
             attenuations: { type:"v3v", value:Attenuations },
             lightColors: { type:"v4v", value:LightColors }
         }
-        console.log(Uniforms);
         let SpriteMaterial = new Three.ShaderMaterial
         (
             {

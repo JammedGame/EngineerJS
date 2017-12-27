@@ -107,6 +107,25 @@ class ThreeDrawEngine extends DrawEngine
             }
         }
     }
+    private PrepLightLoc(Location:Math.Vertex) : Three.Vector3
+    {
+        let NewVector = new Three.Vector3(Location.X, Location.Y, Location.Z);
+        NewVector.x -= this.Resolution.X / 2;
+        NewVector.x /= this.Resolution.X;
+        NewVector.x *= 2;
+        NewVector.y -= this.Resolution.Y / 2;
+        NewVector.y /= this.Resolution.Y;
+        NewVector.y *= -2;
+        return NewVector;
+    }
+    public LoadLights(Scene:Engine.Scene) : void
+    {
+        let Lights = Scene.ActiveLights;
+        for(let i = 0; i < Lights.length; i++)
+        {
+            Lights[i].Data["TOYBOX_"+Lights[i].ID+"_Light"] = this.PrepLightLoc(Lights[i].Trans.Translation);
+        }
+    }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         // Override
@@ -127,6 +146,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.UpdateGrid();
         }
+        this.LoadLights(Scene);
         for(let i = 0; i < Scene.Objects.length; i++)
         {
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
@@ -240,7 +260,7 @@ class ThreeDrawEngine extends DrawEngine
                 if(LitDrawn.SpriteSets.length != LitDrawn.NormalSets.length)
                 {
                     Util.Log.Warning("LitSprite Sets length mismatch.");
-                    SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, null);
+                    SpriteMaterial = ThreeMaterialGenerator.GenerateLitSpriteMaterial(this._EngineerScene, LitDrawn, []);
                 }
                 else
                 {
@@ -250,7 +270,7 @@ class ThreeDrawEngine extends DrawEngine
                 }
             }
         }
-        else SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, null);
+        else SpriteMaterial = ThreeMaterialGenerator.GenerateLitSpriteMaterial(this._EngineerScene, <Engine.LitSprite>Drawn, []);
         return SpriteMaterial;
     }
     protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
