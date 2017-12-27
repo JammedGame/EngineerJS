@@ -67,13 +67,16 @@ class ThreeJSShaders
             }
             else
             {
-                vec4 finalColor = color * texture2D(normalMap, vUv) * texture2D(texture, vUv);
+                vec4 finalColor = color * texture2D(texture, vUv);
                 vec3 SurfacePosition = vec3(vProjection * vModelView * vec4(vPosition, 1));
                 for(int i = 0; i < MAX_LIGHTS; i++)
                 {
                     if(intensities[i] > 0.0)
                     {
+                        float distanceToLight = length(locations[i] - SurfacePosition);
+                        float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
                         finalColor = finalColor * lightColors[i];
+                        finalColor = vec4(finalColor.rgb * currentAttenuation, finalColor.a);
                     }
                 }
                 gl_FragColor = finalColor;
