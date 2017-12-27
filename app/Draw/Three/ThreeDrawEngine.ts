@@ -4,8 +4,8 @@ import * as Three from 'three';
 import * as Math from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
-import * as Shaders from "./Shaders";
 
+import { ThreeMaterialGenerator } from "./ThreeMaterialGenerator";
 import { DrawEngine } from "./../DrawEngine";
 
 class ThreeDrawEngine extends DrawEngine
@@ -190,44 +190,6 @@ class ThreeDrawEngine extends DrawEngine
 	        this._Camera.position.z = 1000;
         }
     }
-    private GenerateSpriteMaterial(Sprite:Engine.Sprite, Texture:Three.Texture) : Three.ShaderMaterial
-    {
-        let Index = Sprite.Index();
-        if(Sprite.SpriteSets.length == 0) Index = -1;
-        let SpriteMaterial = new Three.ShaderMaterial
-        (
-            {
-                uniforms:
-                {
-                    index: { type:"i", value:Index },
-                    color: { type:"v4", value:Sprite.Paint.ToArray() },
-                    texture: { type:"tv", value: Texture }
-                },
-                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-            }
-        );
-        SpriteMaterial.transparent = true;
-        return SpriteMaterial;
-    }
-    private GenerateTileMaterial(Tile:Engine.Tile, Texture:Three.Texture) : Three.ShaderMaterial
-    {
-        let TileMaterial = new Three.ShaderMaterial
-        (
-            {
-                uniforms:
-                {
-                    index: { type:"i", value:Tile.Index },
-                    color: { type:"v4", value:Tile.Paint.ToArray() },
-                    texture: { type:"tv", value: Texture }
-                },
-                vertexShader: Shaders.ThreeJSShaders.Vertex2D,
-                fragmentShader: Shaders.ThreeJSShaders.Fragment2D,
-            }
-        );
-        TileMaterial.transparent = true;
-        return TileMaterial;
-    }
     private LoadSpriteMaterial(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : any
     {
         let SpriteData = <Engine.Sprite>Drawn;
@@ -251,9 +213,9 @@ class ThreeDrawEngine extends DrawEngine
                 }
             }
             let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
-            SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, Textures[SpriteData.CurrentIndex]);
+            SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, [Textures[SpriteData.CurrentIndex]]);
         }
-        else SpriteMaterial = this.GenerateSpriteMaterial(SpriteData, null);
+        else SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, null);
         return SpriteMaterial;
     }
     protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
@@ -345,14 +307,14 @@ class ThreeDrawEngine extends DrawEngine
                         Textures.push(NewTexture);
                     }
                     this.Data["TOYBOX_" + TileData.Collection.ID + "_Tex"] = Textures;
-                    TileMaterial = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
+                    TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(TileData, [Textures[TileData.Index]]);
                 }
-                else TileMaterial = this.GenerateTileMaterial(TileData, null);
+                else TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(TileData, null);
             }
             else
             {
                 let Textures : Three.Texture[] = <Three.Texture[]>this.Data["TOYBOX_" + TileData.Collection.ID + "_Tex"];
-                TileMaterial = this.GenerateTileMaterial(TileData, Textures[TileData.Index]);
+                TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(TileData, [Textures[TileData.Index]]);
             }
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;

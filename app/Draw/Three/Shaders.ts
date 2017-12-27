@@ -27,4 +27,22 @@ class ThreeJSShaders
             }
         }
         `;
+    public static LitFragment2D : string = `
+        uniform int index;
+        uniform vec4 color;
+        uniform sampler2D texture;
+        uniform sampler2D normalMap;
+        varying vec2 vUv;
+        void main()
+        {
+            if(index == -1)
+            {
+                gl_FragColor = color;
+            }
+            else
+            {
+                gl_FragColor = color * texture2D(normalMap, vUv);
+            }
+        }
+        `;
 }
