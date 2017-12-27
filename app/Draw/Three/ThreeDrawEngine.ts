@@ -107,6 +107,11 @@ class ThreeDrawEngine extends DrawEngine
             }
         }
     }
+    public LoadScene(Scene:Engine.Scene) : void
+    {
+        if(Scene.Type == Engine.SceneType.Scene2D) this.Load2DScene(<Engine.Scene2D>Scene);
+        else if(Scene.Type == Engine.SceneType.Scene3D) this.Load3DScene(<Engine.Scene3D>Scene);
+    }
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         // Override
