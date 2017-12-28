@@ -1,4 +1,4 @@
-export  { DrawObject, DrawObjectType };
+export  { DrawObject, DrawObjectType, DrawObjectLightType };
 
 import * as Math from "./../../Mathematics/Mathematics";
 
@@ -11,6 +11,11 @@ enum DrawObjectType
     Tile = 2,
     Light = 3
 }
+enum DrawObjectLightType
+{
+    Unlit = 0,
+    Lit = 1
+}
 class DrawObject extends SceneObject
 {
     private _Modified:boolean;
@@ -18,6 +23,7 @@ class DrawObject extends SceneObject
     private _Active:boolean;
     private _DrawType:DrawObjectType;
     private _Trans:Math.Transformation;
+    protected _LightType:DrawObjectLightType;
     public get Modified():boolean { return this._Modified; }
     public set Modified(value:boolean) { this._Modified = value; }
     public get Active():boolean { return this._Active; }
@@ -26,6 +32,7 @@ class DrawObject extends SceneObject
     public set Fixed(value:boolean) { this._Fixed = value; }
     public get DrawType():DrawObjectType { return this._DrawType; }
     public set DrawType(value:DrawObjectType) { this._DrawType = value; }
+    public get LightType():DrawObjectLightType { return this._LightType; }
     public get Trans():Math.Transformation { return this._Trans; }
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public constructor(Old?:DrawObject)
@@ -37,6 +44,7 @@ class DrawObject extends SceneObject
             this._Fixed = Old._Fixed;
             this._Active = Old._Active;
             this._DrawType = Old._DrawType;
+            this._LightType = Old._LightType;
             this._Trans = Old._Trans.Copy();
         }
         else
@@ -46,6 +54,7 @@ class DrawObject extends SceneObject
             this._Fixed = false;
             this._Active = true;
             this._DrawType = DrawObjectType.Undefined;
+            this._LightType = DrawObjectLightType.Unlit;
             this._Trans = new Math.Transformation();
         }
     }

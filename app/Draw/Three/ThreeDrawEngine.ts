@@ -210,31 +210,8 @@ class ThreeDrawEngine extends DrawEngine
         }
         if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
-            let TileMaterial;
             Drawn.Modified = false;
-            if(this.Data["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
-            {
-                if(Drawn.Collection.Images.length > 0)
-                {
-                    let TextureLoader = new Three.TextureLoader();
-                    let Textures : Three.Texture[] = [];
-                    let TextureUrls : string[] = Drawn.Collection.Images;
-                    for(let j = 0; j < TextureUrls.length; j++)
-                    {
-                        let NewTexture = TextureLoader.load(TextureUrls[j]);
-                        NewTexture.flipY = false;
-                        Textures.push(NewTexture);
-                    }
-                    this.Data["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
-                    TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, [Textures[Drawn.Index]]);
-                }
-                else TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, null);
-            }
-            else
-            {
-                let Textures : Three.Texture[] = <Three.Texture[]>this.Data["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
-                TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, [Textures[Drawn.Index]]);
-            }
+            let TileMaterial = ThreeMaterialGenerator.LoadTileMaterial(Scene, Drawn, this.Data);
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);

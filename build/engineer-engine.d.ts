@@ -152,6 +152,12 @@ export class Tile extends DrawObject
     Deserialize(Data) : void
 }
 
+export class LitTile extends Tile
+{
+    NormalCollection:TileCollection;
+    constructor(Old?:LitTile);
+}
+
 export class SoundObject extends SceneObject
 {
     Autoplay:boolean;

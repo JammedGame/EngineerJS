@@ -1,6 +1,7 @@
 export { LitSprite }
 
-import { SpriteType, Sprite, SpriteSet } from "./Sprite";
+import { DrawObjectLightType } from "./DrawObject";
+import { Sprite, SpriteSet } from "./Sprite";
 
 class LitSprite extends Sprite
 {
@@ -10,7 +11,7 @@ class LitSprite extends Sprite
     public constructor(Old?:LitSprite)
     {
         super(Old);
-        this.SpriteType = SpriteType.Lit;
+        this._LightType = DrawObjectLightType.Lit;
         if(Old != null)
         {
             this._NormalSets = Old._NormalSets;

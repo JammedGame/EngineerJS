@@ -124,6 +124,34 @@ class ThreeMaterialGenerator
         TileMaterial.transparent = true;
         return TileMaterial;
     }
+    public static GenerateLitTileMaterial(Scene:Engine.Scene2D, Tile:Engine.LitTile, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
+    {
+        let Index = Tile.Index;
+        if(Tile.Collection.Images.length == 0) Index = -1;
+        if(Tile.NormalCollection.Images.length == 0) Index = -1;
+        let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
+        let Uniforms =
+        {
+            index: { type:"i", value:Index },
+            color: { type:"v4", value:Tile.Paint.ToArray() },
+            texture: { type:"tv", value: Textures[0] },
+            normalMap: { type:"tv", value: Textures[1] },
+            locations: LightsPack.Locations,
+            intensities: LightsPack.Intensities,
+            attenuations: LightsPack.Attenuations,
+            lightColors: LightsPack.LightColors
+        }
+        let TileMaterial = new Three.ShaderMaterial
+        (
+            {
+                uniforms: Uniforms,
+                vertexShader: Shaders.ThreeJSShaders.LitVertex2D,
+                fragmentShader: Shaders.ThreeJSShaders.LitFragment2D,
+            }
+        );
+        TileMaterial.transparent = true;
+        return TileMaterial;
+    }
     private static RegisterLitMaterial(Material:any, Metadata:any)
     {
         if(Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] = [];
@@ -150,7 +178,7 @@ class ThreeMaterialGenerator
                         Textures.push(NewTexture);
                     }
                 }
-                if(Drawn.SpriteType == Engine.SpriteType.Lit)
+                if(Drawn.LightType == Engine.DrawObjectLightType.Lit)
                 {
                     let LitDrawn = <Engine.LitSprite>Drawn;
                     for(let i = 0; i < LitDrawn.NormalSets.length; i++)
@@ -168,12 +196,12 @@ class ThreeMaterialGenerator
                     }
                 }
             }
-            if(Drawn.SpriteType == Engine.SpriteType.Default)
+            if(Drawn.LightType == Engine.DrawObjectLightType.Unlit)
             {
                 let Textures : Three.Texture[] = Metadata["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 SpriteMaterial = ThreeMaterialGenerator.GenerateSpriteMaterial(SpriteData, [Textures[SpriteData.CurrentIndex]]);
             }
-            else if(Drawn.SpriteType == Engine.SpriteType.Lit)
+            else if(Drawn.LightType == Engine.DrawObjectLightType.Lit)
             {
                 let LitDrawn = <Engine.LitSprite>Drawn;
                 if(LitDrawn.SpriteSets.length != LitDrawn.NormalSets.length)
@@ -193,6 +221,68 @@ class ThreeMaterialGenerator
         }
         else SpriteMaterial = ThreeMaterialGenerator.GenerateLitSpriteMaterial(Scene, <Engine.LitSprite>Drawn, [], Metadata);
         return SpriteMaterial;
+    }
+    public static LoadTileMaterial(Scene:Engine.Scene2D, Drawn:Engine.Tile, Metadata:any) : any
+    {
+        let TileMaterial;
+        if(Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
+        {
+            if(Drawn.Collection.Images.length > 0)
+            {
+                let TextureLoader = new Three.TextureLoader();
+                let Textures : Three.Texture[] = [];
+                let TextureUrls : string[] = Drawn.Collection.Images;
+                for(let j = 0; j < TextureUrls.length; j++)
+                {
+                    let NewTexture = TextureLoader.load(TextureUrls[j]);
+                    NewTexture.flipY = false;
+                    Textures.push(NewTexture);
+                }
+                if(Drawn.LightType == Engine.DrawObjectLightType.Lit)
+                {
+                    let LitDrawn = <Engine.LitTile>Drawn;
+                    let TextureLoader = new Three.TextureLoader();
+                    let Textures : Three.Texture[] = [];
+                    Metadata["TOYBOX_" + LitDrawn.NormalCollection.ID + "_Normal"] = Textures;
+                    let TextureUrls : string[] = LitDrawn.NormalCollection.Images;
+                    for(let j = 0; j < TextureUrls.length; j++)
+                    {
+                        let NewTexture = TextureLoader.load(TextureUrls[j]);
+                        NewTexture.flipY = false;
+                        Textures.push(NewTexture);
+                    }
+                }
+                Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
+                if(Drawn.LightType == Engine.DrawObjectLightType.Unlit)
+                {
+                    TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, [Textures[Drawn.Index]]);
+                }
+                else if(Drawn.LightType == Engine.DrawObjectLightType.Lit)
+                {
+                    let LitDrawn = <Engine.LitTile>Drawn;
+                    if(LitDrawn.Collection.Images.length != LitDrawn.NormalCollection.Images.length)
+                    {
+                        Util.Log.Warning("LitTile Collections length mismatch.");
+                        TileMaterial = ThreeMaterialGenerator.GenerateLitTileMaterial(Scene, LitDrawn, [], Metadata);
+                        ThreeMaterialGenerator.RegisterLitMaterial(TileMaterial, Metadata);
+                    }
+                    else
+                    {
+                        let Textures : Three.Texture[] = Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
+                        let Normals : Three.Texture[] = Metadata["TOYBOX_" + LitDrawn.NormalCollection.ID + "_Normal"];
+                        TileMaterial = ThreeMaterialGenerator.GenerateLitTileMaterial(Scene, LitDrawn, [Textures[Drawn.Index], Normals[Drawn.Index]], Metadata);
+                        ThreeMaterialGenerator.RegisterLitMaterial(TileMaterial, Metadata);
+                    }
+                }
+            }
+            else TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, null);
+        }
+        else
+        {
+            let Textures : Three.Texture[] = <Three.Texture[]>Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
+            TileMaterial = ThreeMaterialGenerator.GenerateTileMaterial(Drawn, [Textures[Drawn.Index]]);
+        }
+        return TileMaterial;
     }
     private static Vec3FromData(Data:number[]) : Three.Vector3
     {

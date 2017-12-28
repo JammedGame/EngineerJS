@@ -1,22 +1,16 @@
-export  { SpriteType, Sprite, SpriteSet };
+export  { Sprite, SpriteSet };
 
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { DrawObject, DrawObjectType } from "./DrawObject";
 
-enum SpriteType
-{
-    Default = 0,
-    Lit = 1
-}
 class Sprite extends DrawObject
 {
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
     private _BackUpSpriteSet:number;
     private _Paint:Math.Color;
-    private _SpriteType:SpriteType;
     private _SpriteSets:SpriteSet[];
     private _SubSprites:Sprite[];
     public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
@@ -25,8 +19,6 @@ class Sprite extends DrawObject
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
     public get Paint():Math.Color { return this._Paint; }
     public set Paint(value:Math.Color) { this._Paint = value; }
-    public get SpriteType():SpriteType { return this._SpriteType; }
-    public set SpriteType(value:SpriteType) { this._SpriteType = value; }
     public get SpriteSets():SpriteSet[] { return this._SpriteSets; }
     public set SpriteSets(value:SpriteSet[]) { this._SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
@@ -38,7 +30,6 @@ class Sprite extends DrawObject
         this._CurrentIndex = 0;
         this._CurrentSpriteSet = 0;
         this._BackUpSpriteSet = -1;
-        this._SpriteType = SpriteType.Default;
         if(Old != null)
         {
             this._SpriteSets = Old._SpriteSets;
