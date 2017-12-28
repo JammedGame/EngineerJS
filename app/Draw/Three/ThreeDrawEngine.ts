@@ -84,6 +84,7 @@ class ThreeDrawEngine extends DrawEngine
                 this.LoadLight(Scene, <Engine.Light>Drawn);
             }
         }
+        ThreeMaterialGenerator.Update2DLights(Scene, this.Data);
         for(let i = 0; i < this._Scene.children.length; i++)
         {
             let Found = false;
@@ -248,15 +249,9 @@ class ThreeDrawEngine extends DrawEngine
             this._Checked.push(Tile.uuid);
         }
     }
-    protected LoadLight(Scene:Engine.Scene, Drawn:Engine.Light) : void
+    protected LoadLight(Scene:Engine.Scene2D, Drawn:Engine.Light) : void
     {
-        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = ThreeMaterialGenerator.PrepLightLoc(Drawn.Trans.Translation, this.Resolution);
-        if(this.Data["TOYBOX_LIT_OBJECT_MATERIALS"])
-        {
-            for(let i in this.Data["TOYBOX_LIT_OBJECT_MATERIALS"])
-            {
-
-            }
-        }
+        let TransLoc = new Mathematics.Vertex(Drawn.Trans.Translation.X + Scene.Trans.Translation.X, Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y, Drawn.Trans.Translation.Z + Scene.Trans.Translation.Z);
+        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = ThreeMaterialGenerator.PrepLightLoc(TransLoc, this.Resolution);
     }
 }

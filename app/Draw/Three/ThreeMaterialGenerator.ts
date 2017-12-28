@@ -35,12 +35,8 @@ class ThreeMaterialGenerator
         SpriteMaterial.transparent = true;
         return SpriteMaterial;
     }
-    public static GenerateLitSpriteMaterial(Scene:Engine.Scene2D, Sprite:Engine.LitSprite, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
+    private static Pack2DLights(Scene:Engine.Scene2D, Metadata:any) : any
     {
-        let Index = Sprite.Index();
-        if(Sprite.SpriteSets.length == 0) Index = -1;
-        if(Sprite.NormalSets.length == 0) Index = -1;
-
         let Locations = [];
         let Intensities = [];
         let Attenuations = [];
@@ -60,16 +56,44 @@ class ThreeMaterialGenerator
             Attenuations.push(new Three.Vector3());
             LightColors.push(new Three.Vector4());
         }
+        let LightsPack =
+        {
+            Locations: { type:"v3v", value:Locations },
+            Intensities: { type:"fv", value:Intensities },
+            Attenuations: { type:"v3v", value:Attenuations },
+            LightColors: { type:"v4v", value:LightColors }
+        }
+        return LightsPack;
+    }
+    public static Update2DLights(Scene:Engine.Scene2D, Metadata:any)
+    {
+        if(Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) return;
+        let Materials = Metadata["TOYBOX_LIT_OBJECT_MATERIALS"];
+        let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
+        for(let i in Materials)
+        {
+            Materials[i]["uniforms"].locations.value = LightsPack.Locations.value;
+            Materials[i]["uniforms"].intensities.value = LightsPack.Intensities.value;
+            Materials[i]["uniforms"].attenuations.value = LightsPack.Attenuations.value;
+            Materials[i]["uniforms"].lightColors.value = LightsPack.LightColors.value;
+        }
+    }
+    public static GenerateLitSpriteMaterial(Scene:Engine.Scene2D, Sprite:Engine.LitSprite, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
+    {
+        let Index = Sprite.Index();
+        if(Sprite.SpriteSets.length == 0) Index = -1;
+        if(Sprite.NormalSets.length == 0) Index = -1;
+        let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
         let Uniforms =
         {
             index: { type:"i", value:Index },
             color: { type:"v4", value:Sprite.Paint.ToArray() },
             texture: { type:"tv", value: Textures[0] },
             normalMap: { type:"tv", value: Textures[1] },
-            locations: { type:"v3v", value: Locations },
-            intensities: { type:"fv", value:Intensities },
-            attenuations: { type:"v3v", value:Attenuations },
-            lightColors: { type:"v4v", value:LightColors }
+            locations: LightsPack.Locations,
+            intensities: LightsPack.Intensities,
+            attenuations: LightsPack.Attenuations,
+            lightColors: LightsPack.LightColors
         }
         let SpriteMaterial = new Three.ShaderMaterial
         (
