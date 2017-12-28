@@ -35,10 +35,11 @@ class ThreeJSShaders
         void main()
         {
             vUv  = vec2(1.0 - uv.x, uv.y);
-            vPosition = (projectionMatrix * modelViewMatrix * vec4( position, 1.0 )).xyz;
+            vec4 pos = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            vPosition = pos.xyz;
             vModelView = modelViewMatrix;
             vProjection = projectionMatrix;
-			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			gl_Position = pos;
         }
         `;
     public static LitFragment2D : string = `
@@ -54,8 +55,6 @@ class ThreeJSShaders
 
         varying vec2 vUv;
         varying vec3 vPosition;
-        varying mat4 vModelView;
-        varying mat4 vProjection;
 
         #define MAX_LIGHTS 8 
 

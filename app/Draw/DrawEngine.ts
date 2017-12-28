@@ -54,7 +54,7 @@ class DrawEngine
     {
         // Virtual
     }
-    private DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    protected DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
     {
         // Virtual
     }
@@ -62,11 +62,15 @@ class DrawEngine
     {
         // Virtual
     }
-    private DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    protected DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
     {
         // Virtual
     }
     protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    {
+        // Virtual
+    }
+    protected LoadLight(Scene:Engine.Scene, Drawn:Engine.Light) : void
     {
         // Virtual
     }
