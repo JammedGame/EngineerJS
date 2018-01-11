@@ -60,12 +60,23 @@ export enum DrawObjectType
     Tile
 }
 
+export enum DrawObjectMaterialType
+{
+    Default = 0,
+    Lit = 1,
+    NormalLit = 2,
+    Custom = 3,
+    Shader = 4
+}
+
 export class DrawObject extends SceneObject
 {
     Modified:boolean;
     Fixed:boolean;
     Active:boolean;
+    Paint:Math.Color;
     DrawType:DrawObjectType;
+    MaterialType:DrawObjectMaterialType;
     Trans:Math.Transformation;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
@@ -90,8 +101,8 @@ export class Sprite extends DrawObject
     CurrentIndex:number;
     CurrentSpriteSet:number;
     BackUpSpriteSet:number;
-    Paint:Math.Color;
     SpriteSets:SpriteSet[];
+    NormalSets:SpriteSet[];
     SubSprites:Sprite[];
     constructor(Old?:Sprite)
     Copy() : Sprite
@@ -108,12 +119,6 @@ export class Sprite extends DrawObject
     Deserialize(Data:any) : void
 }
 
-export class LitSprite extends Sprite
-{
-    NormalSets:SpriteSet[];
-    constructor(Old?:LitSprite);
-}
-
 export class LightAttenuation
 {
     Constant:number;
@@ -125,7 +130,6 @@ export class LightAttenuation
 export class Light extends DrawObject
 {
     Intensity:number;
-    Paint:Math.Color;
     Attenuation:LightAttenuation;
     constructor(Old?:Light);
 }
@@ -144,18 +148,13 @@ export class Tile extends DrawObject
 {
     Index:number;
     Collection:TileCollection;
+    NormalCollection:TileCollection;
     Paint:Math.Color;
     SubTiles:Tile[];
     constructor(Old?:Tile)
     Copy() : Tile
     Serialize() : any
     Deserialize(Data) : void
-}
-
-export class LitTile extends Tile
-{
-    NormalCollection:TileCollection;
-    constructor(Old?:LitTile);
 }
 
 export class SoundObject extends SceneObject
