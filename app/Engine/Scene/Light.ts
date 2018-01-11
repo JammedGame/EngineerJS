@@ -8,12 +8,9 @@ import { DrawObject, DrawObjectType } from "./DrawObject";
 class Light extends DrawObject
 {
     private _Intensity:number;
-    private _Paint:Math.Color;
     private _Attenuation:LightAttenuation;
     public get Intensity():number { return this._Intensity; }
     public set Intensity(value:number) { this._Intensity = value; }
-    public get Paint():Math.Color { return this._Paint; }
-    public set Paint(value:Math.Color) { this._Paint = value; }
     public get Attenuation():LightAttenuation { return this._Attenuation; }
     public set Attenuation(value:LightAttenuation) { this._Attenuation = value; }
     public constructor(Old?:Light)
@@ -23,13 +20,11 @@ class Light extends DrawObject
         if(Old != null)
         {
             this._Intensity = Old._Intensity;
-            this._Paint = Old._Paint.Copy();
             this._Attenuation = Old._Attenuation.Copy();
         }
         else
         {
             this._Intensity = 100;
-            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
             this._Attenuation = new LightAttenuation();
         }
     }
@@ -41,7 +36,6 @@ class Light extends DrawObject
     {
         // Override
         let T = super.Serialize();
-        T.Paint = this._Paint.Serialize();
         T.Intensity = this._Intensity;
         T.Attenuation = this._Attenuation.Copy();
         return T;
@@ -50,7 +44,6 @@ class Light extends DrawObject
     {
         // Override
         super.Deserialize(Data);
-        this._Paint.Deserialize(Data.Paint);
         this._Intensity = Data.Intensity;
         this._Attenuation.Deserialize(Data.Attenuation);
     }

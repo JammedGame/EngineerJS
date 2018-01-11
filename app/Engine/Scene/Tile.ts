@@ -9,7 +9,7 @@ class Tile extends DrawObject
 {
     private _Index:number;
     private _Collection:TileCollection;
-    private _Paint:Math.Color;
+    private _NormalCollection:TileCollection;
     private _SubTiles:Tile[];
     public get Index():number { return this._Index; }
     public set Index(value:number)
@@ -17,10 +17,10 @@ class Tile extends DrawObject
         if(this._Collection.Images.length > value) this._Index = value;
         else this._Index = 0;
     }
-    public get Paint():Math.Color { return this._Paint; }
-    public set Paint(value:Math.Color) { this._Paint = value; }
     public get Collection():TileCollection { return this._Collection; }
     public set Collection(value:TileCollection) { this._Collection = value; }
+    public get NormalCollection():TileCollection { return this._NormalCollection; }
+    public set NormalCollection(value:TileCollection) { this._NormalCollection = value; }
     public get SubTiles():Tile[] { return this._SubTiles; }
     public set SubTiles(value:Tile[]) { this._SubTiles = value; }
     public constructor(Old?:Tile)
@@ -31,24 +31,28 @@ class Tile extends DrawObject
         {
             this._Index = Old._Index;
             this._Collection = Old._Collection;
-            this._Paint = Old._Paint.Copy();
+            this._NormalCollection = Old._NormalCollection;
         }
         else
         {
             this._Index = -1;
             this._Collection = new TileCollection();
-            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
+            this._NormalCollection = new TileCollection();
         }
     }
     public Copy() : Tile
     {
         return new Tile(this);
     }
+    public GetNormalTiles(Set:number) : string[]
+    {
+        if(!this._NormalCollection) return [];
+        return this._NormalCollection.Images;
+    }
     public Serialize() : any
     {
         // Override
         let T = super.Serialize();
-        T.Paint = this._Paint.Serialize();
         T.Collection = this._Collection.Serialize();
         T.SubTiles = [];
         for(let i in this._SubTiles)
@@ -61,7 +65,6 @@ class Tile extends DrawObject
     {
         // Override
         super.Deserialize(Data);
-        this._Paint.Deserialize(Data.Paint);
         this._Collection.Deserialize(Data.Collection);
         for(let i in Data.SubTiles)
         {

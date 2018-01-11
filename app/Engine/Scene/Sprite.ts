@@ -10,17 +10,17 @@ class Sprite extends DrawObject
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
     private _BackUpSpriteSet:number;
-    private _Paint:Math.Color;
     private _SpriteSets:SpriteSet[];
+    private _NormalSets:SpriteSet[];
     private _SubSprites:Sprite[];
     public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
     public set BackUpSpriteSet(value:number) { this._BackUpSpriteSet = value; }
     public get CurrentIndex():number { return this._CurrentIndex; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
-    public get Paint():Math.Color { return this._Paint; }
-    public set Paint(value:Math.Color) { this._Paint = value; }
     public get SpriteSets():SpriteSet[] { return this._SpriteSets; }
     public set SpriteSets(value:SpriteSet[]) { this._SpriteSets = value; }
+    public get NormalSets():SpriteSet[] { return this._NormalSets; }
+    public set NormalSets(value:SpriteSet[]) { this._NormalSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
     public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
     public constructor(Old?:Sprite)
@@ -33,17 +33,17 @@ class Sprite extends DrawObject
         if(Old != null)
         {
             this._SpriteSets = Old._SpriteSets;
+            this._NormalSets = Old._NormalSets;
             this._SubSprites = [];
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
             this.Trans.Scale = Old.Trans.Scale.Copy();
-            this._Paint = Old._Paint.Copy();
         }
         else
         {
             this._SpriteSets = [];
+            this._NormalSets = [];
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);
-            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
         }
     }
     public Copy() : Sprite
@@ -122,11 +122,15 @@ class Sprite extends DrawObject
         if(this._SpriteSets.length == 0) return [];
         return this._SpriteSets[Set].Sprites;
     }
+    public GetNormalSprites(Set:number) : string[]
+    {
+        if(this._NormalSets.length == 0) return [];
+        return this._NormalSets[Set].Sprites;
+    }
     public Serialize() : any
     {
         // Override
         let S = super.Serialize();
-        S.Paint = this._Paint.Serialize();
         S.SpriteSets = [];
         for(let i in this._SpriteSets)
         {
@@ -143,7 +147,6 @@ class Sprite extends DrawObject
     {
         // Override
         super.Deserialize(Data);
-        this._Paint.Deserialize(Data.Paint);
         for(let i in Data.SpriteSets)
         {
             let SS:SpriteSet = new SpriteSet();

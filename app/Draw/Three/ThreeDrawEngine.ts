@@ -170,18 +170,16 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.material = ThreeMaterialGenerator.LoadSpriteMaterial(Scene, Drawn, this.Data);
                 Drawn.Modified = false;
             }
-            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet)
+            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
             {
                 this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
                 let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 Sprite.material["uniforms"].texture.value = Textures[Drawn.CurrentIndex];
-                Sprite.material["uniforms"].color.value = Drawn.Paint.ToArray();
-            }
-            else if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
-            {
-                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
-                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
-                Sprite.material["uniforms"].texture.value = Textures[Drawn.CurrentIndex];
+                if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit)
+                {
+                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + Drawn.NormalSets[Drawn.CurrentSpriteSet].ID + "_Normal"];
+                    Sprite.material["uniforms"].normalMap.value = Normals[Drawn.CurrentIndex];
+                }
                 Sprite.material["uniforms"].color.value = Drawn.Paint.ToArray();
             }
             this.DrawObjectValueCheck(Sprite, Drawn);

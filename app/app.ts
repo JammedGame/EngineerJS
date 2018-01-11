@@ -3,12 +3,10 @@ import { Image } from "./Data/Image";
 import { Reader } from "./Data/Reader";
 import { Serialization} from "./Data/Serialization";
 import { DrawEngineType, DrawEngine } from "./Draw/DrawEngine";
-import { DrawObjectLightType, DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
+import { DrawObjectMaterialType, DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
 import { SpriteSet, Sprite } from "./Engine/Scene/Sprite";
-import { LitSprite } from "./Engine/Scene/LitSprite";
 import { Light, LightAttenuation } from "./Engine/Scene/Light";
 import { TileCollection, Tile } from "./Engine/Scene/Tile";
-import { LitTile } from "./Engine/Scene/LitTile";
 import { EventPackage } from "./Engine/Events/Events";
 import { MouseButton } from "./Engine/Events/EventArguments";
 import { Game } from "./Engine/Game/Game";
@@ -33,8 +31,8 @@ export
 {
     Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
-    DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage,
-    LitSprite, Light, LightAttenuation, LitTile,
+    DrawObjectType, DrawObject, DrawObjectMaterialType, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage,
+    Light, LightAttenuation,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,
