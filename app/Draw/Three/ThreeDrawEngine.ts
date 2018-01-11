@@ -208,9 +208,8 @@ class ThreeDrawEngine extends DrawEngine
         }
         if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
-            Drawn.Modified = true;
-            let TileMaterial = ThreeMaterialGenerator.LoadTileMaterial(Scene, Drawn, this.Data);
             Drawn.Modified = false;
+            let TileMaterial = ThreeMaterialGenerator.LoadTileMaterial(Scene, Drawn, this.Data);
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);

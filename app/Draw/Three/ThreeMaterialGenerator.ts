@@ -122,7 +122,6 @@ class ThreeMaterialGenerator
     }
     public static LoadSpriteMaterial(Scene:Engine.Scene2D, Drawn:Engine.Sprite, Metadata:any) : any
     {
-        let SpriteData = <Engine.Sprite>Drawn;
         let SpriteMaterial;
         if(Drawn.SpriteSets.length > 0)
         {
@@ -133,7 +132,7 @@ class ThreeMaterialGenerator
                     let TextureLoader = new Three.TextureLoader();
                     let Textures : Three.Texture[] = [];
                     Metadata["TOYBOX_" + Drawn.SpriteSets[i].ID + "_Tex"] = Textures;
-                    let TextureUrls : string[] = SpriteData.GetSprites(i);
+                    let TextureUrls : string[] = Drawn.GetSprites(i);
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
                         let NewTexture = TextureLoader.load(TextureUrls[j]);
@@ -168,9 +167,9 @@ class ThreeMaterialGenerator
     public static LoadTileMaterial(Scene:Engine.Scene2D, Drawn:Engine.Tile, Metadata:any) : any
     {
         let TileMaterial;
-        if(Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
+        if(Drawn.Collection.Images.length > 0)
         {
-            if(Drawn.Collection.Images.length > 0)
+            if(Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
             {
                 let TextureLoader = new Three.TextureLoader();
                 let Textures : Three.Texture[] = [];
@@ -199,13 +198,9 @@ class ThreeMaterialGenerator
                 Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
                 TileMaterial = ThreeMaterialGenerator.LoadMaterial(Scene, Drawn, Metadata);
             }
-            else TileMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, null, Metadata);
+            else TileMaterial = ThreeMaterialGenerator.LoadMaterial(Scene, Drawn, Metadata);
         }
-        else
-        {
-            let Textures : Three.Texture[] = <Three.Texture[]>Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
-            TileMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Drawn.Index]], Metadata);
-        }
+        else TileMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, null, Metadata);
         return TileMaterial;
     }
     private static Pack2DLights(Scene:Engine.Scene2D, Metadata:any) : any
