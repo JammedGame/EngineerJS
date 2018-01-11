@@ -5,7 +5,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
 
-import * as Shaders from "./Shaders";
+import { ThreeBasicShaders } from "./ThreeBasicShaders";
 
 const TOYBOX_MAX_LIGHTS = 8;
 
@@ -32,12 +32,12 @@ class ThreeMaterialGenerator
             color: { type:"v4", value: Drawn.Paint.ToArray() },
             texture: { type:"tv", value: Textures[0] }
         };
-        let VertexShader = Shaders.ThreeJSShaders.Vertex2D;
-        let FragmentShader = Shaders.ThreeJSShaders.Fragment2D;
+        let VertexShader = ThreeBasicShaders.Vertex2D;
+        let FragmentShader = ThreeBasicShaders.Fragment2D;
         if(Drawn.MaterialType != Engine.DrawObjectMaterialType.Default)
         {
-            VertexShader = Shaders.ThreeJSShaders.LitVertex2D;
-            FragmentShader = Shaders.ThreeJSShaders.LitFragment2D;
+            VertexShader = ThreeBasicShaders.LitVertex2D;
+            FragmentShader = ThreeBasicShaders.LitFragment2D;
             let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
             Uniforms.locations = LightsPack.Locations;
             Uniforms.intensities = LightsPack.Intensities;
@@ -46,7 +46,7 @@ class ThreeMaterialGenerator
         }
         if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit)
         {
-            FragmentShader = Shaders.ThreeJSShaders.LitNormalFragment2D;
+            FragmentShader = ThreeBasicShaders.LitNormalFragment2D;
             Uniforms.normalMap = { type:"tv", value: Textures[1] };
             if(Sprite && Sprite.NormalSets.length == 0) Index = -1;
             if(Tile && Tile.NormalCollection.Images.length == 0) Index = -1;
