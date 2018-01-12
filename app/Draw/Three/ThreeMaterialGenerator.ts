@@ -6,6 +6,7 @@ import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
 
 import { ThreeBasicShaders } from "./ThreeBasicShaders";
+import { ThreeShaderGenerator } from "./ThreeShaderGenerator";
 
 const TOYBOX_MAX_LIGHTS = 8;
 
@@ -44,12 +45,22 @@ class ThreeMaterialGenerator
             Uniforms.attenuations = LightsPack.Attenuations;
             Uniforms.lightColors = LightsPack.LightColors;
         }
-        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit)
+        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
+           Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom)
         {
             FragmentShader = ThreeBasicShaders.LitNormalFragment2D;
             Uniforms.normalMap = { type:"tv", value: Textures[1] };
             if(Sprite && Sprite.NormalSets.length == 0) Index = -1;
             if(Tile && Tile.NormalCollection.Images.length == 0) Index = -1;
+        }
+        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom)
+        {
+            FragmentShader = ThreeShaderGenerator.GenerateFragment(Drawn.CustomMaterial);
+        }
+        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+        {
+            if(Drawn.CustomShader.VertexShader != "") VertexShader = Drawn.CustomShader.VertexShader;
+            if(Drawn.CustomShader.FragmentShader != "") FragmentShader = Drawn.CustomShader.FragmentShader;
         }
         let DrawnMaterial = new Three.ShaderMaterial
         (

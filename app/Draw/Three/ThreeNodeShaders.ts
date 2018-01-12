@@ -2,11 +2,18 @@ export { ThreeNodeShaders }
 
 class ThreeNodeShaders
 {
+    private static _Single:ThreeNodeShaders;
+    public static get Single():ThreeNodeShaders
+    {
+        if(!ThreeNodeShaders._Single) ThreeNodeShaders._Single = new ThreeNodeShaders();
+        return ThreeNodeShaders._Single;
+    }
     private _Pool: { [key: string]:string; };
     public get Pool():any { return this._Pool; }
     public constructor()
     {
         this.Init();
+        ThreeNodeShaders._Single = this;
     }
     private Init() : void
     {

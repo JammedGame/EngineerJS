@@ -29,7 +29,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector4;
         
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         this._Pool["Output"] = NMN;
 
@@ -43,7 +43,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Color";
@@ -51,7 +51,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         this._Pool["Color"] = NMN;
 
@@ -65,7 +65,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         this._Pool["Color"] = NMN;
 
@@ -79,7 +79,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         this._Pool["Texture"] = NMN;
 
@@ -93,7 +93,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         this._Pool["NormalMap"] = NMN;
 
@@ -107,7 +107,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector3;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         this._Pool["Light"] = NMN;
 
@@ -121,7 +121,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector3;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         this._Pool["BumpLight"] = NMN;
 
@@ -135,7 +135,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector3;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Color";
@@ -143,7 +143,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Light";
@@ -151,7 +151,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector3;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         this._Pool["Diffuse"] = NMN;
 
@@ -165,7 +165,7 @@ class MaterialNodePool
         NMNV.Name = "Output";
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Outputs.push(NMNV);
+        NMN.AddOutput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Color";
@@ -173,7 +173,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Map";
@@ -181,7 +181,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Vector4;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Upper_Limit";
@@ -189,7 +189,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Float;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         NMNV = new MaterialNodeValue();
         NMNV.Name = "Lower_Limit";
@@ -197,7 +197,7 @@ class MaterialNodePool
         NMNV.Editable = true;
         NMNV.Type = MaterialNodeValueType.Float;
 
-        NMN.Inputs.push(NMNV);
+        NMN.AddInput(NMNV);
 
         this._Pool["Mignola"] = NMN;
     }

@@ -2,6 +2,7 @@ export  { DrawObject, DrawObjectType, DrawObjectMaterialType };
 
 import * as Math from "./../../Mathematics/Mathematics";
 
+import { Material } from "./../Material/Material";
 import { SceneObjectType, SceneObject } from "./SceneObject";
 
 enum DrawObjectType
@@ -27,6 +28,8 @@ class DrawObject extends SceneObject
     private _Paint:Math.Color;
     private _DrawType:DrawObjectType;
     private _MaterialType:DrawObjectMaterialType;
+    private _CustomMaterial:Material;
+    private _CustomShader:any;
     private _Trans:Math.Transformation;
     public get Modified():boolean { return this._Modified; }
     public set Modified(value:boolean) { this._Modified = value; }
@@ -40,6 +43,10 @@ class DrawObject extends SceneObject
     public set DrawType(value:DrawObjectType) { this._DrawType = value; }
     public get MaterialType():DrawObjectMaterialType { return this._MaterialType; }
     public set MaterialType(value:DrawObjectMaterialType) { this._MaterialType = value; }
+    public get CustomMaterial():Material { return this._CustomMaterial; }
+    public set CustomMaterial(value:Material) { this._CustomMaterial = value; }
+    public get CustomShader():any { return this._CustomShader; }
+    public set CustomShader(value:any) { this._CustomShader = value; }
     public get Trans():Math.Transformation { return this._Trans; }
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public constructor(Old?:DrawObject)
@@ -53,6 +60,8 @@ class DrawObject extends SceneObject
             this._Paint = Old._Paint.Copy();
             this._DrawType = Old._DrawType;
             this._MaterialType = Old._MaterialType;
+            this._CustomMaterial = Old._CustomMaterial.Copy();
+            this._CustomShader = Old._CustomShader;
             this._Trans = Old._Trans.Copy();
         }
         else
@@ -64,13 +73,14 @@ class DrawObject extends SceneObject
             this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
             this._DrawType = DrawObjectType.Undefined;
             this._MaterialType = DrawObjectMaterialType.Default;
+            this._CustomMaterial = new Material();
+            this._CustomShader = { VertexShader:"", FragmentShader:"" };
             this._Trans = new Math.Transformation();
         }
     }
     public Copy() : DrawObject
     {
-        let New:DrawObject = new DrawObject(this);
-        return New;
+        return new DrawObject(this);
     }
     public Serialize() : any
     {
