@@ -64,6 +64,7 @@ class MaterialNodeValue
     }
     private CopyValue() : any
     {
+        if(!this._Value) return this._Value;
         if (this._Type == MaterialNodeValueType.Bool || 
             this._Type == MaterialNodeValueType.Int || 
             this._Type == MaterialNodeValueType.Float)

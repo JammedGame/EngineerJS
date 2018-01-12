@@ -36,7 +36,7 @@ export
     Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
     DrawObjectType, DrawObject, DrawObjectMaterialType, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage,
-    Light, LightAttenuation, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
+    Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,

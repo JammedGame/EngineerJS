@@ -67,7 +67,7 @@ class MaterialNodePool
 
         NMN.AddOutput(NMNV);
 
-        this._Pool["Color"] = NMN;
+        this._Pool["InputColor"] = NMN;
 
         // Texture
 

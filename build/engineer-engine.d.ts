@@ -85,17 +85,17 @@ export class MaterialNode
     Values:MaterialNodeValue[];
     Inputs:MaterialNodeValue[];
     Outputs:MaterialNodeValue[];
-    public constructor(Old?:MaterialNode)
-    public Copy() : MaterialNode
-    public AddValue(NodeValue: MaterialNodeValue) : void
-    public AddInput(NodeValue: MaterialNodeValue) : void
-    public AddOutput(NodeValue: MaterialNodeValue) : void
+    constructor(Old?:MaterialNode)
+    Copy() : MaterialNode
+    AddValue(NodeValue: MaterialNodeValue) : void
+    AddInput(NodeValue: MaterialNodeValue) : void
+    AddOutput(NodeValue: MaterialNodeValue) : void
 }
 
 export class MaterialNodePool
 {
     Pool: { [key: string]:MaterialNode; };
-    public constructor()
+    constructor()
 }
 
 export class Material
@@ -103,11 +103,11 @@ export class Material
     ID:string;
     Name:string;
     Nodes:MaterialNode[];
-    public constructor(Old?:Material)
-    public Copy() : Material
-    public AddNode(Node:MaterialNode) : void
-    public FindNodeByName(Name:string) : MaterialNode
-    public FindNodeByFunction(Function:string) : MaterialNode
+    constructor(Old?:Material)
+    Copy() : Material
+    AddNode(Node:MaterialNode) : void
+    FindNodeByName(Name:string) : MaterialNode
+    FindNodeByFunction(Function:string) : MaterialNode
 }
 
 export enum DrawObjectType 

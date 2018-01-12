@@ -26,6 +26,7 @@ class MaterialNode
         {
             this._ID = Data.Uuid.Create();
             this._Name = Old._Name;
+            this._FunctionID = Old._FunctionID;
             this._Values = [];
             for(let i in Old._Values) this._Values.push(Old._Values[i].Copy());
             this._Inputs = [];
@@ -37,6 +38,7 @@ class MaterialNode
         {
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
+            this._FunctionID = "";
             this._Values = [];
             this._Inputs = [];
             this._Outputs = [];
@@ -69,6 +71,7 @@ class MaterialNode
         for(let i in this._Values) if(this._Values[i].Name == Name) return false;
         for(let i in this._Inputs) if(this._Inputs[i].Name == Name) return false;
         for(let i in this._Outputs) if(this._Outputs[i].Name == Name) return false;
+        return true;
     }
     private UpdateName() : void
     {

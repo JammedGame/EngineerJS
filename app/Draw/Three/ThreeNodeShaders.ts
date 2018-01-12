@@ -98,8 +98,8 @@ class ThreeNodeShaders
             if(intensities[i] > 0.0)
             {
                 vec3 lightLocation = locations[i];
-                vec3 distance = lightLocation - SurfacePosition;
-                vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
+                vec3 distance = lightLocation - vPosition;
+                vec3 surfaceToCamera = normalize(vPosition - lightLocation);
                 distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
                 float distanceToLight = length(distance);
                 float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
