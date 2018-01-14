@@ -90,6 +90,19 @@ class Material
             }
         }
     }
+    private DeserializeCloneConnections(Old:any) : void
+    {
+        for(let i = 0; i < this._Nodes.length; i++)
+        {
+            for(let j = 0; j < this._Nodes[i].Inputs.length; j++)
+            {
+                if(Old.Nodes[i].Inputs[j].InputTarget != "None")
+                {
+                    this._Nodes[i].Inputs[j].InputTarget = this.FindNodeOutputByOrigin(Old.Nodes[i].Inputs[j].InputTarge);
+                }
+            }
+        }
+    }
     private FindNodeOutputByOrigin(ID:string) : MaterialNodeValue
     {
         for(let i = 0; i < this._Nodes.length; i++)
@@ -102,5 +115,34 @@ class Material
                 }
             }
         }
+    }
+    public Serialize() : any
+    {
+        // Virtual
+        let M =
+        {
+            ID: this._ID,
+            Name: this._Name,
+            Nodes: []
+        };
+        for(let i in this._Nodes)
+        {
+            M.Nodes.push(this._Nodes[i].Serialize());
+        }
+        return M;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Virtual
+        this._ID = Data.ID;
+        this._Name = Data.Name;
+        this._Nodes = [];
+        for(let i in Data.Nodes)
+        {
+            let MN:MaterialNode = new MaterialNode();
+            MN.Deserialize(Data.Nodes[i]);
+            this._Nodes.push(MN);
+        }
+        this.DeserializeCloneConnections(Data);
     }
 }

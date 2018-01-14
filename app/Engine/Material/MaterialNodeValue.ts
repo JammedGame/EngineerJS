@@ -75,4 +75,32 @@ class MaterialNodeValue
             return this._Value.Copy(); 
         return null;
     }
+    public Serialize() : any
+    {
+        // Virtual
+        let MNV =
+        {
+            ID: this._ID,
+            OriginID: this._OriginID,
+            Name: this._Name,
+            ParentName: this._ParentName,
+            Value: this._Value,
+            Editable: this._Editable,
+            Type: <number> this._Type,
+            InputTarget: "None"
+        };
+        if(this._InputTarget != null) MNV.InputTarget = this._InputTarget.OriginID;
+        return MNV;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Virtual
+        this._ID = Data.ID;
+        this._OriginID = Data.OriginID;
+        this._Name = Data.Name;
+        this._ParentName = Data.ParentName;
+        this._Value = Data.Value;
+        this._Editable = Data.Editable;
+        this._Type = <MaterialNodeValueType> Data.Type;
+    }
 }
