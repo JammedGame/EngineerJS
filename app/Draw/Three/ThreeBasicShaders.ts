@@ -1,6 +1,6 @@
-export { ThreeJSShaders }
+export { ThreeBasicShaders }
 
-class ThreeJSShaders
+class ThreeBasicShaders
 {
     public static Vertex2D : string = `
         varying vec2 vUv;

@@ -53,6 +53,63 @@ export class SceneObject
     Deserialize(Data:any) : void
 }
 
+export enum MaterialNodeValueType
+{
+    Int,
+    Bool,
+    Float,
+    Vector2,
+    Vector3,
+    Vector4
+}
+
+export class MaterialNodeValue
+{
+    ID:string;
+    Name:string;
+    OriginID:string;
+    ParentName:string;
+    Editable:boolean;
+    Type:MaterialNodeValueType;
+    InputTarget:MaterialNodeValue;
+    Value:any;
+    constructor(Old?:MaterialNodeValue)
+    Copy() : MaterialNodeValue
+}
+
+export class MaterialNode
+{
+    ID:string;
+    Name:string;
+    FunctionID:string;
+    Values:MaterialNodeValue[];
+    Inputs:MaterialNodeValue[];
+    Outputs:MaterialNodeValue[];
+    constructor(Old?:MaterialNode)
+    Copy() : MaterialNode
+    AddValue(NodeValue: MaterialNodeValue) : void
+    AddInput(NodeValue: MaterialNodeValue) : void
+    AddOutput(NodeValue: MaterialNodeValue) : void
+}
+
+export class MaterialNodePool
+{
+    Pool: { [key: string]:MaterialNode; };
+    constructor()
+}
+
+export class Material
+{
+    ID:string;
+    Name:string;
+    Nodes:MaterialNode[];
+    constructor(Old?:Material)
+    Copy() : Material
+    AddNode(Node:MaterialNode) : void
+    FindNodeByName(Name:string) : MaterialNode
+    FindNodeByFunction(Function:string) : MaterialNode
+}
+
 export enum DrawObjectType 
 {
     Undefined,
@@ -77,6 +134,8 @@ export class DrawObject extends SceneObject
     Paint:Math.Color;
     DrawType:DrawObjectType;
     MaterialType:DrawObjectMaterialType;
+    CustomMaterial:Material;
+    CustomShader:any;
     Trans:Math.Transformation;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
