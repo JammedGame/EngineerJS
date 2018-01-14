@@ -15,7 +15,7 @@ enum DrawObjectType
 }
 class DrawObject extends SceneObject
 {
-    // Abstract Object
+    // Abstract
     private _Modified:boolean;
     private _Fixed:boolean;
     private _Active:boolean;
@@ -44,7 +44,6 @@ class DrawObject extends SceneObject
             this._Active = Old._Active;
             this._Paint = Old._Paint.Copy();
             this._DrawType = Old._DrawType;
-            
             this._Trans = Old._Trans.Copy();
         }
         else

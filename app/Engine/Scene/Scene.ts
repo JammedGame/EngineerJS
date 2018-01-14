@@ -12,8 +12,8 @@ import { Light } from "./Light";
 
 enum SceneType
 {
-    Scene2D,
-    Scene3D
+    Scene2D = "Scene2D",
+    Scene3D = "Scene3D"
 }
 class Scene
 {
@@ -138,7 +138,7 @@ class Scene
         {
             ID: this._ID,
             Name: this._Name,
-            Type: <number>this._Type,
+            Type: <string> this._Type,
             BackColor: this._BackColor.Serialize(),
             Objects: [],
             Data: {}

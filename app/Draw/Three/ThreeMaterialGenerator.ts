@@ -123,7 +123,7 @@ class ThreeMaterialGenerator
         let SpriteMaterial;
         if(Drawn.SpriteSets.length > 0)
         {
-            if(Metadata["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"] == null)
+            if(Metadata["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"] == null || Drawn.Modified)
             {
                 for(let i = 0; i < Drawn.SpriteSets.length; i++)
                 {
@@ -133,8 +133,14 @@ class ThreeMaterialGenerator
                     let TextureUrls : string[] = Drawn.GetSprites(i);
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
-                        let NewTexture = TextureLoader.load(TextureUrls[j]);
+                        let NewTexture : Three.Texture = TextureLoader.load(TextureUrls[j]);
                         NewTexture.flipY = false;
+                        let RepeatX = Drawn.RepeatX;
+                        if(Drawn.FlipX) RepeatX *= -1;
+                        let RepeatY = Drawn.RepeatY;
+                        if(Drawn.FlipY) RepeatY *= -1;
+                        NewTexture.repeat.x = RepeatX;
+                        NewTexture.repeat.y = RepeatY;
                         Textures.push(NewTexture);
                     }
                 }
@@ -152,6 +158,12 @@ class ThreeMaterialGenerator
                         {
                             let NewTexture = TextureLoader.load(TextureUrls[j]);
                             NewTexture.flipY = false;
+                            let RepeatX = Drawn.RepeatX;
+                            if(Drawn.FlipX) RepeatX *= -1;
+                            let RepeatY = Drawn.RepeatY;
+                            if(Drawn.FlipY) RepeatY *= -1;
+                            NewTexture.repeat.x = RepeatX;
+                            NewTexture.repeat.y = RepeatY;
                             Textures.push(NewTexture);
                         }
                     }
@@ -176,6 +188,12 @@ class ThreeMaterialGenerator
                 {
                     let NewTexture = TextureLoader.load(TextureUrls[j]);
                     NewTexture.flipY = false;
+                    let RepeatX = Drawn.RepeatX;
+                    if(Drawn.FlipX) RepeatX *= -1;
+                    let RepeatY = Drawn.RepeatY;
+                    if(Drawn.FlipY) RepeatY *= -1;
+                    NewTexture.repeat.x = RepeatX;
+                    NewTexture.repeat.y = RepeatY;
                     Textures.push(NewTexture);
                 }
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
@@ -190,6 +208,12 @@ class ThreeMaterialGenerator
                     {
                         let NewTexture = TextureLoader.load(TextureUrls[j]);
                         NewTexture.flipY = false;
+                        let RepeatX = Drawn.RepeatX;
+                        if(Drawn.FlipX) RepeatX *= -1;
+                        let RepeatY = Drawn.RepeatY;
+                        if(Drawn.FlipY) RepeatY *= -1;
+                        NewTexture.repeat.x = RepeatX;
+                        NewTexture.repeat.y = RepeatY;
                         Textures.push(NewTexture);
                     }
                 }

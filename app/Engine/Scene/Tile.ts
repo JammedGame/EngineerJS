@@ -17,6 +17,7 @@ class Tile extends ImageObject
     {
         if(this._Collection.Images.length > value) this._Index = value;
         else this._Index = 0;
+        this.Modified = true;
     }
     public get Images() : string[] { /* Override */ return this._Collection.Images; }
     public get NormalMaps() : string[] { /* Override */ return this._NormalCollection.Images; }

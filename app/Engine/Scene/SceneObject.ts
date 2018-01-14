@@ -16,7 +16,7 @@ enum SceneObjectType
 }
 class SceneObject
 {
-    // Abstract Object
+    // Abstract
     private _ID:string;
     private _Name:string;
     private _Type:SceneObjectType;
