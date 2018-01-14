@@ -3,9 +3,10 @@ export  { Sprite, SpriteSet };
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
+import { ImageObject } from "./ImageObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
 
-class Sprite extends DrawObject
+class Sprite extends ImageObject
 {
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
@@ -13,6 +14,9 @@ class Sprite extends DrawObject
     private _SpriteSets:SpriteSet[];
     private _NormalSets:SpriteSet[];
     private _SubSprites:Sprite[];
+    public get Index() : number { /* Override */ return this.GetIndex(); }
+    public get Images() : string[] { /* Override */ return this.GetSprites(this._CurrentSpriteSet); }
+    public get NormalMaps() : string[] { /* Override */ return this.GetNormalSprites(this._CurrentSpriteSet); }
     public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
     public set BackUpSpriteSet(value:number) { this._BackUpSpriteSet = value; }
     public get CurrentIndex():number { return this._CurrentIndex; }
@@ -50,6 +54,17 @@ class Sprite extends DrawObject
     {
         let New:Sprite = new Sprite(this);
         return New;
+    }
+    private GetIndex() : number
+    {
+        // Override
+        let Index:number = 0;
+        for(let i = 0; i < this._CurrentSpriteSet; i++)
+        {
+            Index += this._SpriteSets[i].Sprites.length;
+        }
+        Index += this._CurrentIndex;
+        return Index;
     }
     public CollectiveList() : string[]
     {
@@ -101,21 +116,6 @@ class Sprite extends DrawObject
         {
             if(this._SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
         }
-    }
-    public Index() : number
-    {
-        let Index:number = 0;
-        for(let i = 0; i < this._CurrentSpriteSet; i++)
-        {
-            Index += this._SpriteSets[i].Sprites.length;
-        }
-        Index += this._CurrentIndex;
-        return Index;
-    }
-    public GetActiveSprites() : string[]
-    {
-        if(this._SpriteSets.length == 0) return [];
-        return this._SpriteSets[this._CurrentSpriteSet].Sprites;
     }
     public GetSprites(Set:number) : string[]
     {

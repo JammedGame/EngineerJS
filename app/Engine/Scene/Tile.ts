@@ -3,20 +3,23 @@ export  { Tile, TileCollection };
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
+import { ImageObject } from "./ImageObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
 
-class Tile extends DrawObject
+class Tile extends ImageObject
 {
     private _Index:number;
     private _Collection:TileCollection;
     private _NormalCollection:TileCollection;
     private _SubTiles:Tile[];
-    public get Index():number { return this._Index; }
+    public get Index():number { /*Override*/ return this._Index; }
     public set Index(value:number)
     {
         if(this._Collection.Images.length > value) this._Index = value;
         else this._Index = 0;
     }
+    public get Images() : string[] { /* Override */ return this._Collection.Images; }
+    public get NormalMaps() : string[] { /* Override */ return this._NormalCollection.Images; }
     public get Collection():TileCollection { return this._Collection; }
     public set Collection(value:TileCollection) { this._Collection = value; }
     public get NormalCollection():TileCollection { return this._NormalCollection; }
@@ -43,11 +46,6 @@ class Tile extends DrawObject
     public Copy() : Tile
     {
         return new Tile(this);
-    }
-    public GetNormalTiles(Set:number) : string[]
-    {
-        if(!this._NormalCollection) return [];
-        return this._NormalCollection.Images;
     }
     public Serialize() : any
     {

@@ -12,21 +12,9 @@ const TOYBOX_MAX_LIGHTS = 8;
 
 class ThreeMaterialGenerator
 {
-    private static GenerateMaterial(Scene:Engine.Scene2D, Drawn:Engine.DrawObject, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
+    private static GenerateMaterial(Scene:Engine.Scene2D, Drawn:Engine.ImageObject, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
     {
-        let Index:number = -1;
-        let Tile:Engine.Tile = null;
-        let Sprite:Engine.Sprite = null;
-        if(Drawn.DrawType == Engine.DrawObjectType.Tile)
-        {
-            Tile = <Engine.Tile> Drawn;
-            Index = Tile.Index;
-        }
-        if(Drawn.DrawType == Engine.DrawObjectType.Sprite)
-        {
-            Sprite = <Engine.Sprite> Drawn;
-            Index = Sprite.Index();
-        }
+        let Index:number = Drawn.Index;
         let Uniforms:any =
         {
             index: { type:"i", value: Index },
@@ -35,7 +23,7 @@ class ThreeMaterialGenerator
         };
         let VertexShader = ThreeBasicShaders.Vertex2D;
         let FragmentShader = ThreeBasicShaders.Fragment2D;
-        if(Drawn.MaterialType != Engine.DrawObjectMaterialType.Default)
+        if(Drawn.MaterialType != Engine.ImageObjectMaterialType.Default)
         {
             VertexShader = ThreeBasicShaders.LitVertex2D;
             FragmentShader = ThreeBasicShaders.LitFragment2D;
@@ -45,19 +33,18 @@ class ThreeMaterialGenerator
             Uniforms.attenuations = LightsPack.Attenuations;
             Uniforms.lightColors = LightsPack.LightColors;
         }
-        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-           Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom)
+        if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+           Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom)
         {
             FragmentShader = ThreeBasicShaders.LitNormalFragment2D;
             Uniforms.normalMap = { type:"tv", value: Textures[1] };
-            if(Sprite && Sprite.NormalSets.length == 0) Index = -1;
-            if(Tile && Tile.NormalCollection.Images.length == 0) Index = -1;
+            if(Drawn.NormalMaps.length == 0) Index = -1;
         }
-        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom)
+        if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom)
         {
             FragmentShader = ThreeShaderGenerator.GenerateFragment(Drawn.CustomMaterial);
         }
-        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+        if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
         {
             if(Drawn.CustomShader.VertexShader != "") VertexShader = Drawn.CustomShader.VertexShader;
             if(Drawn.CustomShader.FragmentShader != "") FragmentShader = Drawn.CustomShader.FragmentShader;
@@ -78,7 +65,7 @@ class ThreeMaterialGenerator
         if(Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] = [];
         Metadata["TOYBOX_LIT_OBJECT_MATERIALS"].push(Material);
     }
-    public static LoadMaterial(Scene:Engine.Scene2D, Drawn:Engine.DrawObject, Metadata:any) : Three.ShaderMaterial
+    public static LoadMaterial(Scene:Engine.Scene2D, Drawn:Engine.ImageObject, Metadata:any) : Three.ShaderMaterial
     {
         let ID:string = "";
         let Index:number = -1;
@@ -90,9 +77,9 @@ class ThreeMaterialGenerator
         {
             Tile = <Engine.Tile>Drawn;
             ID = Tile.Collection.ID;
-            if (Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+            if (Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
             {
                 NormalID = Tile.NormalCollection.ID;
             }
@@ -102,27 +89,27 @@ class ThreeMaterialGenerator
         {
             Sprite = <Engine.Sprite>Drawn;
             ID = Sprite.SpriteSets[Sprite.CurrentSpriteSet].ID;
-            if (Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+            if (Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
             {
                 NormalID = Sprite.NormalSets[Sprite.CurrentSpriteSet].ID;
             }
             Index = Sprite.CurrentIndex;
         }
         let Textures : Three.Texture[] = Metadata["TOYBOX_" + ID + "_Tex"];
-        if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Default ||
-           Drawn.MaterialType == Engine.DrawObjectMaterialType.Lit)
+        if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Default ||
+           Drawn.MaterialType == Engine.ImageObjectMaterialType.Lit)
         {
             Material = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Index]], Metadata);
-            if(Drawn.MaterialType == Engine.DrawObjectMaterialType.Lit)
+            if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Lit)
             {
                 ThreeMaterialGenerator.RegisterLitMaterial(Material, Metadata);
             }
         }
-        else if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom ||
-                Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+        else if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
+                Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
         {
             let Normals : Three.Texture[] = Metadata["TOYBOX_" + NormalID + "_Normal"];
             if(Normals) Material = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Index], Normals[Index]], Metadata);
@@ -151,9 +138,9 @@ class ThreeMaterialGenerator
                         Textures.push(NewTexture);
                     }
                 }
-                if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-                    Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom ||
-                    Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+                if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+                    Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
+                    Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
                 {
                     for(let i = 0; i < Drawn.NormalSets.length; i++)
                     {
@@ -191,9 +178,9 @@ class ThreeMaterialGenerator
                     NewTexture.flipY = false;
                     Textures.push(NewTexture);
                 }
-                if(Drawn.MaterialType == Engine.DrawObjectMaterialType.NormalLit ||
-                    Drawn.MaterialType == Engine.DrawObjectMaterialType.Custom ||
-                    Drawn.MaterialType == Engine.DrawObjectMaterialType.Shader)
+                if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
+                    Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
+                    Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
                 {
                     let TextureLoader = new Three.TextureLoader();
                     let Textures : Three.Texture[] = [];
