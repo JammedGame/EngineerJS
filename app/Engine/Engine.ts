@@ -1,5 +1,5 @@
 import { DrawObjectType, DrawObject } from "./Scene/DrawObject";
-import { ImageObject, ImageObjectMaterialType } from "./Scene/ImageObject";
+import { ImageObject, ImageObjectMaterialType, ImageObjectSamplingType } from "./Scene/ImageObject";
 import { SpriteSet, Sprite } from "./Scene/Sprite";
 import { TileCollection, Tile } from "./Scene/Tile";
 import { EventPackage } from "./Events/Events";
@@ -16,5 +16,5 @@ import { MaterialNodePool } from "./Material/MaterialNodePool";
 import { MaterialNode } from "./Material/MaterialNode";
 import { Material } from "./Material/Material";
 
-export { ImageObjectMaterialType, ImageObject, DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage, Game, SceneType, Scene,
+export { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject, DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage, Game, SceneType, Scene,
         Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Light, MaterialNodeValue, MaterialNodeValueType, MaterialNodePool, MaterialNode, Material };

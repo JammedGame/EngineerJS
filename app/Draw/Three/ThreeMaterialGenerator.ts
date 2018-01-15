@@ -133,15 +133,7 @@ class ThreeMaterialGenerator
                     let TextureUrls : string[] = Drawn.GetSprites(i);
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
-                        let NewTexture : Three.Texture = TextureLoader.load(TextureUrls[j]);
-                        NewTexture.flipY = false;
-                        let RepeatX = Drawn.RepeatX;
-                        if(Drawn.FlipX) RepeatX *= -1;
-                        let RepeatY = Drawn.RepeatY;
-                        if(Drawn.FlipY) RepeatY *= -1;
-                        NewTexture.repeat.x = RepeatX;
-                        NewTexture.repeat.y = RepeatY;
-                        Textures.push(NewTexture);
+                        Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                     }
                 }
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
@@ -156,15 +148,7 @@ class ThreeMaterialGenerator
                         let TextureUrls : string[] = Drawn.GetNormalSprites(i);
                         for(let j = 0; j < TextureUrls.length; j++)
                         {
-                            let NewTexture = TextureLoader.load(TextureUrls[j]);
-                            NewTexture.flipY = false;
-                            let RepeatX = Drawn.RepeatX;
-                            if(Drawn.FlipX) RepeatX *= -1;
-                            let RepeatY = Drawn.RepeatY;
-                            if(Drawn.FlipY) RepeatY *= -1;
-                            NewTexture.repeat.x = RepeatX;
-                            NewTexture.repeat.y = RepeatY;
-                            Textures.push(NewTexture);
+                            Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                         }
                     }
                 }
@@ -186,15 +170,7 @@ class ThreeMaterialGenerator
                 let TextureUrls : string[] = Drawn.Collection.Images;
                 for(let j = 0; j < TextureUrls.length; j++)
                 {
-                    let NewTexture = TextureLoader.load(TextureUrls[j]);
-                    NewTexture.flipY = false;
-                    let RepeatX = Drawn.RepeatX;
-                    if(Drawn.FlipX) RepeatX *= -1;
-                    let RepeatY = Drawn.RepeatY;
-                    if(Drawn.FlipY) RepeatY *= -1;
-                    NewTexture.repeat.x = RepeatX;
-                    NewTexture.repeat.y = RepeatY;
-                    Textures.push(NewTexture);
+                    Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                 }
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
                     Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
@@ -206,15 +182,7 @@ class ThreeMaterialGenerator
                     let TextureUrls : string[] = Drawn.NormalCollection.Images;
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
-                        let NewTexture = TextureLoader.load(TextureUrls[j]);
-                        NewTexture.flipY = false;
-                        let RepeatX = Drawn.RepeatX;
-                        if(Drawn.FlipX) RepeatX *= -1;
-                        let RepeatY = Drawn.RepeatY;
-                        if(Drawn.FlipY) RepeatY *= -1;
-                        NewTexture.repeat.x = RepeatX;
-                        NewTexture.repeat.y = RepeatY;
-                        Textures.push(NewTexture);
+                        Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                     }
                 }
                 Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
@@ -224,6 +192,19 @@ class ThreeMaterialGenerator
         }
         else TileMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, null, Metadata);
         return TileMaterial;
+    }
+    private static LoadTexture(Loader:Three.TextureLoader, Drawn:Engine.ImageObject, Path:string) : Three.Texture
+    {
+        let NewTexture = Loader.load(Path);
+        NewTexture.flipY = false;
+        let RepeatX = Drawn.RepeatX;
+        if(Drawn.FlipX) RepeatX *= -1;
+        let RepeatY = Drawn.RepeatY;
+        if(Drawn.FlipY) RepeatY *= -1;
+        NewTexture.repeat.x = RepeatX;
+        NewTexture.repeat.y = RepeatY;
+        if(Drawn.Sampling == Engine.ImageObjectSamplingType.Nearest) NewTexture.magFilter = Three.NearestFilter;
+        return NewTexture;
     }
     private static Pack2DLights(Scene:Engine.Scene2D, Metadata:any) : any
     {
