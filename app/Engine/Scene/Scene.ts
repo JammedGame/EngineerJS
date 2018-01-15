@@ -130,7 +130,12 @@ class Scene
             }  
         }  
         return Objects;  
-    }  
+    }
+    public Composite(Chunk:Scene) : boolean
+    {
+        // Virtual
+        return false;
+    }
     public Serialize() : any
     {
         // Virtual

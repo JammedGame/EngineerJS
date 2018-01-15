@@ -52,6 +52,26 @@ class Scene2D extends Scene
             }
         }
     }
+    public Composite(Chunk:Scene) : boolean
+    {
+        // Override
+        if(Chunk.Type != SceneType.Scene2D) return false
+        for(let i in Chunk.Objects)
+        {
+            if(Chunk.Objects[i].Type == SceneObjectType.Sound)
+            {
+                this.Objects.push(Chunk.Objects[i].Copy());
+            }
+            else if(Chunk.Objects[i].Type == SceneObjectType.Drawn)
+            {
+                let Drawn = <DrawObject> Chunk.Objects[i].Copy();
+                let Chunk2D = <Scene2D> Chunk;
+                Drawn.Trans.Composite(Chunk2D.Trans);
+                this.Objects.push(Drawn);
+            }
+        }
+        return true;
+    }
     public Serialize() : any
     {
         // Override
