@@ -8,7 +8,7 @@ import { MaterialNode } from "./Engine/Material/MaterialNode";
 import { Material } from "./Engine/Material/Material";
 import { DrawEngineType, DrawEngine } from "./Draw/DrawEngine";
 import { DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
-import { ImageObjectMaterialType, ImageObject } from "./Engine/Scene/ImageObject";
+import { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject } from "./Engine/Scene/ImageObject";
 import { SpriteSet, Sprite } from "./Engine/Scene/Sprite";
 import { Light, LightAttenuation } from "./Engine/Scene/Light";
 import { TileCollection, Tile } from "./Engine/Scene/Tile";
@@ -36,6 +36,7 @@ export
 {
     Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
+    ImageObjectMaterialType, ImageObjectSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage,
     Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,

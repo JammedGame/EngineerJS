@@ -4,12 +4,12 @@ import * as Data from "./../../Data/Data";
 
 enum MaterialNodeValueType
 {
-    Int,
-    Bool,
-    Float,
-    Vector2,
-    Vector3,
-    Vector4
+    Int = "int",
+    Bool = "bool",
+    Float = "float",
+    Vector2 = "vec2",
+    Vector3 = "vec3",
+    Vector4 = "vec4"
 }
 
 class MaterialNodeValue
