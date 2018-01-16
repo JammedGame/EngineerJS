@@ -86,7 +86,7 @@ class MaterialNodeValue
             ParentName: this._ParentName,
             Value: this._Value,
             Editable: this._Editable,
-            Type: <number> this._Type,
+            Type: <string> this._Type,
             InputTarget: "None"
         };
         if(this._InputTarget != null) MNV.InputTarget = this._InputTarget.OriginID;
