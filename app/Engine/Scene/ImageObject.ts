@@ -26,6 +26,7 @@ class ImageObject extends DrawObject
     private _FlipY:boolean;
     private _RepeatX:number;
     private _RepeatY:number;
+    private _AmbientColor:Math.Color;
     private _Sampling:ImageObjectSamplingType;
     private _MaterialType:ImageObjectMaterialType;
     private _CustomMaterial:Material;
@@ -41,6 +42,8 @@ class ImageObject extends DrawObject
     public set RepeatX(value:number) { this._RepeatX = value; this.Modified = true; }
     public get RepeatY():number { return this._RepeatY; }
     public set RepeatY(value:number) { this._RepeatY = value; this.Modified = true; }
+    public get AmbientColor():Math.Color { return this._AmbientColor; }
+    public set AmbientColor(value:Math.Color) { this._AmbientColor = value; }
     public get Sampling():ImageObjectSamplingType { return this._Sampling; }
     public set Sampling(value:ImageObjectSamplingType) { this._Sampling = value; }
     public get MaterialType():ImageObjectMaterialType { return this._MaterialType; }
@@ -59,6 +62,7 @@ class ImageObject extends DrawObject
             this._RepeatX = Old._RepeatX;
             this._RepeatY = Old._RepeatY;
             this._Sampling = Old._Sampling;
+            this._AmbientColor = Old._AmbientColor.Copy();
             this._MaterialType = Old._MaterialType;
             this._CustomMaterial = Old._CustomMaterial.Copy();
             this._CustomShader = Old._CustomShader;
@@ -69,6 +73,7 @@ class ImageObject extends DrawObject
             this._FlipY = false;
             this._RepeatX = 1;
             this._RepeatY = 1;
+            this._AmbientColor = Math.Color.FromRGBA(50,50,50,255);
             this._Sampling = ImageObjectSamplingType.Linear;
             this.DrawType = DrawObjectType.Image;
             this._MaterialType = ImageObjectMaterialType.Default;
@@ -88,6 +93,7 @@ class ImageObject extends DrawObject
         IO.FlipY = this._FlipY;
         IO.RepeatX = this._RepeatX;
         IO.RepeatY = this._RepeatY;
+        IO.AmbientColor = this._AmbientColor.Serialize();
         IO.Sampling = <string> this._Sampling;
         IO.MaterialType = <string> this._MaterialType;
         if(this._CustomMaterial) IO.CustomMaterial = this._CustomMaterial.Serialize();
@@ -102,6 +108,7 @@ class ImageObject extends DrawObject
         this._FlipY = Data.FlipY;
         this._RepeatX = Data.RepeatX;
         this._RepeatY = Data.RepeatY;
+        this._AmbientColor.Deserialize(Data.AmbientColor);
         this._Sampling = <ImageObjectSamplingType> Data.Sampling;
         this._MaterialType = <ImageObjectMaterialType> Data.MaterialType;
         if(Data.CustomMaterial) this._CustomMaterial.Deserialize(Data.CustomMaterial);

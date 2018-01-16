@@ -21,7 +21,6 @@ class Scene
     private _Name:string;
     private _Type:SceneType;
     private _BackColor:Math.Color;
-    private _AmbientColor:Math.Color;
     private _Events:EventPackage;
     private _Objects:SceneObject[];
     public get ID():string { return this._ID; }
@@ -31,8 +30,6 @@ class Scene
     public set Type(value:SceneType) { this._Type = value; }
     public get BackColor():Math.Color { return this._BackColor; }
     public set BackColor(value:Math.Color) { this._BackColor = value; }
-    public get AmbientColor():Math.Color { return this._AmbientColor; }
-    public set AmbientColor(value:Math.Color) { this._AmbientColor = value; }
     public get Events():EventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
@@ -61,7 +58,6 @@ class Scene
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._BackColor = Math.Color.FromRGBA(40,40,40,255);
-            this._AmbientColor = Math.Color.FromRGBA(50,50,50,255);
             this._Events = new EventPackage();
             this._Objects = [];
         }

@@ -32,6 +32,7 @@ class ThreeMaterialGenerator
             Uniforms.intensities = LightsPack.Intensities;
             Uniforms.attenuations = LightsPack.Attenuations;
             Uniforms.lightColors = LightsPack.LightColors;
+            Uniforms.ambient = { type:"v4", value: Drawn.AmbientColor.ToArray() };
         }
         if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
            Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom)

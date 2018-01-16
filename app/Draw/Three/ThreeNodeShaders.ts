@@ -40,6 +40,7 @@ class ThreeNodeShaders
         uniform vec3 locations[8];
         uniform vec3 attenuations[8];
         uniform vec4 lightColors[8];
+        uniform vec4 ambient;
 
         varying vec2 vUv;
         varying vec3 vPosition;
@@ -75,7 +76,7 @@ class ThreeNodeShaders
         `;
 
         this._Pool["Light"] = `
-        vec3 <OUTPUT> = vec3(0.3,0.3,0.3);
+        vec3 <OUTPUT> = ambient.rgb;
         for(int i = 0; i < MAX_LIGHTS; i++)
         {
             if(intensities[i] > 0.0)
@@ -92,7 +93,7 @@ class ThreeNodeShaders
         `;
 
         this._Pool["BumpLight"] = `
-        vec3 <OUTPUT> = vec3(0.3,0.3,0.3);
+        vec3 <OUTPUT> = ambient.rgb;
         for(int i = 0; i < MAX_LIGHTS; i++)
         {
             if(intensities[i] > 0.0)
