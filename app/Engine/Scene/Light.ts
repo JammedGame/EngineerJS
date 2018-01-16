@@ -1,18 +1,31 @@
-export  { Light, LightAttenuation };
+export  { Light, LightType, LightAttenuation };
 
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { DrawObject, DrawObjectType } from "./DrawObject";
 
+enum LightType
+{
+    Point = "Point",
+    Spot = "Spot",
+    Directional = "Directional"
+}
 class Light extends DrawObject
 {
     private _Intensity:number;
+    private _LightType:LightType;
+    private _Direction:Math.Vertex;
     private _Attenuation:LightAttenuation;
     public get Intensity():number { return this._Intensity; }
     public set Intensity(value:number) { this._Intensity = value; }
+    public get LightType():LightType { return this._LightType; }
+    public set LightType(value:LightType) { this._LightType = value; }
+    public get Direction():Math.Vertex { return this._Direction; }
+    public set Direction(value:Math.Vertex) { this._Direction = value; }
     public get Attenuation():LightAttenuation { return this._Attenuation; }
     public set Attenuation(value:LightAttenuation) { this._Attenuation = value; }
+    public get Parameter() : number { /*Virtual*/ return -1; }
     public constructor(Old?:Light)
     {
         super(Old);
@@ -20,11 +33,14 @@ class Light extends DrawObject
         if(Old != null)
         {
             this._Intensity = Old._Intensity;
+            this._LightType = Old._LightType;
             this._Attenuation = Old._Attenuation.Copy();
         }
         else
         {
             this._Intensity = 100;
+            this._LightType = LightType.Point;
+            this._Direction = new Math.Vertex(0,0,0);
             this._Attenuation = new LightAttenuation();
         }
     }
@@ -35,16 +51,20 @@ class Light extends DrawObject
     public Serialize() : any
     {
         // Override
-        let T = super.Serialize();
-        T.Intensity = this._Intensity;
-        T.Attenuation = this._Attenuation.Copy();
-        return T;
+        let L = super.Serialize();
+        L.Intensity = this._Intensity;
+        L.LightType = <string> this._LightType;
+        L.Direction = this._Direction.Serialize();
+        L.Attenuation = this._Attenuation.Serialize();
+        return L;
     }
     public Deserialize(Data:any) : void
     {
         // Override
         super.Deserialize(Data);
         this._Intensity = Data.Intensity;
+        this._LightType = <LightType> Data.LightType;
+        this._Direction.Deserialize(Data.Direction);
         this._Attenuation.Deserialize(Data.Attenuation);
     }
 }

@@ -51,8 +51,8 @@ class Transformation
     }
     public Deserialize(Data) : void
     {
-        this._Translation = new Vertex(Data.Translation.X, Data.Translation.Y, Data.Translation.Z);
-        this._Rotation = new Vertex(Data.Rotation.X, Data.Rotation.Y, Data.Rotation.Z);
-        this._Scale = new Vertex(Data.Scale.X, Data.Scale.Y, Data.Scale.Z);
+        this._Translation.Deserialize(Data.Translation);
+        this._Rotation.Deserialize(Data.Rotation);
+        this._Scale.Deserialize(Data.Scale);
     }
 }

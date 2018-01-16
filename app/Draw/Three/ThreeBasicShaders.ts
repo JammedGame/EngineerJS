@@ -47,6 +47,9 @@ class ThreeBasicShaders
         uniform vec3 locations[8];
         uniform vec3 attenuations[8];
         uniform vec4 lightColors[8];
+        uniform vec3 lightDirection[8];
+        uniform float lightParameters[8];
+        uniform int lightTypes[8];
         uniform vec4 ambient;
 
         varying vec2 vUv;

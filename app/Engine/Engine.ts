@@ -10,11 +10,14 @@ import { Scene2D } from "./Scene/Scene2D";
 import { SceneObjectType, SceneObject } from "./Scene/SceneObject";
 import { SoundObject } from "./Scene/SoundObject";
 import { Settings, Quality } from "./Settings";
-import { Light, LightAttenuation } from "./Scene/Light";
+import { Light, LightType, LightAttenuation } from "./Scene/Light";
+import { SpotLight } from "./Scene/SpotLight";
+import { DirectionalLight } from "./Scene/DirectionalLight";
 import { MaterialNodeValue, MaterialNodeValueType } from "./Material/MaterialNodeValue";
 import { MaterialNodePool } from "./Material/MaterialNodePool";
 import { MaterialNode } from "./Material/MaterialNode";
 import { Material } from "./Material/Material";
 
 export { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject, DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage, Game, SceneType, Scene,
-        Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Light, MaterialNodeValue, MaterialNodeValueType, MaterialNodePool, MaterialNode, Material };
+        Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Light, LightType, LightAttenuation, SpotLight, DirectionalLight, MaterialNodeValue, MaterialNodeValueType,
+        MaterialNodePool, MaterialNode, Material };

@@ -32,6 +32,9 @@ class ThreeMaterialGenerator
             Uniforms.intensities = LightsPack.Intensities;
             Uniforms.attenuations = LightsPack.Attenuations;
             Uniforms.lightColors = LightsPack.LightColors;
+            Uniforms.lightTypes = LightsPack.Types;
+            Uniforms.lightParameters = LightsPack.Parameters;
+            Uniforms.lightDirections = LightsPack.Directions;
             Uniforms.ambient = { type:"v4", value: Drawn.AmbientColor.ToArray() };
         }
         if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
@@ -215,6 +218,9 @@ class ThreeMaterialGenerator
         let Intensities = [];
         let Attenuations = [];
         let LightColors = [];
+        let Parameters = [];
+        let Directions = [];
+        let Types = [];
         let Lights:Engine.Light[] = Scene.ActiveLights;
         for(let i = 0; i < Lights.length && i < TOYBOX_MAX_LIGHTS; i++)
         {
@@ -222,6 +228,9 @@ class ThreeMaterialGenerator
             Intensities.push(Lights[i].Intensity / 100);
             Attenuations.push(this.Vec4FromData(Lights[i].Attenuation.ToVertex().ToArray()));
             LightColors.push(this.Vec4FromData(Lights[i].Paint.ToArray()));
+            Parameters.push(Lights[i].Parameter);
+            Directions.push(Lights[i].Direction.ToArray());
+            Types.push(this.CodeLightType(Lights[i].LightType));
         }
         for(let i = Intensities.length; i < TOYBOX_MAX_LIGHTS; i++)
         {
@@ -229,13 +238,19 @@ class ThreeMaterialGenerator
             Intensities.push(0.0);
             Attenuations.push(new Three.Vector3());
             LightColors.push(new Three.Vector4());
+            Parameters.push(0.0);
+            Directions.push(new Three.Vector3());
+            Types.push(0);
         }
         let LightsPack =
         {
             Locations: { type:"v3v", value:Locations },
             Intensities: { type:"fv", value:Intensities },
             Attenuations: { type:"v3v", value:Attenuations },
-            LightColors: { type:"v4v", value:LightColors }
+            LightColors: { type:"v4v", value:LightColors },
+            Parameters: { type:"fv", value:Parameters },
+            Directions: { type:"v3v", value:Directions },
+            Types: { type:"iv", value:Types }
         }
         return LightsPack;
     }
@@ -250,7 +265,17 @@ class ThreeMaterialGenerator
             Materials[i]["uniforms"].intensities.value = LightsPack.Intensities.value;
             Materials[i]["uniforms"].attenuations.value = LightsPack.Attenuations.value;
             Materials[i]["uniforms"].lightColors.value = LightsPack.LightColors.value;
+            Materials[i]["uniforms"].lightParameters.value = LightsPack.Parameters.value;
+            Materials[i]["uniforms"].lightDirections.value = LightsPack.Directions.value;
+            Materials[i]["uniforms"].lightTypes.value = LightsPack.Types.value;
         }
+    }
+    private static CodeLightType(Type:Engine.LightType) : number
+    {
+        if(Type == Engine.LightType.Point) return 0;
+        if(Type == Engine.LightType.Spot) return 1;
+        if(Type == Engine.LightType.Directional) return 2;
+        return -1;
     }
     private static Vec3FromData(Data:number[]) : Three.Vector3
     {
