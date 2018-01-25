@@ -226,10 +226,10 @@ class ThreeMaterialGenerator
         {
             Locations.push(Metadata["TOYBOX_"+Lights[i].ID+"_Light"]);
             Intensities.push(Lights[i].Intensity / 100);
-            Attenuations.push(this.Vec4FromData(Lights[i].Attenuation.ToVertex().ToArray()));
+            Attenuations.push(this.Vec3FromData(Lights[i].Attenuation.ToVertex().ToArray()));
             LightColors.push(this.Vec4FromData(Lights[i].Paint.ToArray()));
             Parameters.push(Lights[i].Parameter);
-            Directions.push(Lights[i].Direction.ToArray());
+            Directions.push(this.Vec3FromData(Lights[i].Direction.ToArray()));
             Types.push(this.CodeLightType(Lights[i].LightType));
         }
         for(let i = Intensities.length; i < TOYBOX_MAX_LIGHTS; i++)
