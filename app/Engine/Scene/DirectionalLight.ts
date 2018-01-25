@@ -9,7 +9,7 @@ class DirectionalLight extends Light
     private _Radius:number;
     public get Radius():number { return this._Radius; }
     public set Radius(value:number) { this._Radius = value; }
-    public get Parameter() : number { /*Override*/ return this._Radius; }
+    public get Parameter() : number { /*Override*/ return this._Radius / 1000; }
     public constructor(Old?:DirectionalLight)
     {
         super(Old);

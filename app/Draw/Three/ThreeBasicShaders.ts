@@ -47,7 +47,7 @@ class ThreeBasicShaders
         uniform vec3 locations[8];
         uniform vec3 attenuations[8];
         uniform vec4 lightColors[8];
-        uniform vec3 lightDirection[8];
+        uniform vec3 lightDirections[8];
         uniform float lightParameters[8];
         uniform int lightTypes[8];
         uniform vec4 ambient;
@@ -56,6 +56,23 @@ class ThreeBasicShaders
         varying vec3 vPosition;
 
         #define MAX_LIGHTS 8 
+
+        vec3 ClosestPointOnLine(vec3 a, vec3 b, vec3 p)
+        {
+            vec3 c = p - a;
+            vec3 v = normalize(b - a);
+            float d = length(b - a);
+            float t = dot(v, c);
+            if(t < 0.0) return a;
+            if(t > d) return b;
+            v *= t;
+            return a + v;
+        }
+
+        float DistToLine(vec3 a, vec3 b, vec3 p)
+        {
+            return length(p - ClosestPointOnLine(a,b,p));
+        }
 
         void main()
         {
@@ -78,6 +95,7 @@ class ThreeBasicShaders
             {
                 if(intensities[i] > 0.0)
                 {
+                    if(lightTypes[i] == 2 && DistToLine(locations[i], lightDirections[i], vPosition) > lightParameters[i]) continue; 
                     vec3 lightLocation = locations[i];
                     vec3 distance = lightLocation - SurfacePosition;
                     distance = vec3(distance.x * 16.0 / 9.0, distance.yz);

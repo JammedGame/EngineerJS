@@ -75,6 +75,8 @@ export class MaterialNodeValue
     Value:any;
     constructor(Old?:MaterialNodeValue)
     Copy() : MaterialNodeValue
+    Serialize() : any
+    Deserialize(Data:any) : void
 }
 
 export class MaterialNode
@@ -87,6 +89,8 @@ export class MaterialNode
     Outputs:MaterialNodeValue[];
     constructor(Old?:MaterialNode)
     Copy() : MaterialNode
+    Serialize() : any
+    Deserialize(Data:any) : void
     AddValue(NodeValue: MaterialNodeValue) : void
     AddInput(NodeValue: MaterialNodeValue) : void
     AddOutput(NodeValue: MaterialNodeValue) : void
@@ -105,6 +109,8 @@ export class Material
     Nodes:MaterialNode[];
     constructor(Old?:Material)
     Copy() : Material
+    Serialize() : any
+    Deserialize(Data:any) : void
     AddNode(Node:MaterialNode) : void
     FindNodeByName(Name:string) : MaterialNode
     FindNodeByFunction(Function:string) : MaterialNode
@@ -133,19 +139,45 @@ export class DrawObject extends SceneObject
     Deserialize(Data) : void
 }
 
+export enum LightType
+{
+    Point = "Point",
+    Spot = "Spot",
+    Directional = "Directional"
+}
+
 export class LightAttenuation
 {
     Constant:number;
     Linear:number;
     Quadratic:number;
     constructor(Old?:LightAttenuation, Constant?:number, Linear?:number, Quadratic?:number);
+    Copy() : LightAttenuation
 }
 
 export class Light extends DrawObject
 {
     Intensity:number;
+    LightType:LightType;
+    Direction:Math.Vertex;
     Attenuation:LightAttenuation;
+    Parameter:number;
     constructor(Old?:Light);
+    Copy() : Light
+}
+
+export class SpotLight extends Light
+{
+    RadiusAngle:number;
+    constructor(Old?:SpotLight);
+    Copy() : SpotLight
+}
+
+export class DirectionalLight extends Light
+{
+    Radius:number;
+    constructor(Old?:DirectionalLight);
+    Copy() : DirectionalLight
 }
 
 export enum ImageObjectMaterialType
@@ -173,6 +205,7 @@ export class ImageObject extends DrawObject
     FlipY:boolean;
     RepeatX:number;
     RepeatY:number;
+    AmbientColor:Math.Color;
     Sampling:ImageObjectSamplingType;
     MaterialType:ImageObjectMaterialType;
     CustomMaterial:Material;

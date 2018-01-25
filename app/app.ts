@@ -10,7 +10,9 @@ import { DrawEngineType, DrawEngine } from "./Draw/DrawEngine";
 import { DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
 import { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject } from "./Engine/Scene/ImageObject";
 import { SpriteSet, Sprite } from "./Engine/Scene/Sprite";
-import { Light, LightAttenuation } from "./Engine/Scene/Light";
+import { Light, LightType, LightAttenuation } from "./Engine/Scene/Light";
+import { SpotLight } from "./Engine/Scene/SpotLight";
+import { DirectionalLight } from "./Engine/Scene/DirectionalLight";
 import { TileCollection, Tile } from "./Engine/Scene/Tile";
 import { EventPackage } from "./Engine/Events/Events";
 import { MouseButton } from "./Engine/Events/EventArguments";
@@ -38,7 +40,8 @@ export
     DrawEngineType, DrawEngine,
     ImageObjectMaterialType, ImageObjectSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, Tile, TileCollection, MouseButton, EventPackage,
-    Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
+    Light, LightType, LightAttenuation, SpotLight, DirectionalLight,
+    MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,
