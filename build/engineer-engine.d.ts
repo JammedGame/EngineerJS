@@ -33,11 +33,11 @@ export enum MouseButton
 
 export enum SceneObjectType
 {
-    Undefined,
-    Drawn,
-    Script,
-    Sound,
-    Other
+    Undefined = "Undefined",
+    Drawn = "Drawn",
+    Script = "Script",
+    Sound = "Sound",
+    Other = "Other"
 }
 
 export class SceneObject
@@ -53,11 +53,76 @@ export class SceneObject
     Deserialize(Data:any) : void
 }
 
-export enum DrawObjectType 
+export enum MaterialNodeValueType
 {
-    Undefined,
-    Sprite,
-    Tile
+    Int = "int",
+    Bool = "bool",
+    Float = "float",
+    Vector2 = "vec2",
+    Vector3 = "vec3",
+    Vector4 = "vec4"
+}
+
+export class MaterialNodeValue
+{
+    ID:string;
+    Name:string;
+    OriginID:string;
+    ParentName:string;
+    Editable:boolean;
+    Type:MaterialNodeValueType;
+    InputTarget:MaterialNodeValue;
+    Value:any;
+    constructor(Old?:MaterialNodeValue)
+    Copy() : MaterialNodeValue
+    Serialize() : any
+    Deserialize(Data:any) : void
+}
+
+export class MaterialNode
+{
+    ID:string;
+    Name:string;
+    FunctionID:string;
+    Values:MaterialNodeValue[];
+    Inputs:MaterialNodeValue[];
+    Outputs:MaterialNodeValue[];
+    constructor(Old?:MaterialNode)
+    Copy() : MaterialNode
+    Serialize() : any
+    Deserialize(Data:any) : void
+    AddValue(NodeValue: MaterialNodeValue) : void
+    AddInput(NodeValue: MaterialNodeValue) : void
+    AddOutput(NodeValue: MaterialNodeValue) : void
+}
+
+export class MaterialNodePool
+{
+    Pool: { [key: string]:MaterialNode; };
+    constructor()
+}
+
+export class Material
+{
+    ID:string;
+    Name:string;
+    Nodes:MaterialNode[];
+    constructor(Old?:Material)
+    Copy() : Material
+    Serialize() : any
+    Deserialize(Data:any) : void
+    AddNode(Node:MaterialNode) : void
+    FindNodeByName(Name:string) : MaterialNode
+    FindNodeByFunction(Function:string) : MaterialNode
+}
+
+export enum DrawObjectType
+{
+    Undefined = "Undefined",
+    Image = "Image",
+    Sprite = "Sprite",
+    Tile = "Tile",
+    Light = "Light"
 }
 
 export class DrawObject extends SceneObject
@@ -65,10 +130,62 @@ export class DrawObject extends SceneObject
     Modified:boolean;
     Fixed:boolean;
     Active:boolean;
+    Paint:Math.Color;
     DrawType:DrawObjectType;
     Trans:Math.Transformation;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
+    Serialize() : any
+    Deserialize(Data) : void
+}
+
+export class LightAttenuation
+{
+    Constant:number;
+    Linear:number;
+    Quadratic:number;
+    constructor(Old?:LightAttenuation, Constant?:number, Linear?:number, Quadratic?:number);
+}
+
+export class Light extends DrawObject
+{
+    Intensity:number;
+    Attenuation:LightAttenuation;
+    constructor(Old?:Light);
+}
+
+export enum ImageObjectMaterialType
+{
+    Default = "Default",
+    Lit = "Lit",
+    NormalLit = "NormalLit",
+    Custom = "Custom",
+    Shader = "Shader"
+}
+
+export enum ImageObjectSamplingType
+{
+    Linear = "Linear",
+    Nearest = "Nearest"
+}
+
+export class ImageObject extends DrawObject
+{
+    // Abstract
+    Index: number;
+    Images: string[];
+    NormalMaps: string[];
+    FlipX:boolean;
+    FlipY:boolean;
+    RepeatX:number;
+    RepeatY:number;
+    AmbientColor:Math.Color;
+    Sampling:ImageObjectSamplingType;
+    MaterialType:ImageObjectMaterialType;
+    CustomMaterial:Material;
+    CustomShader:any;
+    constructor(Old?:ImageObject)
+    Copy() : ImageObject
     Serialize() : any
     Deserialize(Data) : void
 }
@@ -85,13 +202,13 @@ export class SpriteSet
     Deserialize(Data:any) : void
 }
 
-export class Sprite extends DrawObject
+export class Sprite extends ImageObject
 {
     CurrentIndex:number;
     CurrentSpriteSet:number;
     BackUpSpriteSet:number;
-    Paint:Math.Color;
     SpriteSets:SpriteSet[];
+    NormalSets:SpriteSet[];
     SubSprites:Sprite[];
     constructor(Old?:Sprite)
     Copy() : Sprite
@@ -101,9 +218,8 @@ export class Sprite extends DrawObject
     UpdateSpriteSet(Index:number) : void
     SetSpriteSetByName(Name:string) : void
     UpdateSpriteSetByName(Name:string) : void
-    Index() : number
-    GetActiveSprites() : string[]
     GetSprites(Set:number) : string[]
+    GetNormalSprites(Set:number) : string[]
     Serialize() : any
     Deserialize(Data:any) : void
 }
@@ -118,11 +234,10 @@ export class TileCollection
     Deserialize(Data) : void
 }
 
-export class Tile extends DrawObject
+export class Tile extends ImageObject
 {
-    Index:number;
     Collection:TileCollection;
-    Paint:Math.Color;
+    NormalCollection:TileCollection;
     SubTiles:Tile[];
     constructor(Old?:Tile)
     Copy() : Tile
@@ -146,8 +261,8 @@ export class SoundObject extends SceneObject
 
 export enum SceneType
 {
-    Scene2D,
-    Scene3D
+    Scene2D = "Scene2D",
+    Scene3D = "Scene3D"
 }
 
 export class Scene

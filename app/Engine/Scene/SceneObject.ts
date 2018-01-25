@@ -8,14 +8,15 @@ import { Serialization } from "./../../Data/Serialization";
 
 enum SceneObjectType
 {
-    Undefined,
-    Drawn,
-    Script,
-    Sound,
-    Other
+    Undefined = "Undefined",
+    Drawn = "Drawn",
+    Script = "Script",
+    Sound = "Sound",
+    Other = "Other"
 }
 class SceneObject
 {
+    // Abstract
     private _ID:string;
     private _Name:string;
     private _Type:SceneObjectType;
@@ -55,7 +56,7 @@ class SceneObject
         {
             ID: this._ID,
             Name: this._Name,
-            Type: <number> this._Type,
+            Type: <string> this._Type,
             Data: Serialization.CleanData(this.Data)
         };
         return SO;

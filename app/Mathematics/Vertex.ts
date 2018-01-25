@@ -119,6 +119,12 @@ class Vertex
     {
         return Vertex.CalculateAngle(new Vertex(0,1,0), new Vertex(V2.X - V1.X, V2.Y - V1.Y, V2.Z - V1.Z));
     }
+    public Deserialize(Data:any) : void
+    {
+        this.X = Data.X;
+        this.Y = Data.Y;
+        this.Z = Data.Z;
+    }
     public Serialize() : any
     {
         let V = 

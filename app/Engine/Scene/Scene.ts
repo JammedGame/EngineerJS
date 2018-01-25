@@ -5,13 +5,15 @@ import * as Util from "./../../Util/Util";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
-import { SceneObject } from "./SceneObject";
+import { SceneObject, SceneObjectType } from "./SceneObject";
+import { DrawObject, DrawObjectType } from "./DrawObject";
 import { Serialization } from "./../../Data/Serialization";
+import { Light } from "./Light";
 
 enum SceneType
 {
-    Scene2D,
-    Scene3D
+    Scene2D = "Scene2D",
+    Scene3D = "Scene3D"
 }
 class Scene
 {
@@ -31,6 +33,14 @@ class Scene
     public get Events():EventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
+    public get Lights() : Light[]
+    {
+        return this.GetObjectsWithDrawType(DrawObjectType.Light);
+    }
+    public get ActiveLights() : Light[]
+    {
+        return this.GetActiveObjectsWithDrawType(DrawObjectType.Light);
+    }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:Scene)
     {
@@ -87,6 +97,41 @@ class Scene
         }
         return Objects;
     }
+    public GetObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    {  
+        let Objects:any[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn)  
+            {  
+                if((<DrawObject>this.Objects[i]).DrawType == Type)  
+                {  
+                    Objects.push(this.Objects[i]);  
+                }  
+            }  
+        }  
+        return Objects;  
+    }  
+    public GetActiveObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    {  
+        let Objects:any[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn && (<DrawObject>this.Objects[i]).Active)  
+            {  
+                if((<DrawObject>this.Objects[i]).DrawType == Type)
+                {  
+                    Objects.push(this.Objects[i]);  
+                }  
+            }  
+        }  
+        return Objects;  
+    }
+    public Composite(Chunk:Scene) : boolean
+    {
+        // Virtual
+        return false;
+    }
     public Serialize() : any
     {
         // Virtual
@@ -94,7 +139,7 @@ class Scene
         {
             ID: this._ID,
             Name: this._Name,
-            Type: <number>this._Type,
+            Type: <string> this._Type,
             BackColor: this._BackColor.Serialize(),
             Objects: [],
             Data: {}
