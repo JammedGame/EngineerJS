@@ -207,10 +207,13 @@ class ThreeMaterialGenerator
         if(Drawn.FlipX) RepeatX *= -1;
         let RepeatY = Drawn.RepeatY;
         if(Drawn.FlipY) RepeatY *= -1;
-        NewTexture.wrapS = NewTexture.wrapT = Three.RepeatWrapping;
-        NewTexture.offset.set( 0, 0 );
-        NewTexture.repeat.set(RepeatX, RepeatY);
-        NewTexture.needsUpdate = true;
+        if(RepeatX != 1 || RepeatY != 1)
+        {
+            NewTexture.wrapS = NewTexture.wrapT = Three.RepeatWrapping;
+            NewTexture.offset.set( 0, 0 );
+            NewTexture.repeat.set(RepeatX, RepeatY);
+            NewTexture.needsUpdate = true;
+        }
         if(Drawn.Sampling == Engine.ImageObjectSamplingType.Nearest) NewTexture.magFilter = Three.NearestFilter;
         return NewTexture;
     }
