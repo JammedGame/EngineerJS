@@ -51,6 +51,7 @@ class SoundObject extends SceneObject
                 autoplay:this._Autoplay,
                 loop:this._Looped,
                 volume:this._Volume/100.0,
+                preload: true
             }
         )
     }

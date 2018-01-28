@@ -135,8 +135,6 @@ export class DrawObject extends SceneObject
     Trans:Math.Transformation;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
-    Serialize() : any
-    Deserialize(Data) : void
 }
 
 export class LightAttenuation
@@ -186,8 +184,6 @@ export class ImageObject extends DrawObject
     CustomShader:any;
     constructor(Old?:ImageObject)
     Copy() : ImageObject
-    Serialize() : any
-    Deserialize(Data) : void
 }
 
 export class SpriteSet
@@ -220,8 +216,6 @@ export class Sprite extends ImageObject
     UpdateSpriteSetByName(Name:string) : void
     GetSprites(Set:number) : string[]
     GetNormalSprites(Set:number) : string[]
-    Serialize() : any
-    Deserialize(Data:any) : void
 }
 
 export class TileCollection
@@ -230,8 +224,6 @@ export class TileCollection
     Images:string[];
     constructor(Old?:TileCollection, Images?:string[])
     Copy() : TileCollection
-    Serialize() : any
-    Deserialize(Data) : void
 }
 
 export class Tile extends ImageObject
@@ -241,8 +233,6 @@ export class Tile extends ImageObject
     SubTiles:Tile[];
     constructor(Old?:Tile)
     Copy() : Tile
-    Serialize() : any
-    Deserialize(Data) : void
 }
 
 export class SoundObject extends SceneObject
@@ -255,8 +245,6 @@ export class SoundObject extends SceneObject
     Copy() : SceneObject
     GenerateSound() : void
     Play() : void
-    Serialize() : any
-    Deserialize(Data) : void
 }
 
 export enum SceneType
@@ -289,9 +277,6 @@ export class Scene2D extends Scene
     Sprites:Sprite[]
     constructor(Old?:Scene2D)
     Copy() : Scene2D
-    AddSceneObject(Object:SceneObject) : void
-    Serialize() : any
-    Deserialize(Data:any) : void
 }
 
 export class Game

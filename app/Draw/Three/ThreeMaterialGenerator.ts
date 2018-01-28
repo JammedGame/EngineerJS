@@ -19,7 +19,7 @@ class ThreeMaterialGenerator
         {
             index: { type:"i", value: Index },
             color: { type:"v4", value: Drawn.Paint.ToArray() },
-            texture: { type:"tv", value: Textures[0] }
+            texture: { type:"tv", value: (Textures)?Textures[0]:null }
         };
         let VertexShader = ThreeBasicShaders.Vertex2D;
         let FragmentShader = ThreeBasicShaders.Fragment2D;

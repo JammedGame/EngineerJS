@@ -40,9 +40,11 @@ export class Transformation
     Deserialize(Data) : void
 }
 
-export enum MatrixMode { }
-export const Projection: MatrixMode;
-export const ModelView: MatrixMode;
+export enum MatrixMode
+{
+    Projection,
+    ModelView
+}
 
 export class Matrix
 {
@@ -117,11 +119,13 @@ export class Color
     static FromRGBA(R:number, G:number, B:number, A:number):Color
 }
 
-export enum CollisionType { }
-export const Radius2D: CollisionType;
-export const Rectangular2D: CollisionType;
-export const Horizontal2D: CollisionType;
-export const Vertical2D: CollisionType;
+export enum CollisionType
+{
+    Radius2D,
+    Rectangular2D,
+    Horizontal2D,
+    Vertical2D
+}
 
 export class CollisionValue
 {
