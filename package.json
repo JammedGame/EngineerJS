@@ -8,7 +8,8 @@
     "start": "tsc && webpack-dev-server --hot",
     "build": "tsc && webpack --watch",
     "prod": "tsc && webpack -p",
-    "test": "cd tests"
+    "test": "cd tests",
+    "inject": "rm -r ./../GGJ2018/node_modules/engineer-js/build && cp -R ./build ./../GGJ2018/node_modules/engineer-js/build"
   },
   "repository": {
     "type": "git",

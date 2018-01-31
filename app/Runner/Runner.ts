@@ -8,6 +8,7 @@ import * as Three from "./../Draw/Three/Three";
 
 class Runner
 {
+    private static _Current:Runner;
     private _Stop:boolean;
     private _EngineInit:boolean;
     private _Seed:number;
@@ -18,7 +19,10 @@ class Runner
     private _DrawEngine:Draw.DrawEngine;
     private _Canvas:HTMLCanvasElement;
     public get Game():any { return this._Game; }
+    public get DrawEngine():any { return this._DrawEngine; }
     public Data: { [key: string]:any; } = {};
+    public static get Current():Runner { return Runner._Current; }
+    public static get Resolution():Math.Vertex { return Runner._Current._DrawEngine.Resolution; }
     public constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
     {
         this._Stop = true;
@@ -29,6 +33,7 @@ class Runner
         this._Canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.EngineInit(EngineType);
         this.AttachEvents();
+        Runner._Current = this;
     }
     public SwitchScene(SceneName:string, Preload:boolean) : void
     {
