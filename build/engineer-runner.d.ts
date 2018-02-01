@@ -5,6 +5,9 @@ import * as Draw from "./engineer-draw";
 export class Runner
 {
     Game:Engine.Game;
+    DrawEngine:Draw.DrawEngine;
+    static Current:Runner;
+    static Resolution:Math.Vertex;
     constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
     SwitchScene(SceneName:string, Preload:boolean) : void
     SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
