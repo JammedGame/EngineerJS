@@ -44,7 +44,7 @@ class DrawEngine
     public TransformToCanvas(X:number, Y:number) : Math.Vertex
     {
         if(this._FixedSize) return new Math.Vertex(X, Y, 0);
-        return new Math.Vertex((X / this._Parent.innerWidth) * this._Resolution.X, (Y / this._Parent.innerHeight) * this._Resolution.Y, 0);
+        return new Math.Vertex((X / this._Target.clientWidth) * this._Resolution.X, (Y / this._Target.clientHeight) * this._Resolution.Y, 0);
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
