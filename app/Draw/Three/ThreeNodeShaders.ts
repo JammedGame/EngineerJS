@@ -22,9 +22,11 @@ class ThreeNodeShaders
         this._Pool["Vertex"] = `
         varying vec2 vUv;
         varying vec3 vPosition;
+        uniform float repeatx;
+        uniform float repeaty;
         void main()
         {
-            vUv  = vec2(1.0 - uv.x, uv.y);
+            vUv  = vec2((1.0 - uv.x)*repeatx, uv.y*repeaty);
             vec4 pos = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
             vPosition = pos.xyz;
 			gl_Position = pos;
