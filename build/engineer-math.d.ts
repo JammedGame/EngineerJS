@@ -11,6 +11,8 @@ export class Vertex
     constructor(X:number, Y:number, Z:number)
     Copy() : Vertex
     Translate(V:Vertex) : Vertex
+    Add(V:Vertex) : Vertex
+    Substract(V:Vertex) : Vertex
     Scale(V: Vertex) : Vertex
     Scalar(Value:number) : Vertex
     RotateX(Angle:number) : Vertex
@@ -22,6 +24,7 @@ export class Vertex
     ToArray() : number[]
     ToQuattroArray(W:number) : number[]
     Serialize() : any
+    Deserialize(Data:any) : void
     static FromRGB(R:number, G:number, B:number) : Vertex
     static Cross(Left:Vertex, Right:Vertex) : Vertex
     static Distance(V1:Vertex, V2:Vertex) : number
@@ -170,6 +173,11 @@ export class Collision
     static GetCollision8Way(Position1:Vertex, Position2:Vertex) : CollisionValue
     static GetCollisionRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
     static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
+}
+
+export class Random
+{
+    static Next(Min, Max) : number
 }
 
 export as namespace Math;
