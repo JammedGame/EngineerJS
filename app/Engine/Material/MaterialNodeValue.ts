@@ -15,7 +15,7 @@ enum MaterialNodeValueType
 class MaterialNodeValue
 {
     private _ID:string;
-    private _OriginID:string;
+    private _Origin:string;
     private _Name:string;
     private _ParentName:string;
     private _Value:any;
@@ -25,7 +25,7 @@ class MaterialNodeValue
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
-    public get OriginID():string { return this._OriginID; }
+    public get OriginID():string { return this._Origin; }
     public get ParentName():string { return this._ParentName; }
     public set ParentName(value:string) { this._ParentName = value; }
     public get Value():any { return this._Value; }
@@ -41,7 +41,7 @@ class MaterialNodeValue
         if(Old != null)
         {
             this._ID = Data.Uuid.Create();
-            this._OriginID = Old._ID;
+            this._Origin = Old._ID;
             this._ParentName = Old._ParentName;
             this._Name = Old._Name;
             this._Type = Old._Type;
@@ -51,7 +51,7 @@ class MaterialNodeValue
         else
         {
             this._ID = Data.Uuid.Create();
-            this._OriginID = this._ID;
+            this._Origin = this._ID;
             this._ParentName = "";
             this._Name = this._ID;
             this._Type = MaterialNodeValueType.Vector4;
@@ -81,7 +81,7 @@ class MaterialNodeValue
         let MNV =
         {
             ID: this._ID,
-            OriginID: this._OriginID,
+            OriginID: this._Origin,
             Name: this._Name,
             ParentName: this._ParentName,
             Value: this._Value,
@@ -96,7 +96,7 @@ class MaterialNodeValue
     {
         // Virtual
         this._ID = Data.ID;
-        this._OriginID = Data.OriginID;
+        this._Origin = Data.OriginID;
         this._Name = Data.Name;
         this._ParentName = Data.ParentName;
         this._Value = Data.Value;

@@ -6,6 +6,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
 import { SceneObject, SceneObjectType } from "./SceneObject";
+import { SoundObject } from "./SoundObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
 import { Serialization } from "./../../Data/Serialization";
 import { Light } from "./Light";
@@ -33,13 +34,21 @@ class Scene
     public get Events():EventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
+    public get DrawnObjects() : DrawObject[]
+    {
+        return <DrawObject[]>this.GetObjectsWithType(SceneObjectType.Drawn);
+    }
+    public get SoundObjects() : SoundObject[]
+    {
+        return <SoundObject[]>this.GetObjectsWithType(SceneObjectType.Sound);
+    }
     public get Lights() : Light[]
     {
-        return this.GetObjectsWithDrawType(DrawObjectType.Light);
+        return <Light[]>this.GetObjectsWithDrawType(DrawObjectType.Light);
     }
     public get ActiveLights() : Light[]
     {
-        return this.GetActiveObjectsWithDrawType(DrawObjectType.Light);
+        return <Light[]>this.GetActiveObjectsWithDrawType(DrawObjectType.Light);
     }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:Scene)
@@ -81,9 +90,9 @@ class Scene
         }
         else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
     }
-    public GetObjectsWithData(Key:string, Data?:any) : any[]
+    public GetObjectsWithData(Key:string, Data?:any) : SceneObject[]
     {
-        let Objects:any[] = [];
+        let Objects:SceneObject[] = [];
         for(let i = 0; i < this.Objects.length; i++)
         {
             if(this.Objects[i].Data[Key])
@@ -97,31 +106,43 @@ class Scene
         }
         return Objects;
     }
-    public GetObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    public GetObjectsWithType(Type:SceneObjectType) : SceneObject[]  
     {  
-        let Objects:any[] = [];  
+        let Objects:SceneObject[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == Type)  
+            {  
+                Objects.push(this.Objects[i]);  
+            }    
+        }  
+        return Objects;  
+    } 
+    public GetObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]  
+    {  
+        let Objects:DrawObject[] = [];  
         for(let i = 0; i < this.Objects.length; i++)  
         {  
             if(this.Objects[i].Type == SceneObjectType.Drawn)  
             {  
                 if((<DrawObject>this.Objects[i]).DrawType == Type)  
                 {  
-                    Objects.push(this.Objects[i]);  
+                    Objects.push(<DrawObject>this.Objects[i]);  
                 }  
             }  
         }  
         return Objects;  
     }  
-    public GetActiveObjectsWithDrawType(Type:DrawObjectType) : any[]  
+    public GetActiveObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]  
     {  
-        let Objects:any[] = [];  
+        let Objects:DrawObject[] = [];  
         for(let i = 0; i < this.Objects.length; i++)  
         {  
             if(this.Objects[i].Type == SceneObjectType.Drawn && (<DrawObject>this.Objects[i]).Active)  
             {  
                 if((<DrawObject>this.Objects[i]).DrawType == Type)
                 {  
-                    Objects.push(this.Objects[i]);  
+                    Objects.push(<DrawObject>this.Objects[i]);  
                 }  
             }  
         }  

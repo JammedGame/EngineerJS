@@ -1,5 +1,10 @@
 import * as Engine from "./engineer-engine";
 
+export class Uuid
+{
+    static Create() : string
+}
+
 export class Reader
 {
     static ReadFile(FilePath:string, Callback:Function): string

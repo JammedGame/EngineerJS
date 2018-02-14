@@ -32,6 +32,7 @@ class ImageObject extends DrawObject
     private _CustomMaterial:Material;
     private _CustomShader:any;
     public get Index() : number { /*Virtual*/ return -1; }
+    public set Index(value:number) { /*Virtual*/ }
     public get Images() : string[] { /*Virtual*/ return []; }
     public get NormalMaps() : string[] { /*Virtual*/ return []; }
     public get FlipX():boolean { return this._FlipX; }

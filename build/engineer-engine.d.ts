@@ -186,14 +186,32 @@ export class ImageObject extends DrawObject
     Copy() : ImageObject
 }
 
-export class SpriteSet
+export class ImageCollection
 {
     ID:string;
+    Origin:string;
+    Images:string[];
+    constructor(Old?:ImageCollection, Images?:string[])
+    Copy() : ImageCollection
+    Serialize() : any
+    Deserialize(Data:any) : void
+}
+
+export class SpriteSet extends ImageCollection
+{
     Name:string;
     Seed:number;
-    Sprites:string[];
-    constructor(Old?:SpriteSet, Name?:string, Images?:string[])
+    constructor(Old?:SpriteSet, Images?:string[], Name?:string)
     Copy() : SpriteSet
+}
+
+export class SpriteSetCollection
+{
+    ID:string;
+    Origin:string;
+    SpriteSets:SpriteSet[];
+    constructor(Old?:SpriteSetCollection, SpriteSets?:SpriteSet[])
+    Copy() : SpriteSetCollection
     Serialize() : any
     Deserialize(Data:any) : void
 }
@@ -203,6 +221,8 @@ export class Sprite extends ImageObject
     CurrentIndex:number;
     CurrentSpriteSet:number;
     BackUpSpriteSet:number;
+    Collection:SpriteSetCollection;
+    NormalCollection:SpriteSetCollection;
     SpriteSets:SpriteSet[];
     NormalSets:SpriteSet[];
     SubSprites:Sprite[];
@@ -218,18 +238,10 @@ export class Sprite extends ImageObject
     GetNormalSprites(Set:number) : string[]
 }
 
-export class TileCollection
-{
-    ID:string;
-    Images:string[];
-    constructor(Old?:TileCollection, Images?:string[])
-    Copy() : TileCollection
-}
-
 export class Tile extends ImageObject
 {
-    Collection:TileCollection;
-    NormalCollection:TileCollection;
+    Collection:ImageCollection;
+    NormalCollection:ImageCollection;
     SubTiles:Tile[];
     constructor(Old?:Tile)
     Copy() : Tile
@@ -261,12 +273,18 @@ export class Scene
     BackColor:Math.Color;
     Events:EventPackage;
     Objects:SceneObject[];
+    Lights:Light[];
+    DrawObjects:DrawObject[];
+    SoundObjects:SoundObject[];
     Data:any;
     constructor(Old?:Scene)
     Copy() : Scene
     AddSceneObject(Object:SceneObject) : void
     RemoveSceneObject(Object:SceneObject) : void
-    GetObjectsWithData(Key:string, Data?:any) : any[]
+    GetObjectsWithData(Key:string, Data?:any) : SceneObject[]
+    GetObjectsWithType(Type:SceneObjectType) : SceneObject[]
+    GetObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]
+    GetActiveObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]
     Serialize() : any
     Deserialize(Data:any) : void
 }
