@@ -68,7 +68,7 @@ class Sprite extends ImageObject
         let Index:number = 0;
         for(let i = 0; i < this._CurrentSpriteSet; i++)
         {
-            Index += this._SpriteSets[i].Images.length;
+            Index += this._SpriteSets.SpriteSets[i].Images.length;
         }
         Index += this._CurrentIndex;
         return Index;
@@ -78,9 +78,9 @@ class Sprite extends ImageObject
         let List:string[] = [];
         for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
         {
-            for(let j = 0; j < this._SpriteSets[i].Images.length; j++)
+            for(let j = 0; j < this._SpriteSets.SpriteSets[i].Images.length; j++)
             {
-                List.push(this._SpriteSets[i].Images[j]);
+                List.push(this._SpriteSets.SpriteSets[i].Images[j]);
             }
         }
         return List;
@@ -114,14 +114,14 @@ class Sprite extends ImageObject
     {
         for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
         {
-            if(this._SpriteSets[i].Name == Name) this.SetSpriteSet(i);
+            if(this._SpriteSets.SpriteSets[i].Name == Name) this.SetSpriteSet(i);
         }
     }
     public UpdateSpriteSetByName(Name:string) : void
     {
         for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
         {
-            if(this._SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
+            if(this._SpriteSets.SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
         }
     }
     public GetSprites(Set:number) : string[]
