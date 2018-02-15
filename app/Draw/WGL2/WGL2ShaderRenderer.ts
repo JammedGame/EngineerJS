@@ -11,14 +11,16 @@ import { WGL2ShaderManager } from "./WGL2ShaderManager"
 class WGL2ShaderRenderer extends ShaderRenderer
 {
     private _GL:any;
-    public constructor(Old:ShaderRenderer, Canvas:HTMLCanvasElement)
+    public constructor(Old:WGL2ShaderRenderer, Canvas:HTMLCanvasElement)
     {
         let GL: any = Canvas.getContext("webgl2") as any;
         super(Old, Canvas);
+        this._GL = GL;
         if(Old)
         {
-            /// TODO
-            /// Copy constructor;
+            this._Manager = Old._Manager.Copy();
+            this._ShaderPool.Vertex["2D"] = GLSLShaders.Vertex2D;
+            this._ShaderPool.Fragment["2D"] = GLSLShaders.Fragment2D;
         }
         else
         {
@@ -40,6 +42,7 @@ class WGL2ShaderRenderer extends ShaderRenderer
     {
         // Override
         this._GL.viewport(0,0,Size.X,Size.Y);
+        //this._GL.viewport(-1.0,-1.0,1.0,1.0);
     }
     protected Toggle(Preference:any, Value:boolean) : void
     {

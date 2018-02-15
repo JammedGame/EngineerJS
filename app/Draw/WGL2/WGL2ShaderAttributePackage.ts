@@ -5,7 +5,7 @@ import { ShaderAttributePackage } from "./../ShaderRenderer/ShaderAttributePacka
 class WGL2ShaderAttributePackage extends ShaderAttributePackage
 {
     private _GL:any;
-    private _BufferPointer:ArrayBuffer;
+    private _BufferPointer:Float32Array;
     public constructor(Old?:WGL2ShaderAttributePackage)
     {
         const CANVAS: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement;
@@ -22,30 +22,27 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
             this._GL = GL;
         }
     }
-    public Bind(ProgramIndexer:number) : void
+    public CalculateBufferLineLength() : void
     {
-        // Override
         this._BufferLineLength = 0;
         for (let i = 0; i < this._Entries.length; i++)
         {
-            this._GL.bindAttribLocation(ProgramIndexer, i, this._Entries[i].ID);
             this._BufferLineLength += this._Entries[i].Size;
         }
-        this._AttributesBound = true;
     }
     public ClearData() : void
     {
         // Override
         let GL = this._GL;
         this._Activated = false;
-        for(let i = 0; i < this._Entries.length; i++)
+        /*for(let i = 0; i < this._Entries.length; i++)
         {
             if(!this._Entries[i].Buffer) continue;
             GL.deleteBuffer(this._Entries[i].Buffer);
             this._Entries[i].Buffer = null;
         }
         GL.deleteVertexArray(this._VertexArray);
-        super.ClearData();
+        super.ClearData();*/
     }
     protected CreateBuffer(BufferData:Float32Array) : any
     {
@@ -68,35 +65,37 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
         }
         if(this._Activated)
         {
-            this._Activated = false;
+            /*this._Activated = false;
             for(let i = 0; i < this._Entries.length; i++)
             {
                 if(!this._Entries[i].Buffer) continue;
                 GL.deleteBuffer(this._Entries[i].Buffer);
                 this._Entries[i].Buffer = null;
             }
-            GL.deleteVertexArray(this._VertexArray);
+            GL.deleteVertexArray(this._VertexArray);*/
         }
+        this.CalculateBufferLineLength();
         for(let i = 0; i < this._Entries.length; i++)
         {
             this._Entries[i].Buffer = this.CreateBuffer(this._Entries[i].Data);
         }
         this._VertexArray = GL.createVertexArray();
         GL.bindVertexArray(this._VertexArray);
-        let Attribute:number = 0;
         let Offset:number = 0;
         for (let i = 0; i < this._Entries.length; i++)
         {
-            Attribute = i;
-            let AtributeSize:number = this._Entries[i].Size / 4;
-            GL.enableVertexAttribArray(Offset);
+            let Attribute = GL.getAttribLocation(ProgramIndexer, this._Entries[i].ID);
+            let AttributeSize:number = this._Entries[i].Size / 4;
             GL.bindBuffer(GL.ARRAY_BUFFER, this._Entries[i].Buffer);
-            GL.vertexAttribPointer(Attribute, AtributeSize, GL.FLOAT, false, 0, 0);
+            GL.enableVertexAttribArray(Attribute);
+            GL.vertexAttribPointer(Attribute, AttributeSize, GL.FLOAT, false, 0, 0);
             GL.bindBuffer(GL.ARRAY_BUFFER, null);
             Offset += this._Entries[i].Size;
         }
+        GL.bindVertexArray(null);
         this._Activated = true;
         this._DataChanged = false;
+        GL.bindVertexArray(this._VertexArray);
         return true;
     }
 }

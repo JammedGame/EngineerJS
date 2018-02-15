@@ -4,6 +4,7 @@ import * as Util from "./../../Util/Util";
 
 class ShaderAttributePackage
 {
+    // Abstract
     protected _Activated:boolean;
     protected _DataChanged:boolean;
     protected _AttributesBound:boolean;
@@ -19,7 +20,6 @@ class ShaderAttributePackage
         {
             this._Activated = false;
             this._DataChanged = true;
-            this._AttributesBound = Old._AttributesBound;
             this._VertexArray = Old._VertexArray;
             this._BufferLineLength = Old._BufferLineLength;
             this._Entries = [];
@@ -29,7 +29,6 @@ class ShaderAttributePackage
         {
             this._Activated = false;
             this._DataChanged = true;
-            this._AttributesBound = false;
             this._VertexArray = null;
             this._BufferLineLength = 0;
             this._Entries = [];
@@ -42,14 +41,13 @@ class ShaderAttributePackage
     public SetDefinition(ID:string, Size:number, Type:string) : boolean
     {
         // Virtual
-        if(this._AttributesBound) return false;
         let Index:number = this.FindIndex(ID);
         if(Index != -1) return false;
         let NewEntry = new ShaderAttributeEntry(null, ID, Size, Type);
         this._Entries.push(NewEntry);
         return true;
     }
-    public SetData(ID:string, DataSize:number, Data:ArrayBuffer) : boolean
+    public SetData(ID:string, DataSize:number, Data:Float32Array) : boolean
     {
         // Virtual
         let Index:number = this.FindIndex(ID);
@@ -76,7 +74,6 @@ class ShaderAttributePackage
     public ClearData() : void
     {
         // Virtual
-        this._AttributesBound = false;
         for(let i = 0; i < this._Entries.length; i++)
         {
             this._Entries[i].Data = null;
@@ -92,8 +89,6 @@ class ShaderAttributePackage
         }
         return Index;
     }
-    // Abstract
-    public Bind(Program_Indexer:number) : void { /*Virtual*/ }
     public Activate(Program_Indexer:number) : boolean { return false; /*Virtual*/ }
     protected CreateBuffer(BufferData:Float32Array) : any { return null; /*Virtual*/ }
 }

@@ -14,12 +14,14 @@ class ShaderManager
         if(Old != null)
         {
             this._ActiveShaderID = "";
-            this._Shader = {}
+            this._Shader = {};
+            this._DrawLineOffset = Old._DrawLineOffset;
         }
         else
         {
             this._ActiveShaderID = "";
             this._Shader = {}
+            this._DrawLineOffset = 0;
         }
     }
     public Copy() : ShaderManager

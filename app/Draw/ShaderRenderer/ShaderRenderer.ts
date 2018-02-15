@@ -13,8 +13,8 @@ import { ShaderPool } from "./ShaderPool";
 class ShaderRenderer extends Renderer
 {
     private _PushedID:string;
-    private _ImageVertices:any;
-    private _ImageUV:any;
+    private _ImageVertices:Float32Array;
+    private _ImageUV:Float32Array;
     protected _ShaderPool:ShaderPool;
     protected _Globals:ShaderUniformPackage;
     protected _Manager:ShaderManager;
@@ -37,8 +37,8 @@ class ShaderRenderer extends Renderer
             this._Globals = new ShaderUniformPackage();
             this._ShaderPool = new ShaderPool();
             //this._Globals.SetDefinition("CameraPosition", 3 * 4, "vec3");
-            this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
-            this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
+            //this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
+            //this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
         }
     }
     public Copy() : ShaderRenderer
@@ -77,10 +77,10 @@ class ShaderRenderer extends Renderer
     public SetColor(Color:Math.Color) : void
     {
         // Override
-        if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
+        /*if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
         this._Manager.Active.Uniforms.SetData("Color", Color.ToArray());
         if(!this._Globals.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Globals.SetData("Color", Color.ToArray());
+        this._Globals.SetData("Color", Color.ToArray());*/
     }
     public IsMaterialReady(ID:string) : boolean
     {
@@ -123,7 +123,6 @@ class ShaderRenderer extends Renderer
     public RenderImage(ID:string, Textures:string[], CurrentIndex:number, Update:boolean) : void
     {
         // Override
-        
         if (!this._Manager.ShaderExists(ID))
         {
             this._Manager.AddShader(ID);
@@ -135,27 +134,27 @@ class ShaderRenderer extends Renderer
         if (this._ImageVertices == null)
         {
             let Vertices:Math.Vertex[] = [];
-            Vertices.push(new Math.Vertex(0, 0, 0));
-            Vertices.push(new Math.Vertex(1, 0, 0));
-            Vertices.push(new Math.Vertex(0, 1, 0));
-            Vertices.push(new Math.Vertex(0, 1, 0));
-            Vertices.push(new Math.Vertex(1, 0, 0));
-            Vertices.push(new Math.Vertex(1, 1, 0));
+            Vertices.push(new Math.Vertex(0.0, 0.0, 0.0));
+            Vertices.push(new Math.Vertex(1.0, 0.0, 0.0));
+            Vertices.push(new Math.Vertex(0.0, 1.0, 0.0));
+            Vertices.push(new Math.Vertex(0.0, 1.0, 0.0));
+            Vertices.push(new Math.Vertex(1.0, 0.0, 0.0));
+            Vertices.push(new Math.Vertex(1.0, 1.0, 0.0));
             this._ImageVertices = Util.Convert.VerticesToByteArray(Vertices, 3);
             let UV:Math.Vertex[] = [];
-            UV.push(new Math.Vertex(0, 0, 0));
-            UV.push(new Math.Vertex(1, 0, 0));
-            UV.push(new Math.Vertex(0, 1, 0));
-            UV.push(new Math.Vertex(0, 1, 0));
-            UV.push(new Math.Vertex(1, 0, 0));
-            UV.push(new Math.Vertex(1, 1, 0));
+            UV.push(new Math.Vertex(0.0, 0.0, 0.0));
+            UV.push(new Math.Vertex(1.0, 0.0, 0.0));
+            UV.push(new Math.Vertex(0.0, 1.0, 0.0));
+            UV.push(new Math.Vertex(0.0, 1.0, 0.0));
+            UV.push(new Math.Vertex(1.0, 0.0, 0.0));
+            UV.push(new Math.Vertex(1.0, 1.0, 0.0));
             this._ImageUV = Util.Convert.VerticesToByteArray(UV, 2);
         }
         this._Manager.Active.Attributes.BufferLines = 6;
         this._Manager.Active.Attributes.SetData("V_Vertex", 6 * 3 * 4, this._ImageVertices);
         //this._Manager.Active.Attributes.SetData("V_TextureUV", 6 * 2 * 4, this._ImageUV);
-        if (!this._Manager.Active.Uniforms.Exists("Index")) this._Manager.Active.Uniforms.SetDefinition("Index", 4, "int");
-        this._Manager.Active.Uniforms.SetData("Index", CurrentIndex);
+        //if (!this._Manager.Active.Uniforms.Exists("Index")) this._Manager.Active.Uniforms.SetDefinition("Index", 4, "int");
+        //this._Manager.Active.Uniforms.SetData("Index", CurrentIndex);
         this._Manager.SetDrawMode(GraphicDrawMode.Triangles);
         this._Manager.Draw();
     }
@@ -179,6 +178,5 @@ class ShaderRenderer extends Renderer
         return null;
         //return Data.ImageContainer.LoadArray(Textures, CallBack);
     }
-
     protected SetViewport(Size:Math.Vertex) : void { /*Virtual*/ }
 }

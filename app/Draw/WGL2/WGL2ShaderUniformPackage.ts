@@ -1,6 +1,7 @@
 export { WGL2ShaderUniformPackage }
 
 import * as Math from "./../../Mathematics/Mathematics";
+import * as Util from "./../../Util/Util";
 
 import { ShaderUniformPackage } from "./../ShaderRenderer/ShaderUniformPackage"
 
@@ -33,7 +34,7 @@ class WGL2ShaderUniformPackage extends ShaderUniformPackage
             if (this._Data[i] != null)
             {
                 CurrentUniformLocation = GL.getUniformLocation(ProgramIndexer, this._ID[i]);
-                if (CurrentUniformLocation != -1)
+                if (CurrentUniformLocation != null)
                 {
                     if (this._Type[i] == "bool")
                     {
@@ -63,8 +64,22 @@ class WGL2ShaderUniformPackage extends ShaderUniformPackage
                     {
                         GL.uniformMatrix4fv(CurrentUniformLocation, false, this._Data[i]);
                     }
-                    else SomeFailed = true;
+                    else
+                    {
+                        Util.Log.Error("Unknown Uniform Type: " + this._Type[i] + ".");
+                        SomeFailed = true;
+                    }
                 }
+                else
+                {
+                    Util.Log.Error("Uniform " + this._ID[i] + " doesn't exist in shader.");
+                    SomeFailed = true;
+                }
+            }
+            else
+            {
+                Util.Log.Error("Data empty for Uniform " + this._ID[i] + ".");
+                SomeFailed = true;
             }
         }
         return !SomeFailed;

@@ -25,10 +25,20 @@ class WGL2DrawEngine extends DrawEngine
         // Override
         let Width:number = this._Parent.clientWidth;
         let Height:number = this._Parent.clientHeight;
-        this._Target.style.width = Width + "px";
-        this._Target.style.height = Height + "px";
-        this._Renderer.SetSize( Width, Height );
-        this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
+        if(!this._FixedSize)
+        {
+            this._Target.width = Width;
+            this._Target.height = Height;
+            this.Renderer.SetSize( Width, Height );
+            this._GlobalScale = new Math.Vertex(this.Resolution.X / Width, this.Resolution.Y / Height, 1);
+        }
+        else
+        {
+            this._Target.width = this.Resolution.X;
+            this._Target.height = this.Resolution.Y;
+            this.Renderer.SetSize( this.Resolution.X, this.Resolution.Y );
+            this._GlobalScale = new Math.Vertex(1, 1, 1);
+        }
     }
     public Draw2DScene(Scene:Engine.Scene2D, Size:Math.Vertex) : void
     {
@@ -39,11 +49,11 @@ class WGL2DrawEngine extends DrawEngine
         this._Renderer.Clear(Scene.BackColor);
         this._Matrix.MatrixMode(Math.MatrixMode.Projection);
         this._Matrix.LoadIdentity();
-        this._Matrix.Ortho2D(0, Size.X, Size.Y, 0);
+        //this._Matrix.Ortho2D(0, Size.X, Size.Y, 0);
         this._Renderer.SetProjectionMatrix(this._Matrix.ProjectionMatrix.Fields);
         this._Matrix.MatrixMode(Math.MatrixMode.ModelView);
         this._Matrix.LoadIdentity();
-        this._Matrix.Translate(Scene.Trans.Translation.X, Scene.Trans.Translation.Y, Scene.Trans.Translation.Z);
+        //this._Matrix.Translate(Scene.Trans.Translation.X, Scene.Trans.Translation.Y, Scene.Trans.Translation.Z);
         this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
         this._Matrix.PushMatrix();
         let Tiles:Engine.Tile[] = Scene.Tiles;
@@ -67,7 +77,7 @@ class WGL2DrawEngine extends DrawEngine
             this._Matrix.Rotate(Drawn.Trans.Rotation.X, 1, 0, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
-            this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
+            //this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
             this._Renderer.RenderImage(Drawn.ID, Drawn.CollectiveList(), (Drawn.CollectiveList().length > 0) ? Drawn.Index : -1, Drawn.Modified);
             Drawn.Modified = false;
             for(let i = 0; i < Drawn.SubSprites.length; i++)
@@ -90,7 +100,7 @@ class WGL2DrawEngine extends DrawEngine
             this._Matrix.Rotate(Drawn.Trans.Rotation.X, 1, 0, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
-            this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
+            //this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
             this._Renderer.RenderImage(Drawn.ID, Drawn.Collection.Images, (Drawn.Collection.Images.length > 0) ? Drawn.Index : -1, Drawn.Modified);
             Drawn.Modified = false;
             this._Matrix.PopMatrix();
