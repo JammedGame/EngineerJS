@@ -61,7 +61,7 @@ class Runner
     }
     private EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     {
-        if(EngineType == Draw.DrawEngineType.WGL2)
+        if(EngineType == Draw.DrawEngineType.WebGL2)
         {
             this._DrawEngine = new WGL2.WGL2DrawEngine();
             this._EngineInit = true;

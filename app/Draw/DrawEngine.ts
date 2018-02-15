@@ -8,13 +8,13 @@ import { RenderEnableCap, Renderer } from "./Renderer";
 
 enum DrawEngineType
 {
-    WGL2 = 0,
-    ThreeJS = 1
+    WebGL2 = "WGL2",
+    ThreeJS = "ThreeJS"
 }
 class DrawEngine
 {
-    private _Matrix:Math.MatrixTransformer;
-    private _Renderer:any;
+    protected _Matrix:Math.MatrixTransformer;
+    protected _Renderer:any;
     protected _FixedSize:boolean;
     protected _GlobalScale:Math.Vertex;
     protected _GlobalOffset:Math.Vertex;
@@ -54,10 +54,6 @@ class DrawEngine
     {
         if(this._FixedSize) return new Math.Vertex(X, Y, 0);
         return new Math.Vertex((X / this._Target.clientWidth) * this._Resolution.X, (Y / this._Target.clientHeight) * this._Resolution.Y, 0);
-    }
-    public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
-    {
-        // Virtual
     }
     public Draw2DScene(Scene:Engine.Scene2D, Size:Math.Vertex) : void
     {

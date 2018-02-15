@@ -108,14 +108,9 @@ class ThreeDrawEngine extends DrawEngine
             }
         }
     }
-    public Draw2DScene(Scene:Engine.Scene2D, Size:Math.Vertex) : void
+    public Draw2DScene(Scene:Engine.Scene2D, Size:Mathematics.Vertex) : void
     {
         // Override
-        if(this.Data["TOYBOX_Width"] == null || this.Data["TOYBOX_Width"] != Width || this.Data["TOYBOX_Height"] != Height)
-        {
-            this.Data["TOYBOX_Width"] = Width;
-            this.Data["TOYBOX_Height"] = Height;
-        }
         this.Load2DScene(Scene);
         this.Renderer.render( this._Scene, this._Camera );
         Util.Log.Info("Scene2D " + Scene.ID + " drawn.");

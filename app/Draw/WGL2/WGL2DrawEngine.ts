@@ -68,7 +68,7 @@ class WGL2DrawEngine extends DrawEngine
             this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
             this._Renderer.SetModelViewMatrix(this._Matrix.ModelViewMatrix.Fields);
-            this._Renderer.RenderImage(Drawn.ID, Drawn.CollectiveList(), (Drawn.CollectiveList().length > 0) ? Drawn.Index() : -1, Drawn.Modified);
+            this._Renderer.RenderImage(Drawn.ID, Drawn.CollectiveList(), (Drawn.CollectiveList().length > 0) ? Drawn.Index : -1, Drawn.Modified);
             Drawn.Modified = false;
             for(let i = 0; i < Drawn.SubSprites.length; i++)
             {

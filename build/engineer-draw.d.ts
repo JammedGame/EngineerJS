@@ -3,7 +3,8 @@ import * as Engine from "./engineer-engine";
 
 export enum DrawEngineType
 {
-    ThreeJS = 0
+    WebGL2 = "WGL2",
+    ThreeJS = "ThreeJS"
 }
 
 export class DrawEngine
