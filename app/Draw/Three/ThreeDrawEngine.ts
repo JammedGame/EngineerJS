@@ -150,6 +150,23 @@ class ThreeDrawEngine extends DrawEngine
     protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
     {  
         // Override
+        if(!Drawn.Fixed)
+        {
+            if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0 ||
+                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0 ||
+                Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920 ||
+                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
+            {
+                if(this.Data["TOYBOX_" + Drawn.ID])
+                {
+                    this._Scene.remove(this.Data["TOYBOX_" + Drawn.ID]);
+                    this.Data["TOYBOX_" + Drawn.ID].geometry.dispose();
+                    this.Data["TOYBOX_" + Drawn.ID].material.dispose();
+                    this.Data["TOYBOX_" + Drawn.ID] = null;
+                }
+                return;
+            }
+        }
         if(this.Data["TOYBOX_" + Drawn.ID] == null)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
