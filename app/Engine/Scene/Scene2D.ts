@@ -5,8 +5,8 @@ import * as Math from "./../../Mathematics/Mathematics";
 import { SceneType, Scene } from "./Scene";
 import { SceneObjectType, SceneObject } from "./SceneObject";
 import { DrawObjectType, DrawObject } from "./../Scene/DrawObject";
-import { Tile } from "./../Scene/Tile";
-import { Sprite } from "./../Scene/Sprite";
+import { Sprite } from "./Sprite";
+import { Tile } from "./Tile";
 
 class Scene2D extends Scene
 {
@@ -15,34 +15,12 @@ class Scene2D extends Scene
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public get Sprites() : Sprite[]
     {
-        let Sprites:Sprite[] = [];
-        for(let i = 0; i < this.Objects.length; i++)
-        {
-            if(this.Objects[i].Type == SceneObjectType.Drawn)
-            {
-                if((<DrawObject>this.Objects[i]).DrawType == DrawObjectType.Sprite)
-                {
-                    Sprites.push(<Sprite>this.Objects[i]);
-                }
-            }
-        }
-        return Sprites;
+        return <Sprite[]>this.GetObjectsWithDrawType(DrawObjectType.Sprite);
     }
     public get Tiles() : Tile[]
     {
-        let Tiles:Tile[] = [];
-        for(let i = 0; i < this.Objects.length; i++)
-        {
-            if(this.Objects[i].Type == SceneObjectType.Drawn)
-            {
-                if((<DrawObject>this.Objects[i]).DrawType == DrawObjectType.Tile)
-                {
-                    Tiles.push(<Tile>this.Objects[i]);
-                }
-            }
-        }
-        return Tiles;
-    }
+        return <Tile[]>this.GetObjectsWithDrawType(DrawObjectType.Tile);
+    }   
     public constructor(Old?:Scene2D)
     {
         if(Old != null)
@@ -67,11 +45,44 @@ class Scene2D extends Scene
         // Override
         if(Object.Type == SceneObjectType.Drawn)
         {
-            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile)
+            if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile || (<DrawObject>Object).DrawType == DrawObjectType.Light)
             {
                 this.Data[Object.ID] = Object;
                 this.Objects.push(Object);
             }
         }
+    }
+    public Composite(Chunk:Scene) : boolean
+    {
+        // Override
+        if(Chunk.Type != SceneType.Scene2D) return false
+        for(let i in Chunk.Objects)
+        {
+            if(Chunk.Objects[i].Type == SceneObjectType.Sound)
+            {
+                this.Objects.push(Chunk.Objects[i].Copy());
+            }
+            else if(Chunk.Objects[i].Type == SceneObjectType.Drawn)
+            {
+                let Drawn = <DrawObject> Chunk.Objects[i].Copy();
+                let Chunk2D = <Scene2D> Chunk;
+                Drawn.Trans.Composite(Chunk2D.Trans);
+                this.Objects.push(Drawn);
+            }
+        }
+        return true;
+    }
+    public Serialize() : any
+    {
+        // Override
+        let S2D = super.Serialize();
+        S2D.Transformations = this._Trans.Serialize();
+        return S2D;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Override
+        super.Deserialize(Data);
+        this._Trans.Deserialize(Data.Transformations);
     }
 }

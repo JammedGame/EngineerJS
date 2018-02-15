@@ -4,17 +4,19 @@ import * as Data from "./../../Data/Data";
 import * as Mathematics from "./../../Mathematics/Mathematics";
 
 import { EventPackage } from "./../Events/Events";
+import { Serialization } from "./../../Data/Serialization";
 
 enum SceneObjectType
 {
-    Undefined,
-    Drawn,
-    Script,
-    Sound,
-    Other
+    Undefined = "Undefined",
+    Drawn = "Drawn",
+    Script = "Script",
+    Sound = "Sound",
+    Other = "Other"
 }
 class SceneObject
 {
+    // Abstract
     private _ID:string;
     private _Name:string;
     private _Type:SceneObjectType;
@@ -46,5 +48,25 @@ class SceneObject
     public Copy() : SceneObject
     {
         return new SceneObject(this);
+    }
+    public Serialize() : any
+    {
+        // Virtual
+        let SO =
+        {
+            ID: this._ID,
+            Name: this._Name,
+            Type: <string> this._Type,
+            Data: Serialization.CleanData(this.Data)
+        };
+        return SO;
+    }
+    public Deserialize(Data:any) : void
+    {
+        // Virtual
+        this._ID = Data.ID;
+        this._Name = Data.Name;
+        this._Type = <SceneObjectType>Data.Type;
+        this.Data = Data.Data;
     }
 }

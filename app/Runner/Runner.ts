@@ -9,6 +9,7 @@ import * as WGL2 from "./../Draw/WGL2/WGL2";
 
 class Runner
 {
+    private static _Current:Runner;
     private _Stop:boolean;
     private _EngineInit:boolean;
     private _Seed:number;
@@ -17,8 +18,12 @@ class Runner
     private _Next:Engine.Scene;
     private _Game:Engine.Game;
     private _DrawEngine:Draw.DrawEngine;
+    private _Canvas:HTMLCanvasElement;
     public get Game():any { return this._Game; }
+    public get DrawEngine():any { return this._DrawEngine; }
     public Data: { [key: string]:any; } = {};
+    public static get Current():Runner { return Runner._Current; }
+    public static get Resolution():Math.Vertex { return Runner._Current._DrawEngine.Resolution; }
     public constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
     {
         this._Stop = true;
@@ -26,8 +31,10 @@ class Runner
         this._Seed = 0;
         this._FrameUpdateRate = 6;
         this._Game = Game;
+        this._Canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.EngineInit(EngineType);
         this.AttachEvents();
+        Runner._Current = this;
     }
     public SwitchScene(SceneName:string, Preload:boolean) : void
     {
@@ -43,12 +50,16 @@ class Runner
         }
         Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
     }
+    public SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
+    {
+        this._DrawEngine.UpdateResolution(Resolution, FixedSize);
+    }
     private Run() : void
     {
         this._Stop = false;
         this.OnRenderFrame();
     }
-    private EngineInit(EngineType:Draw.DrawEngineType) : void
+    private EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     {
         if(EngineType == Draw.DrawEngineType.WGL2)
         {
@@ -57,7 +68,7 @@ class Runner
         }
         else if(EngineType == Draw.DrawEngineType.ThreeJS)
         {
-            this._DrawEngine = new Three.ThreeDrawEngine();
+            this._DrawEngine = new Three.ThreeDrawEngine(null, Resolution);
             this._EngineInit = true;
         }
         else this._EngineInit = false;
@@ -68,11 +79,11 @@ class Runner
         document.addEventListener("keypress", this.OnKeyPress.bind(this), false);
         document.addEventListener("keydown", this.OnKeyDown.bind(this), false);
         document.addEventListener("keyup", this.OnKeyUp.bind(this), false);
-        document.addEventListener("mousedown", this.OnMouseDown.bind(this), false);
-        document.addEventListener("mouseup", this.OnMouseUp.bind(this), false);
-        document.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
-        document.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
-        document.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
+        this._Canvas.addEventListener("mousedown", this.OnMouseDown.bind(this), false);
+        this._Canvas.addEventListener("mouseup", this.OnMouseUp.bind(this), false);
+        this._Canvas.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
+        this._Canvas.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
+        this._Canvas.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
         window.addEventListener("resize", this.OnResize.bind(this), false);
     }
     private UpdateScene() : void
@@ -81,12 +92,13 @@ class Runner
         if (this._Current.Type == Engine.SceneType.Scene2D)
         {
             let Current2DScene:Engine.Scene2D  = <Engine.Scene2D>this._Current;
-            for (let i = 0; i < Current2DScene.Sprites.length; i++)
+            let SceneSprites:Engine.Sprite[] = Current2DScene.Sprites;
+            for (let i = 0; i < SceneSprites.length; i++)
             {
-                if (Current2DScene.Sprites[i].SpriteSets.length == 0) continue;
+                if (SceneSprites[i].SpriteSets.length == 0) continue;
                 let FrameUpdateRate:number = this._FrameUpdateRate;
-                if (Current2DScene.Sprites[i].SpriteSets[Current2DScene.Sprites[i].CurrentSpriteSet].Seed != -1) FrameUpdateRate = Current2DScene.Sprites[i].SpriteSets[Current2DScene.Sprites[i].CurrentSpriteSet].Seed;
-                if (this._Seed % FrameUpdateRate == 0) Current2DScene.Sprites[i].RaiseIndex();
+                if (SceneSprites[i].SpriteSets[SceneSprites[i].CurrentSpriteSet].Seed != -1) FrameUpdateRate = SceneSprites[i].SpriteSets[SceneSprites[i].CurrentSpriteSet].Seed;
+                if (this._Seed % FrameUpdateRate == 0) SceneSprites[i].RaiseIndex();
             }
         }
     }
@@ -107,6 +119,22 @@ class Runner
         }
         else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
     }
+    private PackEventArgs(event) : any
+    {
+        let Args = 
+        {
+            Ctrl:event.ctrlKey,
+            Alt:event.altKey,
+            Shift:event.shiftKey,
+            MouseButton:<Engine.MouseButton>event.button,
+            Location:this._DrawEngine.TransformToCanvas(event.offsetX, event.offsetY),
+            Delta:event.wheelDelta,
+            KeyCode:event.keyCode,
+            Width:window.innerWidth,
+            Height:window.innerHeight
+        }
+        return Args;
+    }
     private OnClosing(event) : void
     {
         Util.Log.Event("Closing");
@@ -115,20 +143,17 @@ class Runner
     private OnKeyPress(event) : void
     {
         Util.Log.Event("KeyPress");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
-        this._Current.Events.Invoke("KeyPress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
+        this._Current.Events.Invoke("KeyPress", this._Game, this.PackEventArgs(event));
     }
     private OnKeyDown(event) : void
     {
         Util.Log.Event("KeyDown");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
-        this._Current.Events.Invoke("KeyDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
+        this._Current.Events.Invoke("KeyDown", this._Game, this.PackEventArgs(event));
     }
     private OnKeyUp(event) : void
     {
         Util.Log.Event("KeyUp");
-        let KeyCode:Engine.KeyType =  <Engine.KeyType>event.keyCode;
-        this._Current.Events.Invoke("KeyUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Key:KeyCode});
+        this._Current.Events.Invoke("KeyUp", this._Game, this.PackEventArgs(event));
     }
     private OnMouseDown(event) : void
     {
@@ -136,8 +161,8 @@ class Runner
         {
             Util.Log.Event("MousePress");
             Util.Log.Event("MouseDown");
-            this._Current.Events.Invoke("MousePress", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
-            this._Current.Events.Invoke("MouseDown", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+            this._Current.Events.Invoke("MousePress", this._Game, this.PackEventArgs(event));
+            this._Current.Events.Invoke("MouseDown", this._Game, this.PackEventArgs(event));
         }
     }
     private OnMouseUp(event) : void
@@ -145,19 +170,19 @@ class Runner
         if(!this.CheckObjectMouseEvents(["MouseUp"], event))
         {
             Util.Log.Event("MouseUp");
-            this._Current.Events.Invoke("MouseUp", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+            this._Current.Events.Invoke("MouseUp", this._Game, this.PackEventArgs(event));
         }
     }
     private OnMouseWheel(event) : void
     {
         Util.Log.Event("MouseWheel");
-        this._Current.Events.Invoke("MouseWheel", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Delta:event.wheelDelta, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+        this._Current.Events.Invoke("MouseWheel", this._Game, this.PackEventArgs(event));
     }
     private OnMouseMove(event) : void
     {
         // Spammer
         // Util.Log.Event("MouseMove");
-        this._Current.Events.Invoke("MouseMove", this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+        this._Current.Events.Invoke("MouseMove", this._Game, this.PackEventArgs(event));
     }
     private OnMouseRight(event) : void
     {
@@ -167,7 +192,7 @@ class Runner
     private OnResize(event) : void
     {
         Util.Log.Event("Resize");
-        this._Current.Events.Invoke("Resize", this._Game, {Width:window.innerWidth, Height:window.innerHeight});
+        this._Current.Events.Invoke("Resize", this._Game, this.PackEventArgs(event));
     }
     private CheckObjectMouseEvents(EventNames:string[], event) : boolean
     {
@@ -183,15 +208,20 @@ class Runner
                 {
                     let Current:Engine.DrawObject = <Engine.DrawObject>this._Current.Objects[i];
                     let Trans:Math.Vertex = Current.Trans.Translation;
-                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 0);
+                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
                     let Scale:Math.Vertex = Current.Trans.Scale;
-                    let X:number = event.x;
-                    let Y:number = event.y;
-                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 1);
+                    let X:number = event.offsetX;
+                    let Y:number = event.offsetY;
+                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 1);
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
-                        for(let i = 0; i < EventNames.length; i++) Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, {Ctrl:event.ctrlKey, Alt:event.altKey, Shift:event.shiftKey, MouseButton:<Engine.MouseButton>event.button, Location:new Math.Vertex((event.x / window.innerWidth) * 1920, (event.y / window.innerHeight) * 1080, 0)});
+                        for(let i = 0; i < EventNames.length; i++)
+                        {
+                            let Args:any = this.PackEventArgs(event);
+                            Args.Sender = Current;
+                            Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, Args);
+                        }
                         if(true || Handled)
                         {
                             for(let i = 0; i < EventNames.length; i++) Util.Log.Event(EventNames[i] + " " + Current.ID);

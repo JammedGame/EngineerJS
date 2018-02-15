@@ -55,8 +55,24 @@ class EventPackage
         this._OperationProgress = [];
         this._OperationFinished = [];
         this._SpriteSetAnimationComplete = [];
-        /// TODO
-        /// Need to properly duplicate old
+        if(Old != null)
+        {
+            for(let i in Old._Closing) this._Closing.push(Old._Closing[i]);
+            for(let i in Old._KeyPress) this._KeyPress.push(Old._KeyPress[i]);
+            for(let i in Old._KeyDown) this._KeyDown.push(Old._KeyDown[i]);
+            for(let i in Old._KeyUp) this._KeyUp.push(Old._KeyUp[i]);
+            for(let i in Old._Load) this._Load.push(Old._Load[i]);
+            for(let i in Old._MouseClick) this._MouseClick.push(Old._MouseClick[i]);
+            for(let i in Old._MouseDown) this._MouseDown.push(Old._MouseDown[i]);
+            for(let i in Old._MouseUp) this._MouseUp.push(Old._MouseUp[i]);
+            for(let i in Old._MouseMove) this._MouseMove.push(Old._MouseMove[i]);
+            for(let i in Old._RenderFrame) this._RenderFrame.push(Old._RenderFrame[i]);
+            for(let i in Old._Resize) this._Resize.push(Old._Resize[i]);
+            for(let i in Old._TimeTick) this._TimeTick.push(Old._TimeTick[i]);
+            for(let i in Old._OperationProgress) this._OperationProgress.push(Old._OperationProgress[i]);
+            for(let i in Old._OperationFinished) this._OperationFinished.push(Old._OperationFinished[i]);
+            for(let i in Old._SpriteSetAnimationComplete) this._SpriteSetAnimationComplete.push(Old._SpriteSetAnimationComplete[i]);
+        }
     }
     public Copy() : EventPackage
     {
@@ -84,10 +100,11 @@ class EventPackage
     private InvokeEvents(Events:Function[], CurrentGame:Game, Args) : boolean
     {
         if(Events.length == 0) return false;
+        let Handled:boolean = false;
         for(let i = 0; i < Events.length; i++)
         {
-            Events[i](CurrentGame, Args);
+            Handled = Handled || Events[i](CurrentGame, Args);
         }
-        return true;
+        return Handled;
     }
 }

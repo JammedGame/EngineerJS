@@ -1,10 +1,10 @@
-export  { SceneObject };
+export  { SceneObjectUtil };
 
 import * as Data from "./../Data/Data";
 import * as Engine from "./../Engine/Engine";
 import * as Math from "./../Mathematics/Mathematics";
 
-class SceneObject
+class SceneObjectUtil
 {
     public static CreateSprite(Name?:string, Images?:string[], Position?:Math.Vertex, Size?:Math.Vertex) : Engine.Sprite
     {
@@ -12,7 +12,7 @@ class SceneObject
         if(Name) NewSprite.Name = Name;
         if(Images)
         {
-            let NewSpriteSet:Engine.SpriteSet = new Engine.SpriteSet(null, "Default", Images);
+            let NewSpriteSet:Engine.SpriteSet = new Engine.SpriteSet(null, Images, "Default");
             NewSprite.SpriteSets.push(NewSpriteSet);
             NewSprite.SetSpriteSet(0);
         }
@@ -26,7 +26,7 @@ class SceneObject
         if(Name) NewTile.Name = Name;
         if(Images)
         {
-            let NewCollection:Engine.TileCollection = new Engine.TileCollection(null, Images);
+            let NewCollection:Engine.ImageCollection = new Engine.ImageCollection(null, Images);
             NewTile.Collection = NewCollection;
             NewTile.Index = 0;
         }

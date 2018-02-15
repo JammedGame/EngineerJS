@@ -1,26 +1,31 @@
-export  { Tile, TileCollection };
+export  { Tile };
 
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
+import { ImageObject } from "./ImageObject";
+import { ImageCollection } from "./ImageCollection";
 import { DrawObject, DrawObjectType } from "./DrawObject";
 
-class Tile extends DrawObject
+class Tile extends ImageObject
 {
     private _Index:number;
-    private _Collection:TileCollection;
-    private _Paint:Math.Color;
+    private _Collection:ImageCollection;
+    private _NormalCollection:ImageCollection;
     private _SubTiles:Tile[];
-    public get Index():number { return this._Index; }
+    public get Index():number { /*Override*/ return this._Index; }
     public set Index(value:number)
     {
         if(this._Collection.Images.length > value) this._Index = value;
         else this._Index = 0;
+        this.Modified = true;
     }
-    public get Paint():Math.Color { return this._Paint; }
-    public set Paint(value:Math.Color) { this._Paint = value; }
-    public get Collection():TileCollection { return this._Collection; }
-    public set Collection(value:TileCollection) { this._Collection = value; }
+    public get Images() : string[] { /* Override */ return this._Collection.Images; }
+    public get NormalMaps() : string[] { /* Override */ return this._NormalCollection.Images; }
+    public get Collection():ImageCollection { return this._Collection; }
+    public set Collection(value:ImageCollection) { this._Collection = value; }
+    public get NormalCollection():ImageCollection { return this._NormalCollection; }
+    public set NormalCollection(value:ImageCollection) { this._NormalCollection = value; }
     public get SubTiles():Tile[] { return this._SubTiles; }
     public set SubTiles(value:Tile[]) { this._SubTiles = value; }
     public constructor(Old?:Tile)
@@ -31,43 +36,42 @@ class Tile extends DrawObject
         {
             this._Index = Old._Index;
             this._Collection = Old._Collection;
-            this._Paint = Old._Paint;
+            this._NormalCollection = Old._NormalCollection;
         }
         else
         {
             this._Index = -1;
-            this._Collection = new TileCollection();
-            this._Paint = Math.Color.FromRGBA(255, 255, 255, 255);
+            this._Collection = new ImageCollection();
+            this._NormalCollection = new ImageCollection();
         }
     }
     public Copy() : Tile
     {
         return new Tile(this);
     }
-}
-class TileCollection
-{
-    private _ID:string;
-    private _Images:string[];
-    public get ID():string { return this._ID; }
-    public get Images():string[] { return this._Images; }
-    public set Images(value:string[]) { this._Images = value; }
-    public constructor(Old?:TileCollection, Images?:string[])
+    public Serialize() : any
     {
-        if(Old != null)
+        // Override
+        let T = super.Serialize();
+        T.Index = this._Index;
+        T.Collection = this._Collection.Serialize();
+        T.SubTiles = [];
+        for(let i in this._SubTiles)
         {
-            this._ID = Data.Uuid.Create();
-            this._Images = Old._Images;
+            T.SubTiles.push(this._SubTiles[i].Serialize());
         }
-        else
-        {
-            this._ID = Data.Uuid.Create();
-            if(Images) this._Images = Images;
-            else this._Images = [];
-        }
+        return T;
     }
-    public Copy() : TileCollection
+    public Deserialize(Data) : void
     {
-        return new TileCollection(this);
+        // Override
+        super.Deserialize(Data);
+        this._Index = Data.Index;
+        this._Collection.Deserialize(Data.Collection);
+        for(let i in Data.SubTiles)
+        {
+            let ST:Tile = new Tile();
+            ST.Deserialize(Data.SubTiles[i]);
+        }
     }
 }

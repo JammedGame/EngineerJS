@@ -33,4 +33,26 @@ class Transformation
         let New:Transformation = new Transformation(this);
         return New;
     }
+    public Composite(Trans:Transformation) : void
+    {
+        this._Translation.Translate(Trans.Translation);
+        this._Scale.Scale(Trans.Scale);
+        this._Rotation.Translate(Trans._Rotation);
+    }
+    public Serialize() : any
+    {
+        let T =
+        {
+            Translation: this._Translation.Serialize(),
+            Rotation: this._Rotation.Serialize(),
+            Scale: this._Scale.Serialize()
+        };
+        return T;
+    }
+    public Deserialize(Data) : void
+    {
+        this._Translation.Deserialize(Data.Translation);
+        this._Rotation.Deserialize(Data.Rotation);
+        this._Scale.Deserialize(Data.Scale);
+    }
 }
