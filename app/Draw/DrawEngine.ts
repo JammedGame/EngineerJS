@@ -21,11 +21,13 @@ class DrawEngine
     protected _Resolution:Math.Vertex;
     protected _Target:any;
     protected _Parent:any;
+    protected _Type:DrawEngineType;
     public get Renderer():any { return this._Renderer; }
     public set Renderer(value:any) { this._Renderer = value; }
     public get GlobalScale():Math.Vertex { return this._GlobalScale; }
     public get GlobalOffset():Math.Vertex { return this._GlobalOffset; }
     public get Resolution():Math.Vertex { return this._Resolution; }
+    public get Type():DrawEngineType { return this._Type; }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:DrawEngine, Resolution?:any)
     {
@@ -49,6 +51,10 @@ class DrawEngine
         // Virtual
         this._Resolution = Resolution;
         if(FixedSize != null) this._FixedSize = FixedSize;
+    }
+    public Resize() : void
+    {
+        // Virtual
     }
     public TransformToCanvas(X:number, Y:number) : Math.Vertex
     {

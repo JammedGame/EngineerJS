@@ -6,6 +6,7 @@ import * as Util from "./../Util/Util";
 import * as Draw from "./../Draw/Draw";
 import * as Three from "./../Draw/Three/Three";
 import * as WGL2 from "./../Draw/WGL2/WGL2";
+import { DrawEngine, DrawEngineType } from "./../Draw/Draw";
 
 class Runner
 {
@@ -191,6 +192,10 @@ class Runner
     }
     private OnResize(event) : void
     {
+        if(this._DrawEngine.Type == DrawEngineType.WebGL2)
+        {
+            this._DrawEngine.Resize();
+        }
         Util.Log.Event("Resize");
         this._Current.Events.Invoke("Resize", this._Game, this.PackEventArgs(event));
     }

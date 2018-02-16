@@ -7,7 +7,7 @@ import * as Util from "./../../Util/Util";
 
 import { ThreeMaterialGenerator } from "./ThreeMaterialGenerator";
 import { ThreeGridManager } from "./ThreeGridManager";
-import { DrawEngine } from "./../DrawEngine";
+import { DrawEngine, DrawEngineType } from "./../DrawEngine";
 
 class ThreeDrawEngine extends DrawEngine
 {
@@ -18,13 +18,8 @@ class ThreeDrawEngine extends DrawEngine
     public constructor(Old?:ThreeDrawEngine, Resolution?:Mathematics.Vertex)
     {
         super(Old, Resolution);
+        this._Type = DrawEngineType.ThreeJS;
         this._Scene = new Three.Scene();
-        this._GlobalScale = new Mathematics.Vertex(1,1,1);
-        this._GlobalOffset = new Mathematics.Vertex(0,0,0);
-        if(Resolution) this._Resolution = Resolution;
-        else this._Resolution = new Mathematics.Vertex(1920, 1080, 1);
-        this._Target = document.getElementById("canvas");
-        this._Parent = document.getElementById("canvas-parent");
         this.Renderer = new Three.WebGLRenderer({canvas:this._Target});
         this.Renderer.setPixelRatio( window.devicePixelRatio );
         this.Resize();
@@ -55,7 +50,6 @@ class ThreeDrawEngine extends DrawEngine
         super.UpdateResolution(Resolution, FixedSize);
         this.Resize();
     }
-    
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         // Override

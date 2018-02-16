@@ -4,7 +4,7 @@ import * as Math from "./../../Mathematics/Mathematics"
 import * as Engine from "./../../Engine/Engine";
 import * as Util from "./../../Util/Util";
 
-import { DrawEngine } from "./../DrawEngine";
+import { DrawEngine, DrawEngineType } from "./../DrawEngine";
 import { RenderEnableCap, Renderer } from "./../Renderer";
 import { WGL2ShaderRenderer } from "./WGL2ShaderRenderer";
 
@@ -13,6 +13,7 @@ class WGL2DrawEngine extends DrawEngine
     public constructor(Old?:WGL2DrawEngine)
     {
         super(Old);
+        this._Type = DrawEngineType.WebGL2;
         this._Renderer = new WGL2ShaderRenderer(null, this._Target);
         this.Resize();
     }
@@ -30,7 +31,7 @@ class WGL2DrawEngine extends DrawEngine
             this._Target.width = Width;
             this._Target.height = Height;
             this.Renderer.SetSize( Width, Height );
-            this._GlobalScale = new Math.Vertex(this.Resolution.X / Width, this.Resolution.Y / Height, 1);
+            this._GlobalScale = new Math.Vertex(Width / this.Resolution.X, Height / this.Resolution.Y, 1);
         }
         else
         {
@@ -39,6 +40,12 @@ class WGL2DrawEngine extends DrawEngine
             this.Renderer.SetSize( this.Resolution.X, this.Resolution.Y );
             this._GlobalScale = new Math.Vertex(1, 1, 1);
         }
+    }
+    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean)
+    {
+        // Override
+        super.UpdateResolution(Resolution, FixedSize);
+        this.Resize();
     }
     public Draw2DScene(Scene:Engine.Scene2D, Size:Math.Vertex) : void
     {
@@ -67,13 +74,14 @@ class WGL2DrawEngine extends DrawEngine
             this.DrawSprite(Scene, Sprites[i]);
         }
     }
-    protected DrawSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    protected DrawSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
     {
         // Override
         if(Drawn.Active)
         {
-            this._Matrix.Translate(Drawn.Trans.Translation.X, Drawn.Trans.Translation.Y, Drawn.Trans.Translation.Z);
-            this._Matrix.Scale(Drawn.Trans.Scale.X, Drawn.Trans.Scale.Y, Drawn.Trans.Scale.Z);
+            if(Drawn.Fixed) this._Matrix.Translate(Drawn.Trans.Translation.X * this._GlobalScale.X, Drawn.Trans.Translation.Y * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
+            else this._Matrix.Translate((Scene.Trans.Translation.X + Drawn.Trans.Translation.X) * this._GlobalScale.X, (Scene.Trans.Translation.Y + Drawn.Trans.Translation.Y) * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
+            this._Matrix.Scale(Drawn.Trans.Scale.X * this._GlobalScale.X, Drawn.Trans.Scale.Y * this._GlobalScale.Y, Drawn.Trans.Scale.Z);
             this._Matrix.Rotate(Drawn.Trans.Rotation.X, 1, 0, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
@@ -91,12 +99,13 @@ class WGL2DrawEngine extends DrawEngine
     {
         // Override
     }
-    protected DrawTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    protected DrawTile(Scene:Engine.Scene2D, Drawn:Engine.Tile) : void
     {
         if(Drawn.Active)
         {
-            this._Matrix.Translate(Drawn.Trans.Translation.X, Drawn.Trans.Translation.Y, Drawn.Trans.Translation.Z);
-            this._Matrix.Scale(Drawn.Trans.Scale.X, Drawn.Trans.Scale.Y, Drawn.Trans.Scale.Z);
+            if(Drawn.Fixed) this._Matrix.Translate(Drawn.Trans.Translation.X * this._GlobalScale.X, Drawn.Trans.Translation.Y * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
+            else this._Matrix.Translate((Scene.Trans.Translation.X + Drawn.Trans.Translation.X) * this._GlobalScale.X, (Scene.Trans.Translation.Y + Drawn.Trans.Translation.Y) * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
+            this._Matrix.Scale(Drawn.Trans.Scale.X * this._GlobalScale.X, Drawn.Trans.Scale.Y * this._GlobalScale.Y, Drawn.Trans.Scale.Z);
             this._Matrix.Rotate(Drawn.Trans.Rotation.X, 1, 0, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Y, 0, 1, 0);
             this._Matrix.Rotate(Drawn.Trans.Rotation.Z, 0, 0, 1);
