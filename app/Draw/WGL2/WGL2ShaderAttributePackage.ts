@@ -35,14 +35,14 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
         // Override
         let GL = this._GL;
         this._Activated = false;
-        /*for(let i = 0; i < this._Entries.length; i++)
+        for(let i = 0; i < this._Entries.length; i++)
         {
             if(!this._Entries[i].Buffer) continue;
             GL.deleteBuffer(this._Entries[i].Buffer);
             this._Entries[i].Buffer = null;
         }
         GL.deleteVertexArray(this._VertexArray);
-        super.ClearData();*/
+        super.ClearData();
     }
     protected CreateBuffer(BufferData:Float32Array) : any
     {
@@ -65,14 +65,14 @@ class WGL2ShaderAttributePackage extends ShaderAttributePackage
         }
         if(this._Activated)
         {
-            /*this._Activated = false;
+            this._Activated = false;
             for(let i = 0; i < this._Entries.length; i++)
             {
                 if(!this._Entries[i].Buffer) continue;
                 GL.deleteBuffer(this._Entries[i].Buffer);
                 this._Entries[i].Buffer = null;
             }
-            GL.deleteVertexArray(this._VertexArray);*/
+            GL.deleteVertexArray(this._VertexArray);
         }
         this.CalculateBufferLineLength();
         for(let i = 0; i < this._Entries.length; i++)

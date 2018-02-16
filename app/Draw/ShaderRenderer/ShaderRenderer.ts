@@ -37,8 +37,8 @@ class ShaderRenderer extends Renderer
             this._Globals = new ShaderUniformPackage();
             this._ShaderPool = new ShaderPool();
             //this._Globals.SetDefinition("CameraPosition", 3 * 4, "vec3");
-            //this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
-            //this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
+            this._Globals.SetDefinition("Projection", 16 * 4, "mat4");
+            this._Globals.SetDefinition("ModelView", 16 * 4, "mat4");
         }
     }
     public Copy() : ShaderRenderer
@@ -77,10 +77,10 @@ class ShaderRenderer extends Renderer
     public SetColor(Color:Math.Color) : void
     {
         // Override
-        /*if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
+        if(!this._Manager.Active.Uniforms.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
         this._Manager.Active.Uniforms.SetData("Color", Color.ToArray());
         if(!this._Globals.Exists("Color")) this._Manager.Active.Uniforms.SetDefinition("Color", 4 * 4, "vec4");
-        this._Globals.SetData("Color", Color.ToArray());*/
+        this._Globals.SetData("Color", Color.ToArray());
     }
     public IsMaterialReady(ID:string) : boolean
     {
@@ -120,7 +120,7 @@ class ShaderRenderer extends Renderer
         // Override
         this._Globals.SetData("CameraPosition", CameraPosition.ToArray());
     }
-    public RenderImage(ID:string, Textures:string[], CurrentIndex:number, Update:boolean) : void
+    public RenderImage(ID:string, Color:Math.Color, Textures:string[], CurrentIndex:number, Update:boolean) : void
     {
         // Override
         if (!this._Manager.ShaderExists(ID))
@@ -130,16 +130,16 @@ class ShaderRenderer extends Renderer
             this.SetMaterial([[ID, this._ShaderPool.Vertex["2D"], this._ShaderPool.Fragment["2D"], null, null, null ], null, null ], true);
         }
         this.UpdateMaterial();
-        this.SetColor(Math.Color.FromRGBA(255,0,0,255));
+        this.SetColor(Color);
         if (this._ImageVertices == null)
         {
             let Vertices:Math.Vertex[] = [];
-            Vertices.push(new Math.Vertex(0.0, 0.0, 0.0));
-            Vertices.push(new Math.Vertex(1.0, 0.0, 0.0));
-            Vertices.push(new Math.Vertex(0.0, 1.0, 0.0));
-            Vertices.push(new Math.Vertex(0.0, 1.0, 0.0));
-            Vertices.push(new Math.Vertex(1.0, 0.0, 0.0));
-            Vertices.push(new Math.Vertex(1.0, 1.0, 0.0));
+            Vertices.push(new Math.Vertex(-0.5, -0.5, -0.5));
+            Vertices.push(new Math.Vertex(0.5, -0.5, -0.5));
+            Vertices.push(new Math.Vertex(-0.5, 0.5, -0.5));
+            Vertices.push(new Math.Vertex(-0.5, 0.5, -0.5));
+            Vertices.push(new Math.Vertex(0.5, -0.5, -0.5));
+            Vertices.push(new Math.Vertex(0.5, 0.5, -0.5));
             this._ImageVertices = Util.Convert.VerticesToByteArray(Vertices, 3);
             let UV:Math.Vertex[] = [];
             UV.push(new Math.Vertex(0.0, 0.0, 0.0));

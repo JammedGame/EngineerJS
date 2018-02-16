@@ -26,7 +26,8 @@ class WGL2ShaderRenderer extends ShaderRenderer
         {
             this._GL = GL;
             this._Manager = new WGL2ShaderManager(null, Canvas);
-            GL.enable(GL.DEPTH_TEST);
+            //GL.enable(GL.DEPTH_TEST);
+            //GL.depthFunc(GL.LESS);
             GL.enable(GL.BLEND);
             this._ShaderPool.Vertex["2D"] = GLSLShaders.Vertex2D;
             this._ShaderPool.Fragment["2D"] = GLSLShaders.Fragment2D;
@@ -42,7 +43,6 @@ class WGL2ShaderRenderer extends ShaderRenderer
     {
         // Override
         this._GL.viewport(0,0,Size.X,Size.Y);
-        //this._GL.viewport(-1.0,-1.0,1.0,1.0);
     }
     protected Toggle(Preference:any, Value:boolean) : void
     {

@@ -13,7 +13,7 @@ class GLSLShaders
         void main()
         {
             vec4 T = ModelView * Projection * vec4(V_Vertex, 1);
-            gl_Position = vec4(V_Vertex, 1);
+            gl_Position = Projection * ModelView * vec4(V_Vertex, 1);
         }
         `;
     public static Fragment2D : string = 
@@ -25,7 +25,7 @@ class GLSLShaders
 
         void main()
         {
-            FinalColor = vec4(1.0,0.0,0.0,1.0);
+            FinalColor = Color;
         }
         `;
 }
