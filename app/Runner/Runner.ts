@@ -227,10 +227,7 @@ class Runner
                             Args.Sender = Current;
                             Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, Args);
                         }
-                        if(true || Handled)
-                        {
-                            for(let i = 0; i < EventNames.length; i++) Util.Log.Event(EventNames[i] + " " + Current.ID);
-                        }
+                        for(let i = 0; i < EventNames.length; i++) Util.Log.Event(EventNames[i] + " " + Current.Name + "("+Current.ID+")");
                     }
                 }
             }
