@@ -9,6 +9,7 @@ export class Runner
     static Current:Runner;
     static Resolution:Math.Vertex;
     constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
+    PickSceneObject(Position:any) : Engine.SceneObject
     SwitchScene(SceneName:string, Preload:boolean) : void
     SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     Run() : void

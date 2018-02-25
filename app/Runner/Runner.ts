@@ -121,6 +121,7 @@ class Runner
             Alt:event.altKey,
             Shift:event.shiftKey,
             MouseButton:<Engine.MouseButton>event.button,
+            UnscaledLocation: {X:event.offsetX, Y:event.offsetY},
             Location:this._DrawEngine.TransformToCanvas(event.offsetX, event.offsetY),
             Delta:event.wheelDelta,
             KeyCode:event.keyCode,
@@ -195,7 +196,7 @@ class Runner
         {
             let Current2DScene:Engine.Scene2D  = <Engine.Scene2D>this._Current;
             let STrans:Math.Vertex = Current2DScene.Trans.Translation;
-            STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X * this._DrawEngine.GlobalScale.X, STrans.Y * Current2DScene.Trans.Scale.Y * this._DrawEngine.GlobalScale.Y, 0);
+            STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, STrans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
             for (let i = this._Current.Objects.length - 1; i >= 0; i--)
             {
                 if (this._Current.Objects[i].Type == Engine.SceneObjectType.Drawn)
@@ -225,5 +226,34 @@ class Runner
             }
         }
         return Handled;
+    }
+    public PickSceneObject(Position:any) : Engine.SceneObject
+    {
+        let Handled:boolean = false;
+        if (this._Current.Type == Engine.SceneType.Scene2D)
+        {
+            let Current2DScene:Engine.Scene2D  = <Engine.Scene2D>this._Current;
+            let STrans:Math.Vertex = Current2DScene.Trans.Translation;
+            STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, STrans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
+            for (let i = this._Current.Objects.length - 1; i >= 0; i--)
+            {
+                if (this._Current.Objects[i].Type == Engine.SceneObjectType.Drawn)
+                {
+                    let Current:Engine.DrawObject = <Engine.DrawObject>this._Current.Objects[i];
+                    let Trans:Math.Vertex = Current.Trans.Translation;
+                    Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
+                    let Scale:Math.Vertex = Current.Trans.Scale;
+                    let X:number = Position.X;
+                    let Y:number = Position.Y;
+                    Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 1);
+                    if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
+                    (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
+                    {
+                        if(Current.Data["Pickable"]) return Current;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
