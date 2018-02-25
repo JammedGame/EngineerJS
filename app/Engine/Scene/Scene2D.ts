@@ -15,11 +15,11 @@ class Scene2D extends Scene
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public get Sprites() : Sprite[]
     {
-        return this.GetObjectsWithDrawType(DrawObjectType.Sprite);
+        return <Sprite[]>this.GetObjectsWithDrawType(DrawObjectType.Sprite);
     }
     public get Tiles() : Tile[]
     {
-        return this.GetObjectsWithDrawType(DrawObjectType.Tile);
+        return <Tile[]>this.GetObjectsWithDrawType(DrawObjectType.Tile);
     }   
     public constructor(Old?:Scene2D)
     {

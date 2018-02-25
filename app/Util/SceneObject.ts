@@ -12,7 +12,7 @@ class SceneObjectUtil
         if(Name) NewSprite.Name = Name;
         if(Images)
         {
-            let NewSpriteSet:Engine.SpriteSet = new Engine.SpriteSet(null, "Default", Images);
+            let NewSpriteSet:Engine.SpriteSet = new Engine.SpriteSet(null, Images, "Default");
             NewSprite.SpriteSets.push(NewSpriteSet);
             NewSprite.SetSpriteSet(0);
         }
@@ -26,7 +26,7 @@ class SceneObjectUtil
         if(Name) NewTile.Name = Name;
         if(Images)
         {
-            let NewCollection:Engine.TileCollection = new Engine.TileCollection(null, Images);
+            let NewCollection:Engine.ImageCollection = new Engine.ImageCollection(null, Images);
             NewTile.Collection = NewCollection;
             NewTile.Index = 0;
         }

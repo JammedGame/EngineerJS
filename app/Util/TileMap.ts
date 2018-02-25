@@ -33,7 +33,7 @@ class TileMap
         .then(this.SaveImage.bind(this))
         .then(function()
         {
-            let Collection = new Engine.TileCollection(null, [this._ImagePath]);
+            let Collection = new Engine.ImageCollection(null, [this._ImagePath]);
             let NewTile:Engine.Tile = new Engine.Tile();
             NewTile.Collection = Collection;
             NewTile.Index = 0;
