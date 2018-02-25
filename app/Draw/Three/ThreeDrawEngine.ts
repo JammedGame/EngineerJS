@@ -190,6 +190,7 @@ class ThreeDrawEngine extends DrawEngine
             if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
             {
                 this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
+                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
                 let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
                 Sprite.material["uniforms"].texture.value = Textures[Drawn.CurrentIndex];
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit || Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom || Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
