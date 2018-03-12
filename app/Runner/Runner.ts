@@ -12,6 +12,8 @@ class Runner
     private _Stop:boolean;
     private _EngineInit:boolean;
     private _Seed:number;
+    private _DrawHandle:number;
+    private _LoopHandle:number;
     private _FrameUpdateRate:number;
     private _Current:Engine.Scene;
     private _Next:Engine.Scene;
@@ -46,7 +48,7 @@ class Runner
                 return;
             }
         }
-        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
+        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".", this._Game.Scenes);
     }
     public SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     {
@@ -55,11 +57,21 @@ class Runner
     private Run() : void
     {
         this._Stop = false;
+        this.Loop();
         this.OnRenderFrame();
+    }
+    private Loop() : void
+    {
+        if(this._Stop) return;
+        this.UpdateScene();
+        this._Current.Events.Invoke("TimeTick", this._Game, {});
+        this._LoopHandle = requestAnimationFrame( this.Loop.bind(this) );
     }
     private Stop() : void
     {
         this._Stop = true;
+        cancelAnimationFrame(this._LoopHandle);
+        cancelAnimationFrame(this._DrawHandle);
     }
     private EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     {
@@ -99,22 +111,16 @@ class Runner
             }
         }
     }
-    /// TODO
-    /// Export events to separate class.
     private OnRenderFrame() : void
     {
         if(this._Stop) return;
-        this.UpdateScene();
-        this._Current.Events.Invoke("TimeTick", this._Game, {});
-        requestAnimationFrame( this.OnRenderFrame.bind(this) );
+        this._DrawHandle = requestAnimationFrame( this.OnRenderFrame.bind(this) );
         if(this._Current.Type == Engine.SceneType.Scene2D)
         {
-            // Spammer
-            // Util.Log.Event("RenderFrame");
             this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
             this._Current.Events.Invoke("RenderFrame", this._Game, {});
         }
-        else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
+        else Util.Log.Error("Scene " + this._Current.Name + "is not of valid type.", this._Current);
     }
     private PackEventArgs(event) : any
     {
