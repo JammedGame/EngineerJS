@@ -13,6 +13,7 @@ export class Runner
     SwitchScene(SceneName:string, Preload:boolean) : void
     SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     Run() : void
+    Stop() : void
     EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     AttachEvents() : void
     UpdateScene() : void

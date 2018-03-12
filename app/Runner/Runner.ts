@@ -43,7 +43,6 @@ class Runner
             {
                 this._Current = this._Game.Scenes[i];
                 this._Current.Events.Invoke("Load", this._Game, {});
-                this.Run();
                 return;
             }
         }
@@ -57,6 +56,10 @@ class Runner
     {
         this._Stop = false;
         this.OnRenderFrame();
+    }
+    private Stop() : void
+    {
+        this._Stop = true;
     }
     private EngineInit(EngineType:Draw.DrawEngineType, Resolution?:Math.Vertex) : void
     {
