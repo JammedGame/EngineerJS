@@ -57,6 +57,7 @@ class Runner
     private Run() : void
     {
         this._Stop = false;
+        this.Loop();
         this.OnRenderFrame();
     }
     private Loop() : void

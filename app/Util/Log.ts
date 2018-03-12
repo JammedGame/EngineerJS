@@ -3,7 +3,7 @@ export  { Log };
 class Log
 {
     public static LogOut:boolean = true;
-    public static LogInfo:boolean = true;
+    public static LogInfo:boolean = false;
     public static LogError:boolean = true;
     public static LogWarning:boolean = true;
     public static LogEvent:boolean = false;
