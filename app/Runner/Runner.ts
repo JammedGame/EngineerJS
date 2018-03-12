@@ -46,7 +46,7 @@ class Runner
                 return;
             }
         }
-        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".");
+        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".", this._Game.Scenes);
     }
     public SetResolution(Resolution:Math.Vertex, FixedSize?:boolean)
     {
@@ -114,7 +114,7 @@ class Runner
             this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
             this._Current.Events.Invoke("RenderFrame", this._Game, {});
         }
-        else Util.Log.Error("Scene " + this._Current.Name + " cannot be drawn .");
+        else Util.Log.Error("Scene " + this._Current.Name + "is not of valid type.", this._Current);
     }
     private PackEventArgs(event) : any
     {
