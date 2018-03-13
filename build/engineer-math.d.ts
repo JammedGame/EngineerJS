@@ -8,7 +8,7 @@ export class Vertex
     X: number;
     Y: number;
     Z: number;
-    constructor(X:number, Y:number, Z:number)
+    constructor(X?:number, Y?:number, Z?:number)
     Copy() : Vertex
     Translate(V:Vertex) : Vertex
     Add(V:Vertex) : Vertex

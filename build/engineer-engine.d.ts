@@ -2,6 +2,7 @@ import * as Math from "./engineer-math";
 
 export class EventPackage
 {
+    WireTouchEvents:boolean;
     Closing:Function[];
     KeyPress:Function[];
     KeyDown:Function[];
@@ -12,6 +13,9 @@ export class EventPackage
     MouseUp:Function[];
     MouseMove:Function[];
     MouseWheel:Function[];
+    TouchStart:Function[];
+    TouchEnd:Function[];
+    TouchMove:Function[];
     RenderFrame:Function[];
     Resize:Function[];
     TimeTick:Function[];

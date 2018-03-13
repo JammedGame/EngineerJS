@@ -33,6 +33,7 @@ class Runner
         this._FrameUpdateRate = 6;
         this._Game = Game;
         this._Canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        Util.Log.CustomTitle = Game.Name;
         this.EngineInit(EngineType);
         this.AttachEvents();
         Runner._Current = this;
@@ -93,6 +94,9 @@ class Runner
         this._Canvas.addEventListener("mousemove", this.OnMouseMove.bind(this), false);
         this._Canvas.addEventListener("wheel", this.OnMouseWheel.bind(this), false);
         this._Canvas.addEventListener("contextmenu", this.OnMouseRight.bind(this), false);
+        this._Canvas.addEventListener("touchstart", this.OnTouchStart.bind(this), false);
+        this._Canvas.addEventListener("touchend", this.OnTouchEnd.bind(this), false);
+        this._Canvas.addEventListener("touchmove", this.OnTouchMove.bind(this), false);
         window.addEventListener("resize", this.OnResize.bind(this), false);
     }
     private UpdateScene() : void
@@ -124,6 +128,7 @@ class Runner
     }
     private PackEventArgs(event) : any
     {
+        if(event.touches) event = this.PackTouchEvent(event);
         let Args = 
         {
             Ctrl:event.ctrlKey,
@@ -138,6 +143,16 @@ class Runner
             Height:window.innerHeight
         }
         return Args;
+    }
+    private PackTouchEvent(event) : any
+    {
+        let NewEvent =
+        {
+            button: 0,
+            offsetX: event.touches[0].clientX,
+            offsetY: event.touches[0].clientY
+        };
+        return NewEvent;
     }
     private OnClosing(event) : void
     {
@@ -184,14 +199,38 @@ class Runner
     }
     private OnMouseMove(event) : void
     {
-        // Spammer
-        // Util.Log.Event("MouseMove");
         this._Current.Events.Invoke("MouseMove", this._Game, this.PackEventArgs(event));
     }
     private OnMouseRight(event) : void
     {
         Util.Log.Event("MouseRight");
         event.preventDefault();
+    }
+    private OnTouchStart(event) : void
+    {
+        if(event.touches.length == 0) return;
+        if(this._Current.Events.WireTouchEvents) this.OnMouseDown(event);
+        else if(!this.CheckObjectMouseEvents(["TouchStart"], event))
+        {
+            Util.Log.Event("TouchStart");
+            this._Current.Events.Invoke("TouchStart", this._Game, this.PackEventArgs(event));
+        }
+    }
+    private OnTouchEnd(event) : void
+    {
+        if(event.touches.length == 0) return;
+        if(this._Current.Events.WireTouchEvents) this.OnMouseUp(event);
+        else if(!this.CheckObjectMouseEvents(["TouchEnd"], event))
+        {
+            Util.Log.Event("TouchEnd");
+            this._Current.Events.Invoke("TouchEnd", this._Game, this.PackEventArgs(event));
+        }
+    }
+    private OnTouchMove(event) : void
+    {
+        if(event.touches.length == 0) return;
+        if(this._Current.Events.WireTouchEvents) this.OnMouseMove(event);
+        else this._Current.Events.Invoke("TouchMove", this._Game, this.PackEventArgs(event));
     }
     private OnResize(event) : void
     {

@@ -27,7 +27,7 @@ class DrawEngine
     public constructor(Old?:DrawEngine)
     {
         this._FixedSize = false;
-        Util.Log.Info("EngineerJS Version " + Engine.Settings.Version, null, "Engine");
+        Util.Log.Info("ToyBox Version " + Engine.Settings.Version, null, "Engine");
         this._Matrix = new Math.MatrixTransformer();
     }
     public Copy() : DrawEngine
