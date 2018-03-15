@@ -126,118 +126,126 @@ class Runner
         }
         else Util.Log.Error("Scene " + this._Current.Name + "is not of valid type.", this._Current);
     }
-    private PackEventArgs(event) : any
+    private PackEventArgs(Event) : any
     {
-        if(event.touches) event = this.PackTouchEvent(event);
         let Args = 
         {
-            Ctrl:event.ctrlKey,
-            Alt:event.altKey,
-            Shift:event.shiftKey,
-            MouseButton:<Engine.MouseButton>event.button,
-            UnscaledLocation: {X:event.offsetX, Y:event.offsetY},
-            Location:this._DrawEngine.TransformToCanvas(event.offsetX, event.offsetY),
-            Delta:event.wheelDelta,
-            KeyCode:event.keyCode,
+            Ctrl:Event.ctrlKey,
+            Alt:Event.altKey,
+            Shift:Event.shiftKey,
+            MouseButton:<Engine.MouseButton>Event.button,
+            UnscaledLocation: {X:Event.offsetX, Y:Event.offsetY},
+            Location:this._DrawEngine.TransformToCanvas(Event.offsetX, Event.offsetY),
+            Delta:Event.wheelDelta,
+            KeyCode:Event.keyCode,
             Width:window.innerWidth,
             Height:window.innerHeight
         }
         return Args;
     }
-    private PackTouchEvent(event) : any
+    private PackTouchEvent(Touch, Index) : any
     {
-        let NewEvent =
+        let Event =
         {
-            button: 0,
-            offsetX: event.touches[0].clientX,
-            offsetY: event.touches[0].clientY
+            button: Index,
+            offsetX: Touch.clientX,
+            offsetY: Touch.clientY
         };
-        return NewEvent;
+        return Event;
     }
-    private OnClosing(event) : void
+    private OnClosing(Event) : void
     {
         Util.Log.Event("Closing");
-        event.preventDefault();
+        Event.preventDefault();
     }
-    private OnKeyPress(event) : void
+    private OnKeyPress(Event) : void
     {
         Util.Log.Event("KeyPress");
-        this._Current.Events.Invoke("KeyPress", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("KeyPress", this._Game, this.PackEventArgs(Event));
     }
-    private OnKeyDown(event) : void
+    private OnKeyDown(Event) : void
     {
         Util.Log.Event("KeyDown");
-        this._Current.Events.Invoke("KeyDown", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("KeyDown", this._Game, this.PackEventArgs(Event));
     }
-    private OnKeyUp(event) : void
+    private OnKeyUp(Event) : void
     {
         Util.Log.Event("KeyUp");
-        this._Current.Events.Invoke("KeyUp", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("KeyUp", this._Game, this.PackEventArgs(Event));
     }
-    private OnMouseDown(event) : void
+    private OnMouseDown(Event) : void
     {
-        if(!this.CheckObjectMouseEvents(["MousePress", "MouseDown"], event))
+        if(!this.CheckObjectMouseEvents(["MousePress", "MouseDown"], Event))
         {
             Util.Log.Event("MousePress");
             Util.Log.Event("MouseDown");
-            this._Current.Events.Invoke("MousePress", this._Game, this.PackEventArgs(event));
-            this._Current.Events.Invoke("MouseDown", this._Game, this.PackEventArgs(event));
+            this._Current.Events.Invoke("MousePress", this._Game, this.PackEventArgs(Event));
+            this._Current.Events.Invoke("MouseDown", this._Game, this.PackEventArgs(Event));
         }
     }
-    private OnMouseUp(event) : void
+    private OnMouseUp(Event) : void
     {
-        if(!this.CheckObjectMouseEvents(["MouseUp"], event))
+        if(!this.CheckObjectMouseEvents(["MouseUp"], Event))
         {
             Util.Log.Event("MouseUp");
-            this._Current.Events.Invoke("MouseUp", this._Game, this.PackEventArgs(event));
+            this._Current.Events.Invoke("MouseUp", this._Game, this.PackEventArgs(Event));
         }
     }
-    private OnMouseWheel(event) : void
+    private OnMouseWheel(Event) : void
     {
         Util.Log.Event("MouseWheel");
-        this._Current.Events.Invoke("MouseWheel", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("MouseWheel", this._Game, this.PackEventArgs(Event));
     }
-    private OnMouseMove(event) : void
+    private OnMouseMove(Event) : void
     {
-        this._Current.Events.Invoke("MouseMove", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("MouseMove", this._Game, this.PackEventArgs(Event));
     }
-    private OnMouseRight(event) : void
+    private OnMouseRight(Event) : void
     {
         Util.Log.Event("MouseRight");
-        event.preventDefault();
+        Event.preventDefault();
     }
-    private OnTouchStart(event) : void
+    private OnTouchStart(Event) : void
     {
-        if(event.touches.length == 0) return;
-        if(this._Current.Events.WireTouchEvents) this.OnMouseDown(event);
-        else if(!this.CheckObjectMouseEvents(["TouchStart"], event))
+        for(let i = 0; i < Event.touches.length; i++)
         {
-            Util.Log.Event("TouchStart");
-            this._Current.Events.Invoke("TouchStart", this._Game, this.PackEventArgs(event));
+            let TouchEvent:any = this.PackTouchEvent(Event.touches[i], i);
+            if(this._Current.Events.WireTouchEvents) this.OnMouseDown(TouchEvent);
+            else if(!this.CheckObjectMouseEvents(["TouchStart"], TouchEvent))
+            {
+                Util.Log.Event("TouchStart");
+                this._Current.Events.Invoke("TouchStart", this._Game, this.PackEventArgs(TouchEvent));
+            }
         }
     }
-    private OnTouchEnd(event) : void
+    private OnTouchEnd(Event) : void
     {
-        if(event.touches.length == 0) return;
-        if(this._Current.Events.WireTouchEvents) this.OnMouseUp(event);
-        else if(!this.CheckObjectMouseEvents(["TouchEnd"], event))
+        for(let i = 0; i < Event.changedTouches.length; i++)
         {
-            Util.Log.Event("TouchEnd");
-            this._Current.Events.Invoke("TouchEnd", this._Game, this.PackEventArgs(event));
+            let TouchEvent:any = this.PackTouchEvent(Event.changedTouches[i], i);
+            if(this._Current.Events.WireTouchEvents) this.OnMouseUp(TouchEvent);
+            else if(!this.CheckObjectMouseEvents(["TouchEnd"], TouchEvent))
+            {
+                Util.Log.Event("TouchEnd");
+                this._Current.Events.Invoke("TouchEnd", this._Game, this.PackEventArgs(TouchEvent));
+            }
         }
     }
-    private OnTouchMove(event) : void
+    private OnTouchMove(Event) : void
     {
-        if(event.touches.length == 0) return;
-        if(this._Current.Events.WireTouchEvents) this.OnMouseMove(event);
-        else this._Current.Events.Invoke("TouchMove", this._Game, this.PackEventArgs(event));
+        for(let i = 0; i < Event.touches.length; i++)
+        {
+            let TouchEvent:any = this.PackTouchEvent(Event.touches[i], i);
+            if(this._Current.Events.WireTouchEvents) this.OnMouseMove(TouchEvent);
+            else this._Current.Events.Invoke("TouchMove", this._Game, this.PackEventArgs(TouchEvent));
+        }
     }
-    private OnResize(event) : void
+    private OnResize(Event) : void
     {
         Util.Log.Event("Resize");
-        this._Current.Events.Invoke("Resize", this._Game, this.PackEventArgs(event));
+        this._Current.Events.Invoke("Resize", this._Game, this.PackEventArgs(Event));
     }
-    private CheckObjectMouseEvents(EventNames:string[], event) : boolean
+    private CheckObjectMouseEvents(EventNames:string[], Event) : boolean
     {
         let Handled:boolean = false;
         if (this._Current.Type == Engine.SceneType.Scene2D)
@@ -253,15 +261,15 @@ class Runner
                     let Trans:Math.Vertex = Current.Trans.Translation;
                     Trans = new Math.Vertex(Trans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Trans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
                     let Scale:Math.Vertex = Current.Trans.Scale;
-                    let X:number = event.offsetX;
-                    let Y:number = event.offsetY;
+                    let X:number = Event.offsetX;
+                    let Y:number = Event.offsetY;
                     Scale = new Math.Vertex(Scale.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, Scale.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 1);
                     if ((Current.Fixed && Trans.X - Scale.X / 2 < X && X < Trans.X + Scale.X / 2 && Trans.Y - Scale.Y / 2 < Y && Y < Trans.Y + Scale.Y / 2) ||
                     (STrans.X + Trans.X - Scale.X / 2 < X && X < STrans.X + Trans.X + Scale.X / 2 && STrans.Y + Trans.Y - Scale.Y / 2 < Y && Y < STrans.Y + Trans.Y + Scale.Y / 2))
                     {
                         for(let i = 0; i < EventNames.length; i++)
                         {
-                            let Args:any = this.PackEventArgs(event);
+                            let Args:any = this.PackEventArgs(Event);
                             Args.Sender = Current;
                             Handled = Handled || Current.Events.Invoke(EventNames[i], this._Game, Args);
                         }
@@ -303,5 +311,16 @@ class Runner
             }
         }
         return null;
+    }
+    public TouchscreenDevice() : boolean
+    {
+        if( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)) return true;
+        else return false;
     }
 }

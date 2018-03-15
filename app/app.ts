@@ -32,6 +32,8 @@ import { Convert } from "./Util/Converter";
 import { CollisionUtil } from "./Util/Collision";
 import { SceneObjectUtil } from "./Util/SceneObject";
 import { BufferUtil } from "./Util/Buffer";
+import { DPad } from "./Util/DPad";
+import { Analog } from "./Util/Analog";
 import { Log } from "./Util/Log";
 import { Runner } from "./Runner/Runner";
 
@@ -46,5 +48,6 @@ export
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
+    DPad, Analog,
     Runner,
 };

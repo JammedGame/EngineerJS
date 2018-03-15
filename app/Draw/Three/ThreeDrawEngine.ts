@@ -102,7 +102,7 @@ class ThreeDrawEngine extends DrawEngine
             if(!Found)
             {
                 this._Scene.remove(Sprite);
-                Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
+                //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
             }
         }
     }
@@ -230,7 +230,7 @@ class ThreeDrawEngine extends DrawEngine
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);
             this._Scene.add(Tile);
-            Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
+            //Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
             this._Checked.push(Tile.uuid);
         }
         else

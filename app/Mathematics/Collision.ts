@@ -269,7 +269,7 @@ class Collision
         let Result:CollisionValue = new CollisionValue();
         return Result;
     }
-    private static GetCollision4Way(Position1:Vertex, Position2:Vertex) : CollisionValue
+    public static GetCollision4Way(Position1:Vertex, Position2:Vertex) : CollisionValue
     {
         let Result:CollisionValue = new CollisionValue();
         let Angle:number = Vertex.Angle(Position2, Position1);
@@ -295,7 +295,7 @@ class Collision
         }
         return Result;
     }
-    private static GetCollision8Way(Position1:Vertex, Position2:Vertex) : CollisionValue
+    public static GetCollision8Way(Position1:Vertex, Position2:Vertex) : CollisionValue
     {
         let Result:CollisionValue = new CollisionValue();
         let Angle:number = Vertex.Angle(Position2, Position1);
