@@ -2,54 +2,74 @@ export  { Log };
 
 class Log
 {
-    public static LogOut:boolean = true;
-    public static LogInfo:boolean = false;
-    public static LogError:boolean = true;
-    public static LogWarning:boolean = true;
-    public static LogEvent:boolean = false;
-    public static Out(Message:string, Object?:any, Type?:string) : void
+    public static Enabled:boolean = true;
+    public static InfoEnabled:boolean = true;
+    public static ErrorEnabled:boolean = true;
+    public static WarningEnabled:boolean = true;
+    public static EventEnabled:boolean = false;
+    public static CustomEnabled:boolean = false;
+    public static CustomTitle:string = "Custom";
+    public static Out(Message:string, Data?:any, Type?:string) : void
     {
-        if(!Log.LogOut) return;
+        if(!Log.Enabled) return;
         console.log(" - - - ");
-        if(Type) console.log("EngineerJS: " + Type);
-        else console.log("EngineerJS: Message");
+        if(Type) console.log("TBX: " + Type);
+        else console.log("TBX: Message");
         console.log(Message);
-        console.log(Object);
+        if(Data) console.log(Data);
         console.log(" - - - ");
     };
-    public static Info(Message:string, Object?:any, Type?:string) : void
+    public static Info(Message:string, Data?:any, Type?:string) : void
     {
-        if(!Log.LogInfo) return;
+        if(!Log.Enabled) return;
+        if(!Log.InfoEnabled) return;
         console.info(" - - - ");
-        if(Type) console.info("EngineerJS: " + Type + " Info");
-        else console.info("EngineerJS: Info");
+        if(Type) console.info("TBX: " + Type + " Info");
+        else console.info("TBX: Info");
         console.info(Message);
+        if(Data) console.log(Data);
         console.info(" - - - ");
     };
-    public static Error(Message:string, Object?:any, Type?:string) : void
+    public static Error(Message:string, Data?:any, Type?:string) : void
     {
-        if(!Log.LogError) return;
+        if(!Log.Enabled) return;
+        if(!Log.ErrorEnabled) return;
         console.error(" - - - ");
-        if(Type) console.error("EngineerJS: " + Type + " Error");
-        else console.error("EngineerJS: Error");
+        if(Type) console.error("TBX: " + Type + " Error");
+        else console.error("TBX: Error");
         console.error(Message);
+        if(Data) console.log(Data);
         console.error(" - - - ");
     };
-    public static Warning(Message:string, Object?:any, Type?:string) : void
+    public static Warning(Message:string, Data?:any, Type?:string) : void
     {
-        if(!Log.LogWarning) return;
+        if(!Log.Enabled) return;
+        if(!Log.WarningEnabled) return;
         console.warn(" - - - ");
-        if(Type) console.warn("EngineerJS: " + Type + " Warning");
-        else console.warn("EngineerJS: Warning");
+        if(Type) console.warn("TBX: " + Type + " Warning");
+        else console.warn("TBX: Warning");
         console.warn(Message);
+        if(Data) console.log(Data);
         console.warn(" - - - ");
     };
-    public static Event(Message:string, Object?:any) : void
+    public static Event(Message:string, Data?:any) : void
     {
-        if(!Log.LogEvent) return;
+        if(!Log.Enabled) return;
+        if(!Log.EventEnabled) return;
         console.info(" - - - ");
-        console.info("EngineerJS: Event");
+        console.info("TBX: Event");
         console.info(Message);
         console.info(" - - - ");
+    };
+    public static Custom(Message:string, Data?:any, Type?:string) : void
+    {
+        if(!Log.Enabled) return;
+        if(!Log.WarningEnabled) return;
+        console.warn(" - - - ");
+        if(Type) console.warn("TBX: " + Log.CustomTitle + " - " + Type);
+        else console.warn("TBX: " + Log.CustomTitle);
+        console.warn(Message);
+        if(Data) console.log(Data);
+        console.warn(" - - - ");
     };
 }

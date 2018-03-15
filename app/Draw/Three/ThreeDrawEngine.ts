@@ -13,7 +13,7 @@ class ThreeDrawEngine extends DrawEngine
 {
     private _Checked:string[];
     private _Scene:Three.Scene;
-    private _EngineerScene:Engine.Scene2D;
+    private _ToyBoxScene:Engine.Scene2D;
     private _Camera:Three.Camera;
     public constructor(Old?:ThreeDrawEngine, Resolution?:Mathematics.Vertex)
     {
@@ -54,19 +54,18 @@ class ThreeDrawEngine extends DrawEngine
         super.UpdateResolution(Resolution, FixedSize);
         this.Resize();
     }
-    
     public Load2DScene(Scene:Engine.Scene2D) : void
     {
         // Override
         this._Checked = [];
-        if(this._EngineerScene)
+        if(this._ToyBoxScene)
         {
-            this._EngineerScene.Events.Resize.splice(this._EngineerScene.Events.Resize.indexOf(this.Resize), 1);
+            this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
         }
-        this._EngineerScene = Scene;
-        this._EngineerScene.Events.Resize.push(this.Resize.bind(this));
+        this._ToyBoxScene = Scene;
+        this._ToyBoxScene.Events.Resize.push(this.Resize.bind(this));
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
-        ThreeGridManager.CheckGrid(this._Scene, this._EngineerScene, this.Data, this._GlobalScale);
+        ThreeGridManager.CheckGrid(this._Scene, this._ToyBoxScene, this.Data, this._GlobalScale);
         for(let i = 0; i < Scene.Objects.length; i++)
         {
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
@@ -103,7 +102,7 @@ class ThreeDrawEngine extends DrawEngine
             if(!Found)
             {
                 this._Scene.remove(Sprite);
-                Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
+                //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
             }
         }
     }
@@ -117,7 +116,6 @@ class ThreeDrawEngine extends DrawEngine
         }
         this.Load2DScene(Scene);
         this.Renderer.render( this._Scene, this._Camera );
-        Util.Log.Info("Scene2D " + Scene.ID + " drawn.");
     }
     private DrawThree() : void
     {
@@ -136,7 +134,7 @@ class ThreeDrawEngine extends DrawEngine
     private DrawObjectTranslationTransform(Drawn:Engine.DrawObject) : Three.Vector3
     {
         let Translate:Three.Vector3 = new Three.Vector3();
-        if(!Drawn.Fixed) Translate.set((this._EngineerScene.Trans.Translation.X + Drawn.Trans.Translation.X) * this._GlobalScale.X, (this._EngineerScene.Trans.Translation.Y + Drawn.Trans.Translation.Y) * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
+        if(!Drawn.Fixed) Translate.set((this._ToyBoxScene.Trans.Translation.X + Drawn.Trans.Translation.X) * this._GlobalScale.X, (this._ToyBoxScene.Trans.Translation.Y + Drawn.Trans.Translation.Y) * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
         else Translate.set(Drawn.Trans.Translation.X * this._GlobalScale.X, Drawn.Trans.Translation.Y * this._GlobalScale.Y, Drawn.Trans.Translation.Z);
         return Translate;
     }
@@ -176,7 +174,7 @@ class ThreeDrawEngine extends DrawEngine
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
             this._Scene.add(Sprite);
-            Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
+            //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
             this._Checked.push(Sprite.uuid);
         }
         else
@@ -232,7 +230,7 @@ class ThreeDrawEngine extends DrawEngine
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);
             this._Scene.add(Tile);
-            Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
+            //Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
             this._Checked.push(Tile.uuid);
         }
         else

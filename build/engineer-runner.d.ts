@@ -30,4 +30,5 @@ export class Runner
     OnMouseRight(event) : void
     OnResize(event) : void
     CheckObjectMouseEvents(EventNames:string[], event) : boolean
+    TouchscreenDevice() : boolean
 }

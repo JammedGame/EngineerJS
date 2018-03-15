@@ -69,4 +69,8 @@ class SceneObject
         this._Type = <SceneObjectType>Data.Type;
         this.Data = Data.Data;
     }
+    public OnAddedToScene(Args:any) : void
+    {
+        // Virtual
+    }
 }

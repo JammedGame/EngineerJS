@@ -49,6 +49,7 @@ class Scene2D extends Scene
             {
                 this.Data[Object.ID] = Object;
                 this.Objects.push(Object);
+                Object.OnAddedToScene({Scene:this});
             }
         }
     }
