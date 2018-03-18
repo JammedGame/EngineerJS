@@ -3,7 +3,7 @@ export  { SceneObjectType, SceneObject };
 import * as Data from "./../../Data/Data";
 import * as Mathematics from "./../../Mathematics/Mathematics";
 
-import { EventPackage } from "./../Events/Events";
+import { SceneObjectEventPackage } from "./../Events/SceneObjectEventPackage";
 import { Serialization } from "./../../Data/Serialization";
 
 enum SceneObjectType
@@ -12,6 +12,7 @@ enum SceneObjectType
     Drawn = "Drawn",
     Script = "Script",
     Sound = "Sound",
+    Control = "Control",
     Other = "Other"
 }
 class SceneObject
@@ -20,13 +21,13 @@ class SceneObject
     private _ID:string;
     private _Name:string;
     private _Type:SceneObjectType;
-    private _Events:EventPackage;
+    protected _Events:SceneObjectEventPackage;
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
     public get Type():SceneObjectType { return this._Type; }
     public set Type(value:SceneObjectType) { this._Type = value; }
-    public get Events():EventPackage { return this._Events; }
+    public get Events():SceneObjectEventPackage { return this._Events; }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:SceneObject)
     {
@@ -42,7 +43,7 @@ class SceneObject
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._Type = SceneObjectType.Undefined;
-            this._Events = new EventPackage();
+            this._Events = new SceneObjectEventPackage();
         }
     }
     public Copy() : SceneObject
@@ -69,7 +70,11 @@ class SceneObject
         this._Type = <SceneObjectType>Data.Type;
         this.Data = Data.Data;
     }
-    public OnAddedToScene(Args:any) : void
+    public OnAttach(Args:any) : void
+    {
+        // Virtual
+    }
+    public OnSwitch() : void
     {
         // Virtual
     }

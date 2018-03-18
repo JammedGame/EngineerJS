@@ -69,17 +69,17 @@ class DPad extends Engine.Tile
         this._Down.Paint = Directions;
         this._Left.Paint = Directions;
     }
-    public OnAddedToScene(Args:any) : void
+    public OnAttach(Args:any) : void
     {
         // Override
         this.InitEvents(Args.Scene);
     }
     private InitEvents(Scene:Engine.Scene) : void
     {
-        Scene.AddSceneObject(this._Up);
-        Scene.AddSceneObject(this._Right);
-        Scene.AddSceneObject(this._Left);
-        Scene.AddSceneObject(this._Down);
+        Scene.Attach(this._Up);
+        Scene.Attach(this._Right);
+        Scene.Attach(this._Left);
+        Scene.Attach(this._Down);
         this.Events.TouchStart.push(this.TouchStart.bind(this));
         this.Events.TouchEnd.push(this.TouchEnd.bind(this));
         Scene.Events.TouchMove.push(this.TouchMove.bind(this));

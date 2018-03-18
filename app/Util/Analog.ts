@@ -59,14 +59,14 @@ class Analog extends Engine.Tile
         this.Paint = Stick;
         this._Pointer.Paint = Pointer;
     }
-    public OnAddedToScene(Args:any) : void
+    public OnAttach(Args:any) : void
     {
         // Override
         this.InitEvents(Args.Scene);
     }
     private InitEvents(Scene:Engine.Scene) : void
     {
-        Scene.AddSceneObject(this._Pointer);
+        Scene.Attach(this._Pointer);
         this.Events.TouchStart.push(this.TouchStart.bind(this));
         this.Events.TouchEnd.push(this.TouchEnd.bind(this));
         Scene.Events.TouchMove.push(this.TouchMove.bind(this));

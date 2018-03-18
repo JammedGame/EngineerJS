@@ -101,6 +101,7 @@ export class Color
     constructor()
     Copy():Color
     ToArray() : number[]
+    ToString() : string
     Serialize() : any
     Deserialize(Data:any) : void
     static Empty:Color;
