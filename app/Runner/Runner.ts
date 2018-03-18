@@ -130,6 +130,7 @@ class Runner
     {
         let Args = 
         {
+            ID: 0,
             Ctrl:Event.ctrlKey,
             Alt:Event.altKey,
             Shift:Event.shiftKey,
@@ -141,6 +142,7 @@ class Runner
             Width:window.innerWidth,
             Height:window.innerHeight
         }
+        if(Event.identifier) Args.ID = Event.identifier;
         return Args;
     }
     private PackTouchEvent(Touch, Index) : any
@@ -149,7 +151,8 @@ class Runner
         {
             button: Index,
             offsetX: Touch.clientX,
-            offsetY: Touch.clientY
+            offsetY: Touch.clientY,
+            identifier: Touch.identifier
         };
         return Event;
     }

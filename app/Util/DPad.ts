@@ -7,6 +7,7 @@ import * as Math from "./../Mathematics/Mathematics";
 class DPad extends Engine.Tile
 {
     private _Touch:boolean;
+    private _TouchID:number;
     public static All:DPad[] = [];
     private _Up:Engine.Tile;
     private _Right:Engine.Tile;
@@ -83,9 +84,10 @@ class DPad extends Engine.Tile
         this.Events.TouchEnd.push(this.TouchEnd.bind(this));
         Scene.Events.TouchMove.push(this.TouchMove.bind(this));
     }
-    private TouchStart() : void
+    private TouchStart(G:Engine.Game, Args:any) : void
     {
         this._Touch = true;
+        this._TouchID = Args.ID;
     }
     private TouchEnd() : void
     {
@@ -94,6 +96,7 @@ class DPad extends Engine.Tile
     }
     private TouchMove(G:Engine.Game, Args:any) : boolean
     {
+        if(this._TouchID != Args.ID) return;
         if(!this._Touch) return false;
         if(Math.Vertex.Distance(Args.Location, this.Trans.Translation) > this.Trans.Scale.X / 2)
         {
