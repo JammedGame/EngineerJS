@@ -1,8 +1,8 @@
 export { SpriteEventPackage }
 
-import { SceneObjectEventPackage } from "./SceneObjectEventPackage";
+import { ImageObjectEventPackage } from "./ImageObjectEventPackage";
 
-class SpriteEventPackage extends SceneObjectEventPackage
+class SpriteEventPackage extends ImageObjectEventPackage
 {
     public get SetComplete() : Function[] { return this._Data["SetComplete"]; }
     public constructor(Old?:SpriteEventPackage)

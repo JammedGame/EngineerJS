@@ -9,12 +9,13 @@ class SceneEventPackage extends EventPackage
     public set WireTouchEvents(value:boolean) { this._WireTouchEvents = value; }
     public get Load() : Function[] { return this._Data["Load"]; }
     public get Switch() : Function[] { return this._Data["Switch"]; }
+    public get Leave() : Function[] { return this._Data["Leave"]; }
     public get Resize() : Function[] { return this._Data["Resize"]; }
     public get Update() : Function[] { return this._Data["Update"]; }
     public get KeyPress() : Function[] { return this._Data["KeyPress"]; }
     public get KeyDown() : Function[] { return this._Data["KeyDown"]; }
     public get KeyUp() : Function[] { return this._Data["KeyUp"]; }
-    public get MouseClick() : Function[] { return this._Data["MouseClick"]; }
+    public get Click() : Function[] { return this._Data["Click"]; }
     public get MouseDown() : Function[] { return this._Data["MouseDown"]; }
     public get MouseUp() : Function[] { return this._Data["MouseUp"]; }
     public get MouseMove() : Function[] { return this._Data["MouseMove"]; }
@@ -33,12 +34,13 @@ class SceneEventPackage extends EventPackage
         {
             this._Data["Load"] = [];
             this._Data["Switch"] = [];
+            this._Data["Leave"] = [];
             this._Data["Resize"] = [];
             this._Data["Update"] = [];
             this._Data["KeyPress"] = [];
             this._Data["KeyDown"] = [];
             this._Data["KeyUp"] = [];
-            this._Data["MouseClick"] = [];
+            this._Data["Click"] = [];
             this._Data["MouseDown"] = [];
             this._Data["MouseUp"] = [];
             this._Data["MouseMove"] = [];

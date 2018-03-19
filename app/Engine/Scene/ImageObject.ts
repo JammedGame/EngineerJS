@@ -5,6 +5,7 @@ import * as Math from "./../../Mathematics/Mathematics";
 
 import { Material } from "./../Material/Material";
 import { DrawObject, DrawObjectType } from "./DrawObject";
+import { ImageObjectEventPackage } from "./../Events/ImageObjectEventPackage";
 
 enum ImageObjectMaterialType
 {
@@ -53,6 +54,7 @@ class ImageObject extends DrawObject
     public set CustomMaterial(value:Material) { this._CustomMaterial = value; }
     public get CustomShader():any { return this._CustomShader; }
     public set CustomShader(value:any) { this._CustomShader = value; }
+    public get Events():ImageObjectEventPackage { return <ImageObjectEventPackage>this._Events; }
     public constructor(Old?:ImageObject)
     {
         super(Old);
@@ -70,6 +72,7 @@ class ImageObject extends DrawObject
         }
         else
         {
+            this._Events = new ImageObjectEventPackage();
             this._FlipX = false;
             this._FlipY = false;
             this._RepeatX = 1;

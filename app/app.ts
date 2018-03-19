@@ -17,7 +17,7 @@ import { ImageCollection } from "./Engine/Scene/ImageCollection";
 import { Tile } from "./Engine/Scene/Tile";
 import { EventPackage } from "./Engine/Events/EventPackage";
 import { SceneEventPackage } from "./Engine/Events/SceneEventPackage";
-import { SceneObjectEventPackage } from "./Engine/Events/SceneObjectEventPackage";
+import { ImageObjectEventPackage } from "./Engine/Events/ImageObjectEventPackage";
 import { SpriteEventPackage } from "./Engine/Events/SpriteEventPackage";
 import { MouseButton } from "./Engine/Events/EventArguments";
 import { Game } from "./Engine/Game/Game";
@@ -38,6 +38,12 @@ import { BufferUtil } from "./Util/Buffer";
 import { DPad } from "./Util/DPad";
 import { Analog } from "./Util/Analog";
 import { Log } from "./Util/Log";
+import { Border } from "./UI/Border";
+import { ControlEventPackage } from "./UI/ControlEventPackage";
+import { Control } from "./UI/Control";
+import { Label } from "./UI/Label";
+import { Button } from "./UI/Button";
+import { Panel } from "./UI/Panel";
 import { Runner } from "./Runner/Runner";
 
 export
@@ -46,12 +52,13 @@ export
     DrawEngineType, DrawEngine,
     ImageObjectMaterialType, ImageObjectSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,
-    EventPackage, SceneEventPackage, SceneObjectEventPackage, SpriteEventPackage,
+    EventPackage, SceneEventPackage, ImageObjectEventPackage, SpriteEventPackage,
     Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, ColliderObject,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
     DPad, Analog,
+    Border, ControlEventPackage, Control, Label, Button, Panel,
     Runner,
 };

@@ -34,6 +34,7 @@ class Sprite extends ImageObject
     public set NormalSets(value:SpriteSet[]) { this._NormalSets.SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
     public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
+    public get Events():SpriteEventPackage { return <SpriteEventPackage>this._Events; }
     public constructor(Old?:Sprite)
     {
         super(Old);

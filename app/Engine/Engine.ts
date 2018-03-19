@@ -7,7 +7,7 @@ import { ImageCollection } from "./Scene/ImageCollection";
 import { Tile } from "./Scene/Tile";
 import { EventPackage } from "./Events/EventPackage";
 import { SceneEventPackage } from "./Events/SceneEventPackage";
-import { SceneObjectEventPackage } from "./Events/SceneObjectEventPackage";
+import { ImageObjectEventPackage } from "./Events/ImageObjectEventPackage";
 import { SpriteEventPackage } from "./Events/SpriteEventPackage";
 import { MouseButton } from "./Events/EventArguments";
 import { Game } from "./Game/Game";
@@ -25,6 +25,6 @@ import { MaterialNode } from "./Material/MaterialNode";
 import { Material } from "./Material/Material";
 
 export { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject, DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,
-        EventPackage, SceneEventPackage, SceneObjectEventPackage, SpriteEventPackage,
+        EventPackage, SceneEventPackage, ImageObjectEventPackage, SpriteEventPackage,
         Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Light, LightType, LightAttenuation, SpotLight, DirectionalLight,
         MaterialNodeValue, MaterialNodeValueType, MaterialNodePool, MaterialNode, Material };

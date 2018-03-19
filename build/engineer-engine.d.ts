@@ -13,12 +13,13 @@ export class SceneEventPackage extends EventPackage
     WireTouchEvents:boolean;
     Load:Function[];
     Switch:Function[];
+    Leave:Function[];
     Resize:Function[];
     Update:Function[];
     KeyPress:Function[];
     KeyDown:Function[];
     KeyUp:Function[];
-    MouseClick:Function[];
+    Click:Function[];
     MouseDown:Function[];
     MouseUp:Function[];
     MouseMove:Function[];
@@ -30,18 +31,18 @@ export class SceneEventPackage extends EventPackage
     Copy() : SceneEventPackage
 }
 
-export class SceneObjectEventPackage extends EventPackage
+export class ImageObjectEventPackage extends EventPackage
 {
-    MouseClick:Function[];
+    Click:Function[];
     MouseDown:Function[];
     MouseUp:Function[];
     TouchStart:Function[];
     TouchEnd:Function[];
     constructor(Old?:SceneEventPackage)
-    Copy() : SceneObjectEventPackage
+    Copy() : ImageObjectEventPackage
 }
 
-export class SpriteEventPackage extends SceneObjectEventPackage
+export class SpriteEventPackage extends ImageObjectEventPackage
 {
     SetComplete:Function[];
     constructor(Old?:SpriteEventPackage)
@@ -209,6 +210,7 @@ export class ImageObject extends DrawObject
     MaterialType:ImageObjectMaterialType;
     CustomMaterial:Material;
     CustomShader:any;
+    Events:ImageObjectEventPackage;
     constructor(Old?:ImageObject)
     Copy() : ImageObject
 }
@@ -253,6 +255,7 @@ export class Sprite extends ImageObject
     SpriteSets:SpriteSet[];
     NormalSets:SpriteSet[];
     SubSprites:Sprite[];
+    Events:SpriteEventPackage;
     constructor(Old?:Sprite)
     Copy() : Sprite
     CollectiveList() : string[]
@@ -298,7 +301,7 @@ export class Scene
     Name:string;
     Type:SceneType;
     BackColor:Math.Color;
-    Events:EventPackage;
+    Events:SceneEventPackage;
     Objects:SceneObject[];
     Lights:Light[];
     DrawObjects:DrawObject[];

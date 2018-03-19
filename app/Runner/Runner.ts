@@ -44,8 +44,9 @@ class Runner
         {
             if(this._Game.Scenes[i].Name == SceneName)
             {
+                this._Current.Events.Invoke("Leave", this._Game, {Next:this._Game.Scenes[i]});
                 this._Current = this._Game.Scenes[i];
-                this._Current.Events.Invoke("Load", this._Game, {});
+                this._Current.Events.Invoke("Switch", this._Game, {});
                 return;
             }
         }
@@ -65,7 +66,7 @@ class Runner
     {
         if(this._Stop) return;
         this.UpdateScene();
-        this._Current.Events.Invoke("TimeTick", this._Game, {});
+        this._Current.Events.Invoke("Update", this._Game, {});
         this._LoopHandle = requestAnimationFrame( this.Loop.bind(this) );
     }
     private Stop() : void
@@ -122,7 +123,6 @@ class Runner
         if(this._Current.Type == Engine.SceneType.Scene2D)
         {
             this._DrawEngine.Draw2DScene(<Engine.Scene2D>this._Current, window.innerWidth, window.innerHeight);
-            this._Current.Events.Invoke("RenderFrame", this._Game, {});
         }
         else Util.Log.Error("Scene " + this._Current.Name + "is not of valid type.", this._Current);
     }
@@ -178,11 +178,11 @@ class Runner
     }
     private OnMouseDown(Event) : void
     {
-        if(!this.CheckObjectMouseEvents(["MousePress", "MouseDown"], Event))
+        if(!this.CheckObjectMouseEvents(["Click", "MouseDown"], Event))
         {
-            Util.Log.Event("MousePress");
+            Util.Log.Event("Click");
             Util.Log.Event("MouseDown");
-            this._Current.Events.Invoke("MousePress", this._Game, this.PackEventArgs(Event));
+            this._Current.Events.Invoke("Click", this._Game, this.PackEventArgs(Event));
             this._Current.Events.Invoke("MouseDown", this._Game, this.PackEventArgs(Event));
         }
     }

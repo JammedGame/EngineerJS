@@ -3,7 +3,7 @@ export  { SceneObjectType, SceneObject };
 import * as Data from "./../../Data/Data";
 import * as Mathematics from "./../../Mathematics/Mathematics";
 
-import { SceneObjectEventPackage } from "./../Events/SceneObjectEventPackage";
+import { EventPackage } from "./../Events/EventPackage";
 import { Serialization } from "./../../Data/Serialization";
 
 enum SceneObjectType
@@ -21,13 +21,13 @@ class SceneObject
     private _ID:string;
     private _Name:string;
     private _Type:SceneObjectType;
-    protected _Events:SceneObjectEventPackage;
+    protected _Events:EventPackage;
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
     public get Type():SceneObjectType { return this._Type; }
     public set Type(value:SceneObjectType) { this._Type = value; }
-    public get Events():SceneObjectEventPackage { return this._Events; }
+    public get Events():EventPackage { return this._Events; }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:SceneObject)
     {
@@ -43,7 +43,7 @@ class SceneObject
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._Type = SceneObjectType.Undefined;
-            this._Events = new SceneObjectEventPackage();
+            this._Events = new EventPackage();
         }
     }
     public Copy() : SceneObject
