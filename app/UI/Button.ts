@@ -1,6 +1,7 @@
 export { Button }
 
 import { Label } from "./Label";
+import { Settings } from "./../Engine/Settings";
 
 import { ControlEventPackage } from "./ControlEventPackage";
 
@@ -22,6 +23,14 @@ class Button extends Label
     public Copy() : Button
     {
         return new Button(this);
+    }
+    public Update() : void
+    {
+        super.Update();
+        if(Settings.IgnoreUICSS)
+        {
+            this.Element.style.cursor = "pointer";
+        }
     }
     protected Create() : void
     {

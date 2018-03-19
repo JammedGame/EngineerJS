@@ -57,7 +57,7 @@ class Label extends Control
     {
         super.Create();
         this.Element.className += " label";
-        this._TextElement = new HTMLParagraphElement();
+        this._TextElement = <HTMLParagraphElement>(document.createElement('p'));
         this._TextElement.className = "text";
         this.Element.appendChild(this._TextElement);
     }

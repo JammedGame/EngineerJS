@@ -156,6 +156,8 @@ class Scene
     public OnSwitch() : void
     {
         // Virtual
+        let UIParent:HTMLElement = document.getElementById("ui-parent");
+        UIParent.innerHTML = "";
         for(let i in this._Objects) this._Objects[i].OnSwitch();
     }
     public Serialize() : any

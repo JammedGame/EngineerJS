@@ -44,8 +44,9 @@ class Runner
         {
             if(this._Game.Scenes[i].Name == SceneName)
             {
-                this._Current.Events.Invoke("Leave", this._Game, {Next:this._Game.Scenes[i]});
+                if(this._Current) this._Current.Events.Invoke("Leave", this._Game, {Next:this._Game.Scenes[i]});
                 this._Current = this._Game.Scenes[i];
+                this._Current.OnSwitch();
                 this._Current.Events.Invoke("Switch", this._Game, {});
                 return;
             }

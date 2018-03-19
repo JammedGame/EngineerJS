@@ -46,6 +46,7 @@ class Control extends Engine.SceneObject
         }
         else
         {
+            this.Type = Engine.SceneObjectType.Control;
             this._Active = true;
             this._Position = new Math.Vertex();
             this._Size = new Math.Vertex();
@@ -67,6 +68,8 @@ class Control extends Engine.SceneObject
         this._Element.style.position = "absolute";
         this._Element.style.left = (this._Offset.X + this._Position.X).toString();
         this._Element.style.top = (this._Offset.Y + this._Position.Y).toString();
+        this._Element.style.width = this._Size.X + "px";
+        this._Element.style.height = this._Size.Y + "px";
         if(Settings.IgnoreUICSS)
         {
             this._Element.style.color = this._ForeColor.ToString();
@@ -76,12 +79,14 @@ class Control extends Engine.SceneObject
     }
     protected Create() : void
     {
-        this._Element = new HTMLDivElement();
+        this._Element = <HTMLDivElement>(document.createElement('div'));
         this._Element.className = "control";
     }
     public OnSwitch() : void
     {
         // Override
         this.Update();
+        let UIParent:HTMLElement = document.getElementById("ui-parent");
+        UIParent.appendChild(this._Element);
     }
 }
