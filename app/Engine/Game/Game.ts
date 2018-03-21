@@ -33,26 +33,26 @@ class Game
         let Title:HTMLElement = document.getElementById("title") as HTMLElement;
         Title.innerHTML = this._Name;
     }
-    public AddScene(Scene:Scene) : void
+    public Attach(Scene:Scene) : void
     {
         this.Data[Scene.Name] = Scene;
         this._Scenes.push(Scene);
     }
-    public ContainsScene(Name:string)
+    public Contains(Name:string)
     {
         return !!this.Data[Name];
     }
-    public RemoveScene(Scene:Scene) : void
+    public Remove(Scene:Scene) : void
     {
         this.Data[Scene.Name] = null;
         this._Scenes.splice(this._Scenes.indexOf(Scene), 1);
     }
-    public RemoveSceneByName(SceneName:string) : void
+    public RemoveByName(SceneName:string) : void
     {
         this._Scenes.splice(this.Data[SceneName], 1);
         this.Data[SceneName] = null;
     }
-    public GetScenesWithData(Key:string, Data?:any) : any[]
+    public FindByData(Key:string, Data?:any) : any[]
     {
         let Objects:any[] = [];
         for(let i = 0; i < this._Scenes.length; i++)

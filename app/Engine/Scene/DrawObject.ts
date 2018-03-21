@@ -34,6 +34,10 @@ class DrawObject extends SceneObject
     public set DrawType(value:DrawObjectType) { this._DrawType = value; }
     public get Trans():Math.Transformation { return this._Trans; }
     public set Trans(value:Math.Transformation) { this._Trans = value; }
+    public get Position():Math.Vertex { return this._Trans.Translation; }
+    public set Position(value:Math.Vertex) { this._Trans.Translation = value; }
+    public get Size():Math.Vertex { return this._Trans.Scale; }
+    public set Size(value:Math.Vertex) { this._Trans.Scale = value; }
     public constructor(Old?:DrawObject)
     {
         super(Old);

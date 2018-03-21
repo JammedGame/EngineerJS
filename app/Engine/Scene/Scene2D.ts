@@ -15,11 +15,11 @@ class Scene2D extends Scene
     public set Trans(value:Math.Transformation) { this._Trans = value; }
     public get Sprites() : Sprite[]
     {
-        return <Sprite[]>this.GetObjectsWithDrawType(DrawObjectType.Sprite);
+        return <Sprite[]>this.FindByDrawType(DrawObjectType.Sprite);
     }
     public get Tiles() : Tile[]
     {
-        return <Tile[]>this.GetObjectsWithDrawType(DrawObjectType.Tile);
+        return <Tile[]>this.FindByDrawType(DrawObjectType.Tile);
     }   
     public constructor(Old?:Scene2D)
     {
@@ -40,7 +40,7 @@ class Scene2D extends Scene
         let New:Scene2D = new Scene2D(this);
         return New;
     }
-    public AddSceneObject(Object:SceneObject) : void
+    public Attach(Object:SceneObject) : void
     {
         // Override
         if(Object.Type == SceneObjectType.Drawn)
@@ -49,8 +49,14 @@ class Scene2D extends Scene
             {
                 this.Data[Object.ID] = Object;
                 this.Objects.push(Object);
-                Object.OnAddedToScene({Scene:this});
+                Object.OnAttach({Scene:this});
             }
+        }
+        else if(Object.Type == SceneObjectType.Sound || Object.Type == SceneObjectType.Control)
+        {
+            this.Data[Object.ID] = Object;
+            this.Objects.push(Object);
+            Object.OnAttach({Scene:this});
         }
     }
     public Composite(Chunk:Scene) : boolean

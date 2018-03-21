@@ -2,13 +2,24 @@ import * as Math from "./engineer-math";
 
 export class EventPackage
 {
+    constructor(Old?:EventPackage)
+    Copy() : EventPackage
+    Invoke(EventName:string, CurrentGame:Game, Args) : boolean
+    InvokeEvents(Events:Function[], CurrentGame:Game, Args) : boolean
+}
+
+export class SceneEventPackage extends EventPackage
+{
     WireTouchEvents:boolean;
-    Closing:Function[];
+    Load:Function[];
+    Switch:Function[];
+    Leave:Function[];
+    Resize:Function[];
+    Update:Function[];
     KeyPress:Function[];
     KeyDown:Function[];
     KeyUp:Function[];
-    Load:Function[];
-    MouseClick:Function[];
+    Click:Function[];
     MouseDown:Function[];
     MouseUp:Function[];
     MouseMove:Function[];
@@ -16,16 +27,26 @@ export class EventPackage
     TouchStart:Function[];
     TouchEnd:Function[];
     TouchMove:Function[];
-    RenderFrame:Function[];
-    Resize:Function[];
-    TimeTick:Function[];
-    OperationProgress:Function[];
-    OperationFinished:Function[];
-    SpriteSetAnimationComplete:Function[];
-    constructor(Old?:EventPackage)
-    Copy() : EventPackage
-    Invoke(EventName:string, CurrentGame:Game, Args) : boolean
-    InvokeEvents(Events:Function[], CurrentGame:Game, Args) : boolean
+    constructor(Old?:SceneEventPackage)
+    Copy() : SceneEventPackage
+}
+
+export class ImageObjectEventPackage extends EventPackage
+{
+    Click:Function[];
+    MouseDown:Function[];
+    MouseUp:Function[];
+    TouchStart:Function[];
+    TouchEnd:Function[];
+    constructor(Old?:SceneEventPackage)
+    Copy() : ImageObjectEventPackage
+}
+
+export class SpriteEventPackage extends ImageObjectEventPackage
+{
+    SetComplete:Function[];
+    constructor(Old?:SpriteEventPackage)
+    Copy() : SpriteEventPackage
 }
 
 export enum MouseButton 
@@ -41,6 +62,7 @@ export enum SceneObjectType
     Drawn = "Drawn",
     Script = "Script",
     Sound = "Sound",
+    Control = "Control",
     Other = "Other"
 }
 
@@ -137,6 +159,8 @@ export class DrawObject extends SceneObject
     Paint:Math.Color;
     DrawType:DrawObjectType;
     Trans:Math.Transformation;
+    Position:Math.Vertex;
+    Size:Math.Vertex;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
 }
@@ -186,6 +210,7 @@ export class ImageObject extends DrawObject
     MaterialType:ImageObjectMaterialType;
     CustomMaterial:Material;
     CustomShader:any;
+    Events:ImageObjectEventPackage;
     constructor(Old?:ImageObject)
     Copy() : ImageObject
 }
@@ -230,6 +255,7 @@ export class Sprite extends ImageObject
     SpriteSets:SpriteSet[];
     NormalSets:SpriteSet[];
     SubSprites:Sprite[];
+    Events:SpriteEventPackage;
     constructor(Old?:Sprite)
     Copy() : Sprite
     CollectiveList() : string[]
@@ -275,7 +301,7 @@ export class Scene
     Name:string;
     Type:SceneType;
     BackColor:Math.Color;
-    Events:EventPackage;
+    Events:SceneEventPackage;
     Objects:SceneObject[];
     Lights:Light[];
     DrawObjects:DrawObject[];
@@ -283,12 +309,12 @@ export class Scene
     Data:any;
     constructor(Old?:Scene)
     Copy() : Scene
-    AddSceneObject(Object:SceneObject) : void
-    RemoveSceneObject(Object:SceneObject) : void
-    GetObjectsWithData(Key:string, Data?:any) : SceneObject[]
-    GetObjectsWithType(Type:SceneObjectType) : SceneObject[]
-    GetObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]
-    GetActiveObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]
+    Attach(Object:SceneObject) : void
+    Remove(Object:SceneObject) : void
+    FindByData(Key:string, Data?:any) : SceneObject[]
+    FindByType(Type:SceneObjectType) : SceneObject[]
+    FindByDrawType(Type:DrawObjectType) : DrawObject[]
+    FindActiveByDrawType(Type:DrawObjectType) : DrawObject[]
     Serialize() : any
     Deserialize(Data:any) : void
 }
@@ -309,11 +335,10 @@ export class Game
     Data:any;
     constructor(Name?:string)
     Copy() : Game
-    UpdateName() : void
-    AddScene(Scene:Scene) : void
-    ContainsScene(Name:string)
-    RemoveScene(Scene:Scene) : void
-    RemoveSceneByName(SceneName:string) : void
+    Attach(Scene:Scene) : void
+    Contains(Name:string)
+    Remove(Scene:Scene) : void
+    RemoveByName(SceneName:string) : void
     GetScenesWithData(Key:string, Data?:any) : any[]
 }
 

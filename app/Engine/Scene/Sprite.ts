@@ -7,6 +7,7 @@ import { SpriteSet } from "./SpriteSet";
 import { SpriteSetCollection } from "./SpriteSetCollection";
 import { ImageObject } from "./ImageObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
+import { SpriteEventPackage } from "../Events/SpriteEventPackage";
 
 class Sprite extends ImageObject
 {
@@ -33,6 +34,7 @@ class Sprite extends ImageObject
     public set NormalSets(value:SpriteSet[]) { this._NormalSets.SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
     public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
+    public get Events():SpriteEventPackage { return <SpriteEventPackage>this._Events; }
     public constructor(Old?:Sprite)
     {
         super(Old);
@@ -51,6 +53,7 @@ class Sprite extends ImageObject
         }
         else
         {
+            this._Events = new SpriteEventPackage();
             this._SpriteSets = new SpriteSetCollection();
             this._NormalSets = new SpriteSetCollection();
             this._SubSprites = [];
@@ -91,7 +94,7 @@ class Sprite extends ImageObject
         if (this._SpriteSets.SpriteSets.length <= 0) this._CurrentIndex = -1;
         else if (this._CurrentIndex >= this._SpriteSets.SpriteSets[this._CurrentSpriteSet].Images.length)
         {
-            this.Events.Invoke("SpriteSetAnimationComplete", null, {CurrentSpriteSet:this._CurrentSpriteSet, NextSpriteSet:((this._BackUpSpriteSet!=-1)?this._BackUpSpriteSet:this._CurrentSpriteSet)});
+            this.Events.Invoke("SetComplete", null, {CurrentSpriteSet:this._CurrentSpriteSet, NextSpriteSet:((this._BackUpSpriteSet!=-1)?this._BackUpSpriteSet:this._CurrentSpriteSet)});
             if (this._BackUpSpriteSet != -1)
             {
                 this._CurrentSpriteSet = this._BackUpSpriteSet;

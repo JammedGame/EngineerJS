@@ -4,7 +4,7 @@ import * as Data from "./../../Data/Data";
 import * as Util from "./../../Util/Util";
 import * as Math from "./../../Mathematics/Mathematics";
 
-import { EventPackage } from "./../Events/Events";
+import { SceneEventPackage } from "./../Events/SceneEventPackage";
 import { SceneObject, SceneObjectType } from "./SceneObject";
 import { SoundObject } from "./SoundObject";
 import { DrawObject, DrawObjectType } from "./DrawObject";
@@ -22,7 +22,7 @@ class Scene
     private _Name:string;
     private _Type:SceneType;
     private _BackColor:Math.Color;
-    private _Events:EventPackage;
+    private _Events:SceneEventPackage;
     private _Objects:SceneObject[];
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
@@ -31,24 +31,24 @@ class Scene
     public set Type(value:SceneType) { this._Type = value; }
     public get BackColor():Math.Color { return this._BackColor; }
     public set BackColor(value:Math.Color) { this._BackColor = value; }
-    public get Events():EventPackage { return this._Events; }
+    public get Events():SceneEventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
     public get DrawnObjects() : DrawObject[]
     {
-        return <DrawObject[]>this.GetObjectsWithType(SceneObjectType.Drawn);
+        return <DrawObject[]>this.FindByType(SceneObjectType.Drawn);
     }
     public get SoundObjects() : SoundObject[]
     {
-        return <SoundObject[]>this.GetObjectsWithType(SceneObjectType.Sound);
+        return <SoundObject[]>this.FindByType(SceneObjectType.Sound);
     }
     public get Lights() : Light[]
     {
-        return <Light[]>this.GetObjectsWithDrawType(DrawObjectType.Light);
+        return <Light[]>this.FindByDrawType(DrawObjectType.Light);
     }
     public get ActiveLights() : Light[]
     {
-        return <Light[]>this.GetActiveObjectsWithDrawType(DrawObjectType.Light);
+        return <Light[]>this.FindActiveByDrawType(DrawObjectType.Light);
     }
     public Data: { [key: string]:any; } = {};
     public constructor(Old?:Scene)
@@ -67,7 +67,7 @@ class Scene
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._BackColor = Math.Color.FromRGBA(40,40,40,255);
-            this._Events = new EventPackage();
+            this._Events = new SceneEventPackage();
             this._Objects = [];
         }
     }
@@ -75,13 +75,13 @@ class Scene
     {
         return new Scene(this);
     }
-    public AddSceneObject(Object:SceneObject) : void
+    public Attach(Object:SceneObject) : void
     {
         // Virtual
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
     }
-    public RemoveSceneObject(Object:SceneObject) : void
+    public Remove(Object:SceneObject) : void
     {
         let Index:number = this._Objects.indexOf(Object);
         if(Index != -1)
@@ -90,7 +90,7 @@ class Scene
         }
         else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
     }
-    public GetObjectsWithData(Key:string, Data?:any) : SceneObject[]
+    public FindByData(Key:string, Data?:any) : SceneObject[]
     {
         let Objects:SceneObject[] = [];
         for(let i = 0; i < this.Objects.length; i++)
@@ -106,7 +106,7 @@ class Scene
         }
         return Objects;
     }
-    public GetObjectsWithType(Type:SceneObjectType) : SceneObject[]  
+    public FindByType(Type:SceneObjectType) : SceneObject[]  
     {  
         let Objects:SceneObject[] = [];  
         for(let i = 0; i < this.Objects.length; i++)  
@@ -118,7 +118,7 @@ class Scene
         }  
         return Objects;  
     } 
-    public GetObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]  
+    public FindByDrawType(Type:DrawObjectType) : DrawObject[]  
     {  
         let Objects:DrawObject[] = [];  
         for(let i = 0; i < this.Objects.length; i++)  
@@ -133,7 +133,7 @@ class Scene
         }  
         return Objects;  
     }  
-    public GetActiveObjectsWithDrawType(Type:DrawObjectType) : DrawObject[]  
+    public FindActiveByDrawType(Type:DrawObjectType) : DrawObject[]  
     {  
         let Objects:DrawObject[] = [];  
         for(let i = 0; i < this.Objects.length; i++)  
@@ -152,6 +152,13 @@ class Scene
     {
         // Virtual
         return false;
+    }
+    public OnSwitch() : void
+    {
+        // Virtual
+        let UIParent:HTMLElement = document.getElementById("ui-parent");
+        UIParent.innerHTML = "";
+        for(let i in this._Objects) this._Objects[i].OnSwitch();
     }
     public Serialize() : any
     {
@@ -182,7 +189,7 @@ class Scene
         this.Data = Data.Data;
         for(let i in Data.Objects)
         {
-            this.AddSceneObject(Serialization.DeserializeSceneObject(Data.Objects[i]));
+            this.Attach(Serialization.DeserializeSceneObject(Data.Objects[i]));
         }
     }
 }

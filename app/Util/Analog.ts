@@ -7,6 +7,7 @@ import * as Math from "./../Mathematics/Mathematics";
 class Analog extends Engine.Tile
 {
     private _Touch:boolean;
+    private _TouchID:number;
     public static All:Analog[] = [];
     private _Pointer:Engine.Tile;
     private _Press:Function[];
@@ -58,21 +59,22 @@ class Analog extends Engine.Tile
         this.Paint = Stick;
         this._Pointer.Paint = Pointer;
     }
-    public OnAddedToScene(Args:any) : void
+    public OnAttach(Args:any) : void
     {
         // Override
         this.InitEvents(Args.Scene);
     }
     private InitEvents(Scene:Engine.Scene) : void
     {
-        Scene.AddSceneObject(this._Pointer);
+        Scene.Attach(this._Pointer);
         this.Events.TouchStart.push(this.TouchStart.bind(this));
         this.Events.TouchEnd.push(this.TouchEnd.bind(this));
         Scene.Events.TouchMove.push(this.TouchMove.bind(this));
     }
-    private TouchStart()
+    private TouchStart(G:Engine.Game, Args:any) : void
     {
         this._Touch = true;
+        this._TouchID = Args.ID;
     }
     private TouchEnd()
     {
@@ -81,6 +83,7 @@ class Analog extends Engine.Tile
     }
     private TouchMove(G:Engine.Game, Args:any)
     {
+        if(this._TouchID != Args.ID) return;
         if(!this._Touch) return false;
         if(Math.Vertex.Distance(Args.Location, this.Trans.Translation) > this.Trans.Scale.X / 2)
         {
