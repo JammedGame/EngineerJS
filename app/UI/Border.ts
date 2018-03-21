@@ -36,8 +36,9 @@ class Border
     }
     public Apply(Element:HTMLElement)
     {
-        Element.style.borderWidth = this._Width.toString();
-        Element.style.borderRadius = this._Radius.toString();
+        Element.style.borderStyle = "solid";
+        Element.style.borderWidth = this._Width + "px";
+        Element.style.borderRadius = this._Radius + "px";
         Element.style.borderColor = this._Color.ToString();
     }
 }
