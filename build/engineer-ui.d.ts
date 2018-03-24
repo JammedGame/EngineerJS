@@ -14,6 +14,8 @@ export class Border
 export class ControlEventPackage extends Engine.EventPackage
 {
     Click:Function[];
+    MouseEnter:Function[];
+    MouseLeave:Function[];
     constructor(Old?:ControlEventPackage)
     Copy() : ControlEventPackage
     Connect(Element:HTMLElement) : void
@@ -43,6 +45,7 @@ export enum TextAlign
 export class Label extends Control
 {
     Text:string;
+    TextSize:number;
     Padding:number;
     TextAlign:TextAlign;
     constructor(Old?:Label, Text?:string)

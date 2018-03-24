@@ -47,16 +47,12 @@ class Scene2D extends Scene
         {
             if((<DrawObject>Object).DrawType == DrawObjectType.Sprite || (<DrawObject>Object).DrawType == DrawObjectType.Tile || (<DrawObject>Object).DrawType == DrawObjectType.Light)
             {
-                this.Data[Object.ID] = Object;
-                this.Objects.push(Object);
-                Object.OnAttach({Scene:this});
+                super.Attach(Object);
             }
         }
         else if(Object.Type == SceneObjectType.Sound || Object.Type == SceneObjectType.Control)
         {
-            this.Data[Object.ID] = Object;
-            this.Objects.push(Object);
-            Object.OnAttach({Scene:this});
+            super.Attach(Object);
         }
     }
     public Composite(Chunk:Scene) : boolean
