@@ -100,6 +100,8 @@ export class Color
     A:number;
     constructor()
     Copy():Color
+    Lighten():Color
+    Darken():Color
     ToArray() : number[]
     ToString() : string
     Serialize() : any
@@ -121,6 +123,7 @@ export class Color
     static Maroon:Color;
     static FromString( ColorString:string ) : Color
     static FromRGBA(R:number, G:number, B:number, A:number):Color
+    static Blend(Color1:Color, Color2:Color, Ratio:number) : Color
 }
 
 export enum CollisionType

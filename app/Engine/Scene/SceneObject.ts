@@ -74,6 +74,10 @@ class SceneObject
     {
         // Virtual
     }
+    public OnRemove(Args:any) : void
+    {
+        // Virtual
+    }
     public OnSwitch() : void
     {
         // Virtual

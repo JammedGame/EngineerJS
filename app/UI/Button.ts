@@ -1,5 +1,7 @@
 export { Button }
 
+import * as Math from "./../Mathematics/Mathematics";
+
 import { Label } from "./Label";
 import { Settings } from "./../Engine/Settings";
 
@@ -37,5 +39,21 @@ class Button extends Label
         super.Create();
         this.Element.className += " button";
         this.Events.Connect(this.Element);
+        this.Events.MouseEnter.push(this.OnMouseEnter.bind(this));
+        this.Events.MouseLeave.push(this.OnMouseLeave.bind(this));
+    }
+    private OnMouseEnter(Event) : void
+    {
+        if(Settings.IgnoreUICSS)
+        {
+            this.Element.style.backgroundColor = this.BackColor.Copy().Lighten().ToString();
+        }
+    }
+    private OnMouseLeave(Event) : void
+    {
+        if(Settings.IgnoreUICSS)
+        {
+            this.Element.style.backgroundColor = this.BackColor.ToString();
+        }
     }
 }

@@ -10,7 +10,7 @@ class EventPackage
         this._Data = {};
         if(Old != null)
         {
-            for(let key of this._Data)
+            for(let key of Object.keys(Old._Data))
             {
                 this._Data[key] = [];
                 for(let i in Old._Data[key])

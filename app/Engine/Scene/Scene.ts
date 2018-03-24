@@ -80,12 +80,15 @@ class Scene
         // Virtual
         this.Data[Object.ID] = Object;
         this._Objects.push(Object);
+        Object.OnAttach({Scene:this});
     }
     public Remove(Object:SceneObject) : void
     {
+        // Virtual
         let Index:number = this._Objects.indexOf(Object);
         if(Index != -1)
         {
+            Object.OnRemove({Scene:this});
             this._Objects.splice(Index, 1);
         }
         else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
@@ -157,7 +160,7 @@ class Scene
     {
         // Virtual
         let UIParent:HTMLElement = document.getElementById("ui-parent");
-        UIParent.innerHTML = "";
+        if(UIParent) UIParent.innerHTML = "";
         for(let i in this._Objects) this._Objects[i].OnSwitch();
     }
     public Serialize() : any

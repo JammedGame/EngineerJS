@@ -6,6 +6,8 @@ import * as Engine from "./../Engine/Engine";
 class ControlEventPackage extends Engine.EventPackage
 {
     public get Click() : Function[] { return this._Data["Click"]; }
+    public get MouseEnter() : Function[] { return this._Data["MouseEnter"]; }
+    public get MouseLeave() : Function[] { return this._Data["MouseLeave"]; }
     public constructor(Old?:ControlEventPackage)
     {
         super(Old);
@@ -16,6 +18,8 @@ class ControlEventPackage extends Engine.EventPackage
         else
         {
             this._Data["Click"] = [];
+            this._Data["MouseEnter"] = [];
+            this._Data["MouseLeave"] = [];
         }
     }
     public Copy() : ControlEventPackage
@@ -25,6 +29,8 @@ class ControlEventPackage extends Engine.EventPackage
     public Connect(Element:HTMLElement) : void
     {
         Element.addEventListener("mousedown", this.OnClick.bind(this));
+        Element.addEventListener("mouseenter", this.OnMouseEnter.bind(this));
+        Element.addEventListener("mouseleave", this.OnMouseLeave.bind(this));
     }
     private PackEventArgs(Event) : any
     {
@@ -48,5 +54,13 @@ class ControlEventPackage extends Engine.EventPackage
     private OnClick(Event) : void
     {
         this.Invoke("Click", Runner.Runner.Current.Game, this.PackEventArgs(Event));
+    }
+    private OnMouseEnter(Event) : void
+    {
+        this.Invoke("MouseEnter", Runner.Runner.Current.Game, this.PackEventArgs(Event));
+    }
+    private OnMouseLeave(Event) : void
+    {
+        this.Invoke("MouseLeave", Runner.Runner.Current.Game, this.PackEventArgs(Event));
     }
 }

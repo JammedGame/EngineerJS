@@ -75,6 +75,9 @@ export class SceneObject
     Data:any;
     constructor(Old?:SceneObject)
     Copy() : SceneObject
+    OnAttach(Args:any) : void
+    OnRemove(Args:any) : void
+    OnSwitch() : void
     Serialize() : any
     Deserialize(Data:any) : void
 }

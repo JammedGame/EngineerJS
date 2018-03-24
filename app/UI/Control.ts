@@ -65,13 +65,16 @@ class Control extends Engine.SceneObject
         if(!this._Element) this.Create();
         if(this._Active) this._Element.style.display = "block";
         else this._Element.style.display = "none";
+        this._Element.style.margin = "0px";
+        this._Element.style.boxSizing = "border-box";
         this._Element.style.position = "absolute";
-        this._Element.style.left = (this._Offset.X + this._Position.X).toString();
-        this._Element.style.top = (this._Offset.Y + this._Position.Y).toString();
+        this._Element.style.left = (this._Offset.X + this._Position.X - this._Size.X / 2).toString();
+        this._Element.style.top = (this._Offset.Y + this._Position.Y - this._Size.Y / 2).toString();
         this._Element.style.width = this._Size.X + "px";
         this._Element.style.height = this._Size.Y + "px";
         if(Settings.IgnoreUICSS)
         {
+            this._Element.style.fontFamily = "Arial";
             this._Element.style.color = this._ForeColor.ToString();
             this._Element.style.backgroundColor = this._BackColor.ToString();
         }

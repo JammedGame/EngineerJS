@@ -41,7 +41,7 @@ import { Log } from "./Util/Log";
 import { Border } from "./UI/Border";
 import { ControlEventPackage } from "./UI/ControlEventPackage";
 import { Control } from "./UI/Control";
-import { Label } from "./UI/Label";
+import { Label, TextAlign } from "./UI/Label";
 import { Button } from "./UI/Button";
 import { Panel } from "./UI/Panel";
 import { Runner } from "./Runner/Runner";
@@ -59,6 +59,6 @@ export
     CollisionValue, ColliderObject,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
     DPad, Analog,
-    Border, ControlEventPackage, Control, Label, Button, Panel,
+    Border, ControlEventPackage, Control, Label, TextAlign, Button, Panel,
     Runner,
 };

@@ -17,6 +17,26 @@ class Color
     {
         return Color.FromRGBA(this.R, this.G, this.B, this.A);
     }
+    public Lighten():Color
+    {
+        this.R += 20;
+        if(this.R > 255) this.R = 255;
+        this.G += 20;
+        if(this.G > 255) this.G = 255;
+        this.B += 20;
+        if(this.B > 255) this.B = 255;
+        return this;
+    }
+    public Darken():Color
+    {
+        this.R -= 20;
+        if(this.R < 0) this.R = 0;
+        this.G -= 20;
+        if(this.G < 0) this.G = 0;
+        this.B -= 20;
+        if(this.B < 0) this.B = 0;
+        return this;
+    }
     public ToArray() : number[]
     {
         return [(this.R * 1.0 + 1) / 256, (this.G * 1.0 + 1) / 256, (this.B * 1.0 + 1) / 256, (this.A * 1.0 + 1) / 256];
@@ -119,5 +139,13 @@ class Color
         else if (ColorString.toUpperCase() == "RED") return Color.Red;
         else if (ColorString.toUpperCase() == "MAROON") return Color.Maroon;
         else return Color.Empty;
+    }
+    public static Blend(Color1:Color, Color2:Color, Ratio:number) : Color
+    {
+        let NewColor:Color = Color.Black;
+        NewColor.R = Math.floor((1-Ratio) * Color1.R + Ratio * Color2.R);
+        NewColor.G = Math.floor((1-Ratio) * Color1.G + Ratio * Color2.G);
+        NewColor.B = Math.floor((1-Ratio) * Color1.B + Ratio * Color2.B);
+        return NewColor;
     }
 }
