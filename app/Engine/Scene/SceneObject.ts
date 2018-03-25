@@ -82,4 +82,8 @@ class SceneObject
     {
         // Virtual
     }
+    public OnResize(Args:any) : void
+    {
+        // Virtual
+    }
 }
