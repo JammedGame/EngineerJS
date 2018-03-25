@@ -163,6 +163,11 @@ class Scene
         if(UIParent) UIParent.innerHTML = "";
         for(let i in this._Objects) this._Objects[i].OnSwitch();
     }
+    public OnResize(Args:any) : void
+    {
+        // Virtual
+        for(let i in this._Objects) this._Objects[i].OnResize(Args);
+    }
     public Serialize() : any
     {
         // Virtual

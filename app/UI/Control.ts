@@ -16,6 +16,7 @@ class Control extends Engine.SceneObject
     private _Border:Border;
     private _Element:HTMLElement;
     protected _Offset:Math.Vertex;
+    protected _Scale:Math.Vertex;
     public get Active():boolean { return this._Active; }
     public set Active(value:boolean) { this._Active = value; }
     public get Position():Math.Vertex { return this._Position; }
@@ -40,6 +41,7 @@ class Control extends Engine.SceneObject
             this._Position = Old._Position;
             this._Size = Old._Size;
             this._Offset = new Math.Vertex();
+            this._Scale = Old._Scale.Copy();
             this._ForeColor = Old._ForeColor.Copy();
             this._BackColor = Old.BackColor.Copy();
             this._Border = Old._Border.Copy();
@@ -51,6 +53,7 @@ class Control extends Engine.SceneObject
             this._Position = new Math.Vertex();
             this._Size = new Math.Vertex();
             this._Offset = new Math.Vertex();
+            this._Scale = new Math.Vertex(1,1,1);
             this._ForeColor = Math.Color.Black;
             this._BackColor = Math.Color.White;
             this._Border = new Border();
@@ -68,10 +71,10 @@ class Control extends Engine.SceneObject
         this._Element.style.margin = "0px";
         this._Element.style.boxSizing = "border-box";
         this._Element.style.position = "absolute";
-        this._Element.style.left = (this._Offset.X + this._Position.X - this._Size.X / 2).toString();
-        this._Element.style.top = (this._Offset.Y + this._Position.Y - this._Size.Y / 2).toString();
-        this._Element.style.width = this._Size.X + "px";
-        this._Element.style.height = this._Size.Y + "px";
+        this._Element.style.left = (this._Scale.X * (this._Offset.X + this._Position.X - this._Size.X / 2)).toString();
+        this._Element.style.top = (this._Scale.Y * (this._Offset.Y + this._Position.Y - this._Size.Y / 2)).toString();
+        this._Element.style.width = this._Scale.X * this._Size.X + "px";
+        this._Element.style.height = this._Scale.Y * this._Size.Y + "px";
         if(Settings.IgnoreUICSS)
         {
             this._Element.style.fontFamily = "Arial";
@@ -91,5 +94,11 @@ class Control extends Engine.SceneObject
         this.Update();
         let UIParent:HTMLElement = document.getElementById("ui-parent");
         UIParent.appendChild(this._Element);
+    }
+    public OnResize(Args:any) : void
+    {
+        // Override
+        this._Scale = new Math.Vertex(Args.Scale.X / Args.GlobalScale.X, Args.Scale.Y / Args.GlobalScale.Y, 1);
+        this.Update();
     }
 }

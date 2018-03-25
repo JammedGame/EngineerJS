@@ -47,6 +47,7 @@ class ThreeDrawEngine extends DrawEngine
             this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 10 );
             this._Camera.position.z = 5;
         }
+        if(this._ToyBoxScene) this._ToyBoxScene.OnResize({GlobalScale:this._GlobalScale, Scale:this._ToyBoxScene.Trans.Scale});
     }
     public UpdateResolution(Resolution:Mathematics.Vertex, FixedSize?:boolean)
     {
@@ -63,6 +64,7 @@ class ThreeDrawEngine extends DrawEngine
             this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
         }
         this._ToyBoxScene = Scene;
+        this.Resize();
         this._ToyBoxScene.Events.Resize.push(this.Resize.bind(this));
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
         ThreeGridManager.CheckGrid(this._Scene, this._ToyBoxScene, this.Data, this._GlobalScale);
