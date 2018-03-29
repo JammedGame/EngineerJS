@@ -45,6 +45,7 @@ export enum TextAlign
 export class Label extends Control
 {
     Text:string;
+    Font:string;
     TextSize:number;
     Padding:number;
     TextAlign:TextAlign;
