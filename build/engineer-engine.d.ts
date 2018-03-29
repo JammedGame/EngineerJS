@@ -359,6 +359,7 @@ export class Settings
     static Graphics:Quality;
     static IgnoreUICSS:boolean;
     static GlobalFontScale:number;
+    static GlobalFontFamily:string;
 }
 
 export as namespace Engine;

@@ -75,6 +75,7 @@ class Control extends Engine.SceneObject
         this._Element.style.top = (this._Scale.Y * (this._Offset.Y + this._Position.Y - this._Size.Y / 2)).toString();
         this._Element.style.width = this._Scale.X * this._Size.X + "px";
         this._Element.style.height = this._Scale.Y * this._Size.Y + "px";
+        this._Element.style.zIndex = "3";
         if(Settings.IgnoreUICSS)
         {
             this._Element.style.color = this._ForeColor.ToString();
