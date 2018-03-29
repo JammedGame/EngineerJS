@@ -43,7 +43,7 @@ class Label extends Control
         {
             if(Text) this._Text = Text;
             else this._Text = "";
-            this._Font = "Arial";
+            this._Font = Settings.GlobalFontFamily;
             this._Padding = 5;
             this._TextSize = 16;
             this._TextAlign = TextAlign.Center;
