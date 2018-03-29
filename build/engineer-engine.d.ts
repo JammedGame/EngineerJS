@@ -345,4 +345,20 @@ export class Game
     GetScenesWithData(Key:string, Data?:any) : any[]
 }
 
+export enum Quality
+{
+    Low = 1,
+    Medium = 2,
+    High = 4,
+}
+
+export class Settings
+{
+    static Version:string;
+    static LibPath:string;
+    static Graphics:Quality;
+    static IgnoreUICSS:boolean;
+    static GlobalFontScale:number;
+}
+
 export as namespace Engine;

@@ -37,14 +37,14 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Renderer.setSize( Width, Height );
             this._GlobalScale = new Mathematics.Vertex(this.Resolution.X / Width, this.Resolution.Y / Height, 1);
-            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X * this._GlobalScale.X, 0, this.Resolution.Y * this._GlobalScale.Y, 1, 10 );
+            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X * this._GlobalScale.X, 0, this.Resolution.Y * this._GlobalScale.Y, 1, 100 );
             this._Camera.position.z = 5;
         }
         else
         {
             this.Renderer.setSize( this.Resolution.X, this.Resolution.Y );
             this._GlobalScale = new Mathematics.Vertex(1, 1, 1);
-            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 10 );
+            this._Camera = new Three.OrthographicCamera( 0, this.Resolution.X, 0, this.Resolution.Y, 1, 100 );
             this._Camera.position.z = 5;
         }
         if(this._ToyBoxScene) this._ToyBoxScene.OnResize({GlobalScale:this._GlobalScale, Scale:this._ToyBoxScene.Trans.Scale});

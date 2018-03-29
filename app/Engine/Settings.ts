@@ -12,4 +12,5 @@ class Settings
     public static LibPath:string = "/Resources/";
     public static Graphics:Quality = Quality.High;
     public static IgnoreUICSS:boolean = true;
+    public static GlobalFontScale: number = 1.0;
 }

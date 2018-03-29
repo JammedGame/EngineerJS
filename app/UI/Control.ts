@@ -77,7 +77,6 @@ class Control extends Engine.SceneObject
         this._Element.style.height = this._Scale.Y * this._Size.Y + "px";
         if(Settings.IgnoreUICSS)
         {
-            this._Element.style.fontFamily = "Arial";
             this._Element.style.color = this._ForeColor.ToString();
             this._Element.style.backgroundColor = this._BackColor.ToString();
         }
