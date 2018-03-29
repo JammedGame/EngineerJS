@@ -13,12 +13,15 @@ enum TextAlign
 class Label extends Control
 {
     private _Text:string;
+    private _Font:string;
     private _Padding:number;
     private _TextSize:number;
     private _TextAlign:TextAlign;
     private _TextElement:HTMLElement;
     public get Text():string { return this._Text; }
     public set Text(value:string) { this._Text = value; }
+    public get Font():string { return this._Font; }
+    public set Font(value:string) { this._Font = value; }
     public get TextSize():number { return this._TextSize; }
     public set TextSize(value:number) { this._TextSize = value; }
     public get Padding():number { return this._Padding; }
@@ -31,6 +34,7 @@ class Label extends Control
         if(Old)
         {
             this._Text = Old._Text;
+            this._Font = Old._Font;
             this._TextSize = Old._TextSize;
             this._Padding = Old._Padding;
             this._TextAlign = Old._TextAlign;
@@ -39,6 +43,7 @@ class Label extends Control
         {
             if(Text) this._Text = Text;
             else this._Text = "";
+            this._Font = "Arial";
             this._Padding = 5;
             this._TextSize = 16;
             this._TextAlign = TextAlign.Center;
@@ -53,9 +58,10 @@ class Label extends Control
         super.Update();
         if(Settings.IgnoreUICSS)
         {
-            this.Element.style.fontSize = this._TextSize + "px";
+            this.Element.style.fontFamily = this._Font;
+            this.Element.style.fontSize = Math.floor(Settings.GlobalFontScale * this._Scale.Y * this._TextSize) + "px";
             this.Element.style.textAlign = this._TextAlign;
-            this.Element.style.padding = this._Padding + "px";
+            this.Element.style.padding = Math.floor(this._Scale.Y * this._Padding) + "px";
             this.Element.style.overflow = "hidden";
         }
         this._TextElement.style.margin = "0px";
