@@ -25,7 +25,7 @@ class DrawObject extends SceneObject
     public get Modified():boolean { return this._Modified; }
     public set Modified(value:boolean) { this._Modified = value; }
     public get Active():boolean { return this._Active; }
-    public set Active(value:boolean) { this._Active = value; }
+    public set Active(value:boolean) { this._Active = value; this.OnToggle(value); }
     public get Fixed():boolean { return this._Fixed; }
     public set Fixed(value:boolean) { this._Fixed = value; }
     public get Paint():Math.Color { return this._Paint; }
@@ -64,6 +64,10 @@ class DrawObject extends SceneObject
     public Copy() : DrawObject
     {
         return new DrawObject(this);
+    }
+    public OnToggle(Value:boolean) : void
+    {
+        // Virtual
     }
     public Serialize() : any
     {

@@ -50,4 +50,19 @@ class Panel extends Control
     {
         this._Children.push(Child);
     }
+    public OnAttach(Args:any) : void
+    {
+        // Override
+        for(let i in this._Children) Args.Scene.Attach(this._Children[i]);
+    }
+    public OnRemove(Args:any) : void
+    {
+        // Override
+        for(let i in this._Children) Args.Scene.Remove(this._Children[i]);
+    }
+    public OnToggle(Value:boolean) : void
+    {
+        // Override
+        for(let i in this._Children) this._Children[i].Active = Value;
+    }
 }
