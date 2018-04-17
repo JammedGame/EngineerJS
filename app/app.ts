@@ -30,6 +30,7 @@ import { Axis, Vertex } from "./Mathematics/Vertex";
 import { Transformation } from "./Mathematics/Transformation"
 import { MatrixMode, Matrix, MatrixTransformer } from "./Mathematics/MatrixTransformer"
 import { Color } from "./Mathematics/Color"
+import { Random } from "./Mathematics/Functions"
 import { Collision, CollisionType, CollisionValue, ColliderObject } from "./Mathematics/Collision"
 import { Convert } from "./Util/Converter";
 import { CollisionUtil } from "./Util/Collision";
@@ -56,7 +57,7 @@ export
     Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
-    CollisionValue, ColliderObject,
+    CollisionValue, ColliderObject, Random,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
     DPad, Analog,
     Border, ControlEventPackage, Control, Label, TextAlign, Button, Panel,
