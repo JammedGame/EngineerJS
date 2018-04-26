@@ -17,6 +17,7 @@ class CollisionUtil
         let Collider = new Math.ColliderObject();
         Collider.Position = Object.Trans.Translation;
         Collider.Scale= Object.Trans.Scale;
+        if(Object.Data["Collision_Scale"]) Collider.Scale = Object.Data["Collision_Scale"];
         Collider.Type = Object.Data["Collision"];
         return Collider;
     }

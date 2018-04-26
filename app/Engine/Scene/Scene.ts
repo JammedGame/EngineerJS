@@ -91,7 +91,7 @@ class Scene
             Object.OnRemove({Scene:this});
             this._Objects.splice(Index, 1);
         }
-        else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
+        else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID, {Objects:this._Objects, Object});
     }
     public FindByData(Key:string, Data?:any) : SceneObject[]
     {
