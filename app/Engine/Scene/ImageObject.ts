@@ -1,20 +1,13 @@
-export { ImageObject, ImageObjectMaterialType, ImageObjectSamplingType }
+export { ImageObject, ImageObjectSamplingType }
 
 import * as Data from "./../../Data/Data";
 import * as Math from "./../../Mathematics/Mathematics";
 
 import { Material } from "./../Material/Material";
 import { DrawObject, DrawObjectType } from "./DrawObject";
+import { ImageCollection } from "./ImageCollection";
 import { ImageObjectEventPackage } from "./../Events/ImageObjectEventPackage";
 
-enum ImageObjectMaterialType
-{
-    Default = "Default",
-    Lit = "Lit",
-    NormalLit = "NormalLit",
-    Custom = "Custom",
-    Shader = "Shader"
-}
 enum ImageObjectSamplingType
 {
     Linear = "Linear",
@@ -29,9 +22,9 @@ class ImageObject extends DrawObject
     private _RepeatY:number;
     private _AmbientColor:Math.Color;
     private _Sampling:ImageObjectSamplingType;
-    private _MaterialType:ImageObjectMaterialType;
-    private _CustomMaterial:Material;
+    private _Material:Material;
     private _CustomShader:any;
+    protected _Collection:ImageCollection;
     public get Index() : number { /*Virtual*/ return -1; }
     public set Index(value:number) { /*Virtual*/ }
     public get Images() : string[] { /*Virtual*/ return []; }
@@ -48,10 +41,8 @@ class ImageObject extends DrawObject
     public set AmbientColor(value:Math.Color) { this._AmbientColor = value; }
     public get Sampling():ImageObjectSamplingType { return this._Sampling; }
     public set Sampling(value:ImageObjectSamplingType) { this._Sampling = value; }
-    public get MaterialType():ImageObjectMaterialType { return this._MaterialType; }
-    public set MaterialType(value:ImageObjectMaterialType) { this._MaterialType = value; this.Modified = true; }
-    public get CustomMaterial():Material { return this._CustomMaterial; }
-    public set CustomMaterial(value:Material) { this._CustomMaterial = value; }
+    public get Material():Material { return this._Material; }
+    public set Material(value:Material) { this._Material = value; }
     public get CustomShader():any { return this._CustomShader; }
     public set CustomShader(value:any) { this._CustomShader = value; }
     public get Events():ImageObjectEventPackage { return <ImageObjectEventPackage>this._Events; }
@@ -66,9 +57,7 @@ class ImageObject extends DrawObject
             this._RepeatY = Old._RepeatY;
             this._Sampling = Old._Sampling;
             this._AmbientColor = Old._AmbientColor.Copy();
-            this._MaterialType = Old._MaterialType;
-            this._CustomMaterial = Old._CustomMaterial.Copy();
-            this._CustomShader = Old._CustomShader;
+            this._Material = Old._Material.Copy();
         }
         else
         {
@@ -80,9 +69,7 @@ class ImageObject extends DrawObject
             this._AmbientColor = Math.Color.FromRGBA(50,50,50,255);
             this._Sampling = ImageObjectSamplingType.Linear;
             this.DrawType = DrawObjectType.Image;
-            this._MaterialType = ImageObjectMaterialType.Default;
-            this._CustomMaterial = new Material();
-            this._CustomShader = { VertexShader:"", FragmentShader:"" };
+            this._Material = new Material();
         }
     }
     public Copy() : ImageObject
@@ -99,9 +86,7 @@ class ImageObject extends DrawObject
         IO.RepeatY = this._RepeatY;
         IO.AmbientColor = this._AmbientColor.Serialize();
         IO.Sampling = <string> this._Sampling;
-        IO.MaterialType = <string> this._MaterialType;
-        if(this._CustomMaterial) IO.CustomMaterial = this._CustomMaterial.Serialize();
-        IO.CustomShader = this._CustomShader;
+        if(this._Material) IO.CustomMaterial = this._Material.Serialize();
         return IO;
     }
     public Deserialize(Data) : void
@@ -114,8 +99,6 @@ class ImageObject extends DrawObject
         this._RepeatY = Data.RepeatY;
         this._AmbientColor.Deserialize(Data.AmbientColor);
         this._Sampling = <ImageObjectSamplingType> Data.Sampling;
-        this._MaterialType = <ImageObjectMaterialType> Data.MaterialType;
-        if(Data.CustomMaterial) this._CustomMaterial.Deserialize(Data.CustomMaterial);
-        this._CustomShader = Data.CustomShader;
+        if(Data.CustomMaterial) this._Material.Deserialize(Data.CustomMaterial);
     }
 }

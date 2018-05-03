@@ -10,7 +10,6 @@ import { DrawObject, DrawObjectType } from "./DrawObject";
 class Tile extends ImageObject
 {
     private _Index:number;
-    private _Collection:ImageCollection;
     private _NormalCollection:ImageCollection;
     private _SubTiles:Tile[];
     public get Index():number { /*Override*/ return this._Index; }

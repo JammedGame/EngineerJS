@@ -5,10 +5,10 @@ import { Serialization} from "./Data/Serialization";
 import { MaterialNodeValue, MaterialNodeValueType } from "./Engine/Material/MaterialNodeValue";
 import { MaterialNodePool } from "./Engine/Material/MaterialNodePool";
 import { MaterialNode } from "./Engine/Material/MaterialNode";
-import { Material } from "./Engine/Material/Material";
+import { MaterialType, Material } from "./Engine/Material/Material";
 import { DrawEngineType, DrawEngine } from "./Draw/DrawEngine";
 import { DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
-import { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject } from "./Engine/Scene/ImageObject";
+import { ImageObjectSamplingType, ImageObject } from "./Engine/Scene/ImageObject";
 import { Light, LightAttenuation } from "./Engine/Scene/Light";
 import { SpriteSet } from "./Engine/Scene/SpriteSet";
 import { SpriteSetCollection } from "./Engine/Scene/SpriteSetCollection";
@@ -51,7 +51,7 @@ export
 {
     Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
-    ImageObjectMaterialType, ImageObjectSamplingType, ImageObject,
+    MaterialType, ImageObjectSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,
     EventPackage, SceneEventPackage, ImageObjectEventPackage, SpriteEventPackage,
     Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,

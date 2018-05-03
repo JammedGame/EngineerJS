@@ -131,16 +131,55 @@ export class MaterialNodePool
     constructor()
 }
 
+export enum MaterialType
+{
+    Default = "Default",
+    Lit = "Lit",
+    Phong = "Phong",
+    Custom = "Custom",
+    Shader = "Shader"
+}
+
+export enum MaterialInputType
+{
+    Integer = "i",
+    Float = "f",
+    Vector2 = "v2",
+    Vector3 = "v3",
+    Vector4 = "v4",
+    Texture = "tv"
+}
+
+export class MaterialInput
+{
+    ID:string;
+    Type:MaterialInputType;
+    constructor(Old?:MaterialInput, ID?:string, Type?:MaterialInputType)
+    Copy() : MaterialInput
+}
+
+export class ShaderCode
+{
+    Vertex:string;
+    Fragment:string;
+    constructor(Old?:ShaderCode, Vertex?:string, Fragment?:string)
+    Copy() : ShaderCode
+}
+
 export class Material
 {
     ID:string;
     Name:string;
+    Type:MaterialType;
     Nodes:MaterialNode[];
+    Inputs:MaterialInput[];
+    Shaders:ShaderCode;
     constructor(Old?:Material)
     Copy() : Material
     Serialize() : any
     Deserialize(Data:any) : void
     AddNode(Node:MaterialNode) : void
+    RegisterInput(ID:string, Type:MaterialInputType) : boolean
     FindNodeByName(Name:string) : MaterialNode
     FindNodeByFunction(Function:string) : MaterialNode
 }
@@ -183,15 +222,6 @@ export class Light extends DrawObject
     constructor(Old?:Light);
 }
 
-export enum ImageObjectMaterialType
-{
-    Default = "Default",
-    Lit = "Lit",
-    NormalLit = "NormalLit",
-    Custom = "Custom",
-    Shader = "Shader"
-}
-
 export enum ImageObjectSamplingType
 {
     Linear = "Linear",
@@ -210,9 +240,7 @@ export class ImageObject extends DrawObject
     RepeatY:number;
     AmbientColor:Math.Color;
     Sampling:ImageObjectSamplingType;
-    MaterialType:ImageObjectMaterialType;
-    CustomMaterial:Material;
-    CustomShader:any;
+    Material:Material;
     Events:ImageObjectEventPackage;
     constructor(Old?:ImageObject)
     Copy() : ImageObject

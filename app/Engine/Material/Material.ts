@@ -1,40 +1,58 @@
-export { Material }
+export { Material, MaterialType }
 
 import * as Data from "./../../Data/Data";
 
+import { ShaderCode } from "./ShaderCode";
 import { MaterialNode } from "./MaterialNode";
 import { MaterialNodeValue } from "./MaterialNodeValue";
 import { MaterialInput, MaterialInputType } from "./MaterialInput";
 
+enum MaterialType
+{
+    Default = "Default",
+    Lit = "Lit",
+    Phong = "Phong",
+    Custom = "Custom",
+    Shader = "Shader"
+}
 class Material
 {
     private _ID:string;
     private _Name:string;
+    private _Type:MaterialType;
     private _Nodes:MaterialNode[];
     private _Inputs:MaterialInput[];
+    private _Shaders:ShaderCode;
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
+    public get Type():MaterialType { return this._Type; }
+    public set Type(value:MaterialType) { this._Type = value; }
     public get Nodes():MaterialNode[] { return this._Nodes; }
     public get Inputs():MaterialInput[] { return this._Inputs; }
+    public get Shaders():ShaderCode { return this._Shaders; }
     public constructor(Old?:Material)
     {
         if(Old != null)
         {
             this._ID = Data.Uuid.Create();
             this._Name = Old._Name;
+            this._Type = Old._Type;
             this._Nodes = [];
             for(let i in Old._Nodes) this._Nodes.push(Old._Nodes[i].Copy());
             this._Inputs = [];
             for(let i in Old._Inputs) this._Inputs.push(Old._Inputs[i].Copy());
+            this._Shaders = Old._Shaders.Copy();
             this.CloneConnections(Old);
         }
         else
         {
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
+            this._Type = MaterialType.Default;
             this._Nodes = [];
             this._Inputs = [];
+            this._Shaders = new ShaderCode();
         }
     }
     public Copy() : Material
