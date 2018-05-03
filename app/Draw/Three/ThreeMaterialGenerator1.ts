@@ -12,29 +12,7 @@ const TOYBOX_MAX_LIGHTS = 8;
 
 class ThreeMaterialGenerator
 {
-    private _Metadata:any;
-    private _Scene:Engine.Scene;
-    private _Loader:Three.TextureLoader;
-    public constructor(Old?:ThreeMaterialGenerator, Metadata?:any, Scene?:Engine.Scene)
-    {
-        if(Old)
-        {
-            this._Scene = Old._Scene;
-            this._Metadata = Old._Metadata;
-            this._Loader = Old._Loader;
-        }
-        else
-        {
-            this._Scene = Scene;
-            this._Metadata = Metadata;
-            this._Loader = new Three.TextureLoader();
-        }
-    }
-    public Copy() : ThreeMaterialGenerator
-    {
-        return new ThreeMaterialGenerator(this);
-    }
-    private GenerateMaterial(Drawn:Engine.ImageObject, Textures:Three.Texture[]) : Three.ShaderMaterial
+    private static GenerateMaterial(Scene:Engine.Scene2D, Drawn:Engine.ImageObject, Textures:Three.Texture[], Metadata:any) : Three.ShaderMaterial
     {
         let Index:number = Drawn.Index;
         let Uniforms:any =
@@ -51,42 +29,22 @@ class ThreeMaterialGenerator
         {
             VertexShader = ThreeBasicShaders.LitVertex2D;
             FragmentShader = ThreeBasicShaders.LitFragment2D;
-            this.PrePack2DLights(Uniforms);
+            let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
+            Uniforms.locations = LightsPack.Locations;
+            Uniforms.intensities = LightsPack.Intensities;
+            Uniforms.attenuations = LightsPack.Attenuations;
+            Uniforms.lightColors = LightsPack.LightColors;
+            Uniforms.lightTypes = LightsPack.Types;
+            Uniforms.lightParameters = LightsPack.Parameters;
+            Uniforms.lightDirections = LightsPack.Directions;
             Uniforms.ambient = { type:"v4", value: Drawn.AmbientColor.ToArray() };
         }
         if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
            Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom)
         {
+            FragmentShader = ThreeBasicShaders.LitNormalFragment2D;
+            Uniforms.normalMap = { type:"tv", value: Textures[1] };
             if(Drawn.NormalMaps.length == 0) Index = -1;
-            else
-            {
-                FragmentShader = ThreeBasicShaders.LitNormalFragment2D;
-                Uniforms.normalMap = { type:"tv", value: Textures[1] };
-            }
-        }
-        if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
-            Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
-        {
-            for(let i in Drawn.CustomMaterial.Inputs)
-            {
-                let Input:Engine.MaterialInput = Drawn.CustomMaterial.Inputs[i];
-                if(Drawn.Data[Input.ID] != null)
-                {
-                    if(<string>Input.Type == "tv")
-                    {
-                        if(this._Metadata["TOYBOX_TEXTURE_"+Input.ID] == null)
-                        {
-                            let Path:string = Drawn.Data[Input.ID];
-                            this._Metadata["TOYBOX_TEXTURE_"+Input.ID] = this.LoadTexture(Drawn, Path);
-                        }
-                        Uniforms[Input.ID] = { type:<string>Input.Type, value:this._Metadata["TOYBOX_TEXTURE_"+Input.ID] };
-                    }
-                    else
-                    {
-                        Uniforms[Input.ID] = { type:<string>Input.Type, value:Drawn.Data[Input.ID] };
-                    }
-                }
-            }
         }
         if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom)
         {
@@ -102,13 +60,18 @@ class ThreeMaterialGenerator
             {
                 uniforms: Uniforms,
                 vertexShader: VertexShader,
-                fragmentShader: FragmentShader
+                fragmentShader: FragmentShader,
             }
         );
         DrawnMaterial.transparent = true;
         return DrawnMaterial;
     }
-    public LoadMaterial(Drawn:Engine.ImageObject) : Three.ShaderMaterial
+    private static RegisterLitMaterial(Material:any, Metadata:any)
+    {
+        if(Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] = [];
+        Metadata["TOYBOX_LIT_OBJECT_MATERIALS"].push(Material);
+    }
+    public static LoadMaterial(Scene:Engine.Scene2D, Drawn:Engine.ImageObject, Metadata:any) : Three.ShaderMaterial
     {
         let ID:string = "";
         let Index:number = -1;
@@ -140,43 +103,43 @@ class ThreeMaterialGenerator
             }
             Index = Sprite.CurrentIndex;
         }
-        let Textures : Three.Texture[] = this._Metadata["TOYBOX_" + ID + "_Tex"];
+        let Textures : Three.Texture[] = Metadata["TOYBOX_" + ID + "_Tex"];
         if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Default ||
            Drawn.MaterialType == Engine.ImageObjectMaterialType.Lit)
         {
-            Material = this.GenerateMaterial(Drawn, [Textures[Index]]);
+            Material = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Index]], Metadata);
             if(Drawn.MaterialType == Engine.ImageObjectMaterialType.Lit)
             {
-                this.RegisterLitMaterial(Material);
+                ThreeMaterialGenerator.RegisterLitMaterial(Material, Metadata);
             }
         }
         else if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
                 Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
                 Drawn.MaterialType == Engine.ImageObjectMaterialType.Shader)
         {
-            let Normals : Three.Texture[] = this._Metadata["TOYBOX_" + NormalID + "_Normal"];
-            if(Normals) Material = this.GenerateMaterial(Drawn, [Textures[Index], Normals[Index]]);
-            else Material = this.GenerateMaterial(Drawn, [Textures[Index]]);
-            this.RegisterLitMaterial(Material);
+            let Normals : Three.Texture[] = Metadata["TOYBOX_" + NormalID + "_Normal"];
+            if(Normals) Material = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Index], Normals[Index]], Metadata);
+            else Material = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, [Textures[Index]], Metadata);
+            ThreeMaterialGenerator.RegisterLitMaterial(Material, Metadata);
         }
         return Material
     }
-    public LoadSpriteMaterial(Drawn:Engine.Sprite) : any
+    public static LoadSpriteMaterial(Scene:Engine.Scene2D, Drawn:Engine.Sprite, Metadata:any) : any
     {
         let SpriteMaterial;
         if(Drawn.SpriteSets.length > 0)
         {
-            if(this._Metadata["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"] == null || Drawn.Modified)
+            if(Metadata["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"] == null || Drawn.Modified)
             {
                 for(let i = 0; i < Drawn.SpriteSets.length; i++)
                 {
                     let TextureLoader = new Three.TextureLoader();
                     let Textures : Three.Texture[] = [];
-                    this._Metadata["TOYBOX_" + Drawn.SpriteSets[i].ID + "_Tex"] = Textures;
+                    Metadata["TOYBOX_" + Drawn.SpriteSets[i].ID + "_Tex"] = Textures;
                     let TextureUrls : string[] = Drawn.GetSprites(i);
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
-                        Textures.push(this.LoadTexture(Drawn, TextureUrls[j]));
+                        Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                     }
                 }
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
@@ -187,33 +150,33 @@ class ThreeMaterialGenerator
                     {
                         let TextureLoader = new Three.TextureLoader();
                         let Textures : Three.Texture[] = [];
-                        this._Metadata["TOYBOX_" + Drawn.NormalSets[i].ID + "_Normal"] = Textures;
+                        Metadata["TOYBOX_" + Drawn.NormalSets[i].ID + "_Normal"] = Textures;
                         let TextureUrls : string[] = Drawn.GetNormalSprites(i);
                         for(let j = 0; j < TextureUrls.length; j++)
                         {
-                            Textures.push(this.LoadTexture(Drawn, TextureUrls[j]));
+                            Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                         }
                     }
                 }
             }
-            SpriteMaterial = this.LoadMaterial(Drawn);
+            SpriteMaterial = ThreeMaterialGenerator.LoadMaterial(Scene, Drawn, Metadata);
         }
-        else SpriteMaterial = this.GenerateMaterial(<Engine.Sprite>Drawn, null);
+        else SpriteMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, <Engine.Sprite>Drawn, [], Metadata);
         return SpriteMaterial;
     }
-    public LoadTileMaterial(Drawn:Engine.Tile) : any
+    public static LoadTileMaterial(Scene:Engine.Scene2D, Drawn:Engine.Tile, Metadata:any) : any
     {
         let TileMaterial;
         if(Drawn.Collection.Images.length > 0)
         {
-            if(this._Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
+            if(Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] == null || Drawn.Modified)
             {
                 let TextureLoader = new Three.TextureLoader();
                 let Textures : Three.Texture[] = [];
                 let TextureUrls : string[] = Drawn.Collection.Images;
                 for(let j = 0; j < TextureUrls.length; j++)
                 {
-                    Textures.push(this.LoadTexture(Drawn, TextureUrls[j]));
+                    Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                 }
                 if(Drawn.MaterialType == Engine.ImageObjectMaterialType.NormalLit ||
                     Drawn.MaterialType == Engine.ImageObjectMaterialType.Custom ||
@@ -221,23 +184,24 @@ class ThreeMaterialGenerator
                 {
                     let TextureLoader = new Three.TextureLoader();
                     let Textures : Three.Texture[] = [];
-                    this._Metadata["TOYBOX_" + Drawn.NormalCollection.ID + "_Normal"] = Textures;
+                    Metadata["TOYBOX_" + Drawn.NormalCollection.ID + "_Normal"] = Textures;
                     let TextureUrls : string[] = Drawn.NormalCollection.Images;
                     for(let j = 0; j < TextureUrls.length; j++)
                     {
-                        Textures.push(this.LoadTexture(Drawn, TextureUrls[j]));
+                        Textures.push(ThreeMaterialGenerator.LoadTexture(TextureLoader, Drawn, TextureUrls[j]));
                     }
                 }
-                this._Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
+                Metadata["TOYBOX_" + Drawn.Collection.ID + "_Tex"] = Textures;
+                TileMaterial = ThreeMaterialGenerator.LoadMaterial(Scene, Drawn, Metadata);
             }
-            TileMaterial = this.LoadMaterial(Drawn);
+            else TileMaterial = ThreeMaterialGenerator.LoadMaterial(Scene, Drawn, Metadata);
         }
-        else TileMaterial = this.GenerateMaterial(Drawn, null);
+        else TileMaterial = ThreeMaterialGenerator.GenerateMaterial(Scene, Drawn, null, Metadata);
         return TileMaterial;
     }
-    private LoadTexture(Drawn:Engine.ImageObject, Path:string) : Three.Texture
+    private static LoadTexture(Loader:Three.TextureLoader, Drawn:Engine.ImageObject, Path:string) : Three.Texture
     {
-        let NewTexture = this._Loader.load(Path);
+        let NewTexture = Loader.load(Path);
         NewTexture.flipY = false;
         let RepeatX = Drawn.RepeatX;
         if(Drawn.FlipX) RepeatX *= -1;
@@ -253,39 +217,7 @@ class ThreeMaterialGenerator
         if(Drawn.Sampling == Engine.ImageObjectSamplingType.Nearest) NewTexture.magFilter = Three.NearestFilter;
         return NewTexture;
     }
-    public Update2DLights() : void
-    {
-        if(this._Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) return;
-        let Materials:Three.ShaderMaterial[] = this._Metadata["TOYBOX_LIT_OBJECT_MATERIALS"];
-        let LightsPack:any = this.Pack2DLights();
-        for(let i in Materials)
-        {
-            Materials[i]["uniforms"].locations.value = LightsPack.Locations.value;
-            Materials[i]["uniforms"].intensities.value = LightsPack.Intensities.value;
-            Materials[i]["uniforms"].attenuations.value = LightsPack.Attenuations.value;
-            Materials[i]["uniforms"].lightColors.value = LightsPack.LightColors.value;
-            Materials[i]["uniforms"].lightParameters.value = LightsPack.Parameters.value;
-            Materials[i]["uniforms"].lightDirections.value = LightsPack.Directions.value;
-            Materials[i]["uniforms"].lightTypes.value = LightsPack.Types.value;
-        }
-    }
-    private RegisterLitMaterial(Material:any) : void
-    {
-        if(this._Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) this._Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] = [];
-        this._Metadata["TOYBOX_LIT_OBJECT_MATERIALS"].push(Material);
-    }
-    private PrePack2DLights(Uniforms:any) : void
-    {
-        let LightsPack:any = this.Pack2DLights();
-        Uniforms.locations = LightsPack.Locations;
-        Uniforms.intensities = LightsPack.Intensities;
-        Uniforms.attenuations = LightsPack.Attenuations;
-        Uniforms.lightColors = LightsPack.LightColors;
-        Uniforms.lightTypes = LightsPack.Types;
-        Uniforms.lightParameters = LightsPack.Parameters;
-        Uniforms.lightDirections = LightsPack.Directions;
-    }
-    private Pack2DLights() : any
+    private static Pack2DLights(Scene:Engine.Scene2D, Metadata:any) : any
     {
         let Locations = [];
         let Intensities = [];
@@ -294,16 +226,16 @@ class ThreeMaterialGenerator
         let Parameters = [];
         let Directions = [];
         let Types = [];
-        let Lights:Engine.Light[] = this._Scene.ActiveLights;
+        let Lights:Engine.Light[] = Scene.ActiveLights;
         for(let i = 0; i < Lights.length && i < TOYBOX_MAX_LIGHTS; i++)
         {
-            Locations.push(this._Metadata["TOYBOX_"+Lights[i].ID+"_Light"]);
+            Locations.push(Metadata["TOYBOX_"+Lights[i].ID+"_Light"]);
             Intensities.push(Lights[i].Intensity / 100);
-            Attenuations.push(TMGUtil.Vec3FromData(Lights[i].Attenuation.ToVertex().ToArray()));
-            LightColors.push(TMGUtil.Vec4FromData(Lights[i].Paint.ToArray()));
+            Attenuations.push(this.Vec3FromData(Lights[i].Attenuation.ToVertex().ToArray()));
+            LightColors.push(this.Vec4FromData(Lights[i].Paint.ToArray()));
             Parameters.push(Lights[i].Parameter);
-            Directions.push(TMGUtil.Vec3FromData(Lights[i].Direction.ToArray()));
-            Types.push(TMGUtil.CodeLightType(Lights[i].LightType));
+            Directions.push(this.Vec3FromData(Lights[i].Direction.ToArray()));
+            Types.push(this.CodeLightType(Lights[i].LightType));
         }
         for(let i = Intensities.length; i < TOYBOX_MAX_LIGHTS; i++)
         {
@@ -327,33 +259,34 @@ class ThreeMaterialGenerator
         }
         return LightsPack;
     }
-    public PrepLightLoc(Location:Math.Vertex, Resolution:Math.Vertex) : Three.Vector3
+    public static Update2DLights(Scene:Engine.Scene2D, Metadata:any)
     {
-        let NewVector = new Three.Vector3(Location.X, Location.Y, Location.Z);
-        NewVector.x -= Resolution.X / 2;
-        NewVector.x /= Resolution.X;
-        NewVector.x *= 2;
-        NewVector.y -= Resolution.Y / 2;
-        NewVector.y /= Resolution.Y;
-        NewVector.y *= -2;
-        return NewVector;
+        if(Metadata["TOYBOX_LIT_OBJECT_MATERIALS"] == null) return;
+        let Materials = Metadata["TOYBOX_LIT_OBJECT_MATERIALS"];
+        let LightsPack = ThreeMaterialGenerator.Pack2DLights(Scene, Metadata);
+        for(let i in Materials)
+        {
+            Materials[i]["uniforms"].locations.value = LightsPack.Locations.value;
+            Materials[i]["uniforms"].intensities.value = LightsPack.Intensities.value;
+            Materials[i]["uniforms"].attenuations.value = LightsPack.Attenuations.value;
+            Materials[i]["uniforms"].lightColors.value = LightsPack.LightColors.value;
+            Materials[i]["uniforms"].lightParameters.value = LightsPack.Parameters.value;
+            Materials[i]["uniforms"].lightDirections.value = LightsPack.Directions.value;
+            Materials[i]["uniforms"].lightTypes.value = LightsPack.Types.value;
+        }
     }
-}
-
-class TMGUtil
-{
-    public static CodeLightType(Type:Engine.LightType) : number
+    private static CodeLightType(Type:Engine.LightType) : number
     {
         if(Type == Engine.LightType.Point) return 0;
         if(Type == Engine.LightType.Spot) return 1;
         if(Type == Engine.LightType.Directional) return 2;
         return -1;
     }
-    public static Vec3FromData(Data:number[]) : Three.Vector3
+    private static Vec3FromData(Data:number[]) : Three.Vector3
     {
         return new Three.Vector3(Data[0], Data[1], Data[2]);   
     }
-    public static Vec4FromData(Data:number[]) : Three.Vector4
+    private static Vec4FromData(Data:number[]) : Three.Vector4
     {
         return new Three.Vector4(Data[0], Data[1], Data[2], Data[3]);   
     }

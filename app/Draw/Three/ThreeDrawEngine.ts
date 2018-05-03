@@ -15,6 +15,7 @@ class ThreeDrawEngine extends DrawEngine
     private _Scene:Three.Scene;
     private _ToyBoxScene:Engine.Scene2D;
     private _Camera:Three.Camera;
+    private _Generator:ThreeMaterialGenerator;
     public constructor(Old?:ThreeDrawEngine, Resolution?:Mathematics.Vertex)
     {
         super(Old);
@@ -59,6 +60,7 @@ class ThreeDrawEngine extends DrawEngine
     {
         // Override
         this._Checked = [];
+        this._Generator = new ThreeMaterialGenerator(null, this.Data, Scene);
         if(this._ToyBoxScene)
         {
             this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
@@ -85,7 +87,7 @@ class ThreeDrawEngine extends DrawEngine
                 this.LoadLight(Scene, <Engine.Light>Drawn);
             }
         }
-        ThreeMaterialGenerator.Update2DLights(Scene, this.Data);
+        this._Generator.Update2DLights();
         for(let i = 0; i < this._Scene.children.length; i++)
         {
             let Found = false;
@@ -171,7 +173,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
-            let SpriteMaterial = ThreeMaterialGenerator.LoadSpriteMaterial(Scene, Drawn, this.Data);
+            let SpriteMaterial = this._Generator.LoadSpriteMaterial(Drawn);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
@@ -184,7 +186,7 @@ class ThreeDrawEngine extends DrawEngine
             let Sprite:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
             if(Drawn.Modified)
             {
-                Sprite.material = ThreeMaterialGenerator.LoadSpriteMaterial(Scene, Drawn, this.Data);
+                Sprite.material = this._Generator.LoadSpriteMaterial(Drawn);
                 Drawn.Modified = false;
             }
             if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
@@ -227,7 +229,7 @@ class ThreeDrawEngine extends DrawEngine
         if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
             Drawn.Modified = false;
-            let TileMaterial = ThreeMaterialGenerator.LoadTileMaterial(Scene, Drawn, this.Data);
+            let TileMaterial = this._Generator.LoadTileMaterial(Drawn);
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);
@@ -245,6 +247,6 @@ class ThreeDrawEngine extends DrawEngine
     protected LoadLight(Scene:Engine.Scene2D, Drawn:Engine.Light) : void
     {
         let TransLoc = new Mathematics.Vertex(Drawn.Trans.Translation.X + Scene.Trans.Translation.X, Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y, Drawn.Trans.Translation.Z + Scene.Trans.Translation.Z);
-        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = ThreeMaterialGenerator.PrepLightLoc(TransLoc, this.Resolution);
+        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = this._Generator.PrepLightLoc(TransLoc, this.Resolution);
     }
 }

@@ -22,9 +22,10 @@ import { DirectionalLight } from "./Scene/DirectionalLight";
 import { MaterialNodeValue, MaterialNodeValueType } from "./Material/MaterialNodeValue";
 import { MaterialNodePool } from "./Material/MaterialNodePool";
 import { MaterialNode } from "./Material/MaterialNode";
+import { MaterialInput, MaterialInputType } from "./Material/MaterialInput";
 import { Material } from "./Material/Material";
 
 export { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject, DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,
         EventPackage, SceneEventPackage, ImageObjectEventPackage, SpriteEventPackage,
         Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality, Light, LightType, LightAttenuation, SpotLight, DirectionalLight,
-        MaterialNodeValue, MaterialNodeValueType, MaterialNodePool, MaterialNode, Material };
+        MaterialNodeValue, MaterialNodeValueType, MaterialNodePool, MaterialNode, MaterialInput, MaterialInputType, Material };

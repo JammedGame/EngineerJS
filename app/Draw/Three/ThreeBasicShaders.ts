@@ -82,9 +82,9 @@ class ThreeBasicShaders
                 {
                     vec3 lightLocation = locations[i];
                     vec3 distance = lightLocation - SurfacePosition;
-                    distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                    float distanceToLight = length(distance);
-                    float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = length(distance) * 10.0;
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
                     currentAttenuation = intensities[i] * currentAttenuation;
                     finalLight = vec3(finalLight + currentAttenuation * lightColors[i].rgb);
                 }
@@ -101,9 +101,9 @@ class ThreeBasicShaders
                     vec3 lightLocation = locations[i];
                     vec3 distance = lightLocation - SurfacePosition;
                     vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
-                    distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                    float distanceToLight = length(distance);
-                    float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = length(distance) * 10.0;
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
                     vec4 normalCoded = texture2D(normalMap, vUv);
                     vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
                     float shot = length(surfaceToCamera - normal);
@@ -113,11 +113,28 @@ class ThreeBasicShaders
             }
             finalColor = vec4(finalLight * finalColor.rgb, finalColor.a);
         `;
-    public static PostprocessMignola : string = `
-            vec4 finalResult = vec4(finalLight * finalColor.rgb, finalColor.a);
-            if(finalResult.r < 0.35 && finalResult.g < 0.75 && finalResult.b < 0.75) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
-            if(finalResult.r < 0.75 && finalResult.g < 0.35 && finalResult.b < 0.75) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
-            if(finalResult.r < 0.75 && finalResult.g < 0.75 && finalResult.b < 0.35) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
+    public static PostProcessMignola : string = `
+            vec3 SurfacePosition = vPosition;
+            float finalLight = 0.0;
+            for(int i = 0; i < MAX_LIGHTS; i++)
+            {
+                if(intensities[i] > 0.0)
+                {
+                    vec3 lightLocation = locations[i];
+                    vec3 distance = lightLocation - SurfacePosition;
+                    vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = length(distance) * 10.0;
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                    vec4 normalCoded = texture2D(normalMap, vUv);
+                    vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
+                    float shot = length(surfaceToCamera - normal);
+                    finalLight = intensities[i] * currentAttenuation * shot * shot * shot;
+                }
+            }
+            if(finalLight > 0.9) finalColor = vec4(3.0 * finalColor.rgb, finalColor.a);
+            else if(finalLight > 0.7)finalColor = vec4(2.0 * finalColor.rgb, finalColor.a);
+            else finalColor = vec4(1.0 * finalColor.rgb, finalColor.a);
         `;
     public static get LitFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightCalculation + this.DefaultFooter; }
     public static get LitNormalFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightNormalCalculation + this.DefaultFooter; }

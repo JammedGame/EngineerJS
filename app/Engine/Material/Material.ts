@@ -4,16 +4,19 @@ import * as Data from "./../../Data/Data";
 
 import { MaterialNode } from "./MaterialNode";
 import { MaterialNodeValue } from "./MaterialNodeValue";
+import { MaterialInput, MaterialInputType } from "./MaterialInput";
 
 class Material
 {
     private _ID:string;
     private _Name:string;
     private _Nodes:MaterialNode[];
+    private _Inputs:MaterialInput[];
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
     public get Nodes():MaterialNode[] { return this._Nodes; }
+    public get Inputs():MaterialInput[] { return this._Inputs; }
     public constructor(Old?:Material)
     {
         if(Old != null)
@@ -22,6 +25,8 @@ class Material
             this._Name = Old._Name;
             this._Nodes = [];
             for(let i in Old._Nodes) this._Nodes.push(Old._Nodes[i].Copy());
+            this._Inputs = [];
+            for(let i in Old._Inputs) this._Inputs.push(Old._Inputs[i].Copy());
             this.CloneConnections(Old);
         }
         else
@@ -29,6 +34,7 @@ class Material
             this._ID = Data.Uuid.Create();
             this._Name = this._ID;
             this._Nodes = [];
+            this._Inputs = [];
         }
     }
     public Copy() : Material
@@ -42,6 +48,12 @@ class Material
             Node.Name = this.BumpName(Node.Name);
         }
         this._Nodes.push(Node);
+    }
+    public RegisterInput(ID:string, Type:MaterialInputType) : boolean
+    {
+        for(let i in this._Inputs) if(this._Inputs[i].ID == ID) return false;
+        this._Inputs.push(new MaterialInput(null, ID, Type));
+        return true;
     }
     public FindNodeByName(Name:string) : MaterialNode
     {
