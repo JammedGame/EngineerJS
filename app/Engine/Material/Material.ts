@@ -1,4 +1,4 @@
-export { Material, MaterialType }
+export { Material, MaterialType, TextureSamplingType }
 
 import * as Data from "./../../Data/Data";
 
@@ -12,8 +12,14 @@ enum MaterialType
     Default = "Default",
     Lit = "Lit",
     Phong = "Phong",
+    Toon = "Toon",
     Custom = "Custom",
     Shader = "Shader"
+}
+enum TextureSamplingType
+{
+    Linear = "Linear",
+    Nearest = "Nearest"
 }
 class Material
 {
@@ -23,6 +29,7 @@ class Material
     private _Nodes:MaterialNode[];
     private _Inputs:MaterialInput[];
     private _Shaders:ShaderCode;
+    private _Sampling:TextureSamplingType;
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
@@ -31,6 +38,8 @@ class Material
     public get Nodes():MaterialNode[] { return this._Nodes; }
     public get Inputs():MaterialInput[] { return this._Inputs; }
     public get Shaders():ShaderCode { return this._Shaders; }
+    public get Sampling():TextureSamplingType { return this._Sampling; }
+    public set Sampling(value:TextureSamplingType) { this._Sampling = value; }
     public constructor(Old?:Material)
     {
         if(Old != null)
@@ -43,6 +52,7 @@ class Material
             this._Inputs = [];
             for(let i in Old._Inputs) this._Inputs.push(Old._Inputs[i].Copy());
             this._Shaders = Old._Shaders.Copy();
+            this._Sampling = Old._Sampling;
             this.CloneConnections(Old);
         }
         else
@@ -53,6 +63,7 @@ class Material
             this._Nodes = [];
             this._Inputs = [];
             this._Shaders = new ShaderCode();
+            this._Sampling = TextureSamplingType.Nearest;
         }
     }
     public Copy() : Material

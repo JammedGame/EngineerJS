@@ -173,7 +173,7 @@ class ThreeDrawEngine extends DrawEngine
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
-            let SpriteMaterial = this._Generator.LoadSpriteMaterial(Drawn);
+            let SpriteMaterial = this._Generator.LoadObjectMaterial(Drawn);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
@@ -186,7 +186,7 @@ class ThreeDrawEngine extends DrawEngine
             let Sprite:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
             if(Drawn.Modified)
             {
-                Sprite.material = this._Generator.LoadSpriteMaterial(Drawn);
+                Sprite.material = this._Generator.LoadObjectMaterial(Drawn);
                 Drawn.Modified = false;
             }
             if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
@@ -229,7 +229,7 @@ class ThreeDrawEngine extends DrawEngine
         if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
             Drawn.Modified = false;
-            let TileMaterial = this._Generator.LoadTileMaterial(Drawn);
+            let TileMaterial = this._Generator.LoadObjectMaterial(Drawn);
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);

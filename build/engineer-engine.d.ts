@@ -136,6 +136,7 @@ export enum MaterialType
     Default = "Default",
     Lit = "Lit",
     Phong = "Phong",
+    Toon = "Toon",
     Custom = "Custom",
     Shader = "Shader"
 }
@@ -166,6 +167,12 @@ export class ShaderCode
     Copy() : ShaderCode
 }
 
+export enum TextureSamplingType
+{
+    Linear = "Linear",
+    Nearest = "Nearest"
+}
+
 export class Material
 {
     ID:string;
@@ -174,6 +181,7 @@ export class Material
     Nodes:MaterialNode[];
     Inputs:MaterialInput[];
     Shaders:ShaderCode;
+    Sampling:TextureSamplingType;
     constructor(Old?:Material)
     Copy() : Material
     Serialize() : any
@@ -217,15 +225,10 @@ export class LightAttenuation
 
 export class Light extends DrawObject
 {
+    Radius:number;
     Intensity:number;
     Attenuation:LightAttenuation;
     constructor(Old?:Light);
-}
-
-export enum ImageObjectSamplingType
-{
-    Linear = "Linear",
-    Nearest = "Nearest"
 }
 
 export class ImageObject extends DrawObject
@@ -234,13 +237,16 @@ export class ImageObject extends DrawObject
     Index: number;
     Images: string[];
     NormalMaps: string[];
+    SpecularMaps: string[];
     FlipX:boolean;
     FlipY:boolean;
     RepeatX:number;
     RepeatY:number;
     AmbientColor:Math.Color;
-    Sampling:ImageObjectSamplingType;
     Material:Material;
+    Collection:ImageCollection;
+    NormalCollection:ImageCollection;
+    SpecularCollection:ImageCollection;
     Events:ImageObjectEventPackage;
     constructor(Old?:ImageObject)
     Copy() : ImageObject
@@ -265,15 +271,11 @@ export class SpriteSet extends ImageCollection
     Copy() : SpriteSet
 }
 
-export class SpriteSetCollection
+export class SpriteSetCollection extends ImageCollection
 {
-    ID:string;
-    Origin:string;
     SpriteSets:SpriteSet[];
     constructor(Old?:SpriteSetCollection, SpriteSets?:SpriteSet[])
     Copy() : SpriteSetCollection
-    Serialize() : any
-    Deserialize(Data:any) : void
 }
 
 export class Sprite extends ImageObject
@@ -281,12 +283,13 @@ export class Sprite extends ImageObject
     CurrentIndex:number;
     CurrentSpriteSet:number;
     BackUpSpriteSet:number;
-    Collection:SpriteSetCollection;
-    NormalCollection:SpriteSetCollection;
     SpriteSets:SpriteSet[];
     NormalSets:SpriteSet[];
     SubSprites:Sprite[];
     Events:SpriteEventPackage;
+    Collection:SpriteSetCollection;
+    NormalCollection:SpriteSetCollection;
+    SpecularCollection:SpriteSetCollection;
     constructor(Old?:Sprite)
     Copy() : Sprite
     CollectiveList() : string[]
@@ -301,8 +304,6 @@ export class Sprite extends ImageObject
 
 export class Tile extends ImageObject
 {
-    Collection:ImageCollection;
-    NormalCollection:ImageCollection;
     SubTiles:Tile[];
     constructor(Old?:Tile)
     Copy() : Tile
