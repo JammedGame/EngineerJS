@@ -8,9 +8,11 @@ export class BufferUtil
 
 export class CollisionUtil
 {
-    static Check(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
+    static CheckCollision(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
     static CreateColliderObject(Object:Engine.DrawObject) : Math.ColliderObject
-    static CalculateObjectCollisions(Type:string, Object:Engine.DrawObject, Colliders:Engine.DrawObject[])
+    static CalculateCollisions(Object:Engine.DrawObject, Colliders:Engine.DrawObject[]) : Math.CollisionResult
+    static CalculateTypeCollisions(Type:string, Object:Engine.DrawObject, Colliders:Engine.DrawObject[]) : void
+    static Check(Object:Engine.DrawObject, Scene:Engine.Scene2D) : void
 }
 
 export class Convert
