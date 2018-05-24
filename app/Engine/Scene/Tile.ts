@@ -10,8 +10,6 @@ import { DrawObject, DrawObjectType } from "./DrawObject";
 class Tile extends ImageObject
 {
     private _Index:number;
-    private _Collection:ImageCollection;
-    private _NormalCollection:ImageCollection;
     private _SubTiles:Tile[];
     public get Index():number { /*Override*/ return this._Index; }
     public set Index(value:number)
@@ -20,12 +18,6 @@ class Tile extends ImageObject
         else this._Index = 0;
         this.Modified = true;
     }
-    public get Images() : string[] { /* Override */ return this._Collection.Images; }
-    public get NormalMaps() : string[] { /* Override */ return this._NormalCollection.Images; }
-    public get Collection():ImageCollection { return this._Collection; }
-    public set Collection(value:ImageCollection) { this._Collection = value; }
-    public get NormalCollection():ImageCollection { return this._NormalCollection; }
-    public set NormalCollection(value:ImageCollection) { this._NormalCollection = value; }
     public get SubTiles():Tile[] { return this._SubTiles; }
     public set SubTiles(value:Tile[]) { this._SubTiles = value; }
     public constructor(Old?:Tile)

@@ -91,7 +91,7 @@ class Scene
             Object.OnRemove({Scene:this});
             this._Objects.splice(Index, 1);
         }
-        else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID);
+        else Util.Log.Warning("Object " + Object.Name + "/" + Object.ID + " does not exist in scene " + this.Name + "/" + this.ID, {Objects:this._Objects, Object});
     }
     public FindByData(Key:string, Data?:any) : SceneObject[]
     {
@@ -131,6 +131,30 @@ class Scene
                 if((<DrawObject>this.Objects[i]).DrawType == Type)  
                 {  
                     Objects.push(<DrawObject>this.Objects[i]);  
+                }  
+            }  
+        }  
+        return Objects;  
+    }  
+    public FindColliders(Tags:string[]) : DrawObject[]  
+    {  
+        let Objects:DrawObject[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn)  
+            {  
+                let Drawn:DrawObject = <DrawObject>this.Objects[i];
+                if(Drawn.Collision.Active)  
+                {  
+                    if(Tags.length == 0) Objects.push(Drawn);
+                    else for(let i in Tags)
+                    {
+                        if(Drawn.Data[Tags[i]])
+                        {
+                            Objects.push(Drawn);
+                            break;
+                        }
+                    }
                 }  
             }  
         }  

@@ -104,7 +104,7 @@ class DPad extends Engine.Tile
             this._Touch = false;
             return false;
         }
-        let CollisionResult:Math.CollisionValue = Math.Collision.GetCollision8Way(this.Trans.Translation, Args.Location);
+        let CollisionResult:Math.CollisionResult = Math.Collision.GetCollision8Way(this.Trans.Translation, Args.Location);
         let Directions = this.ConvertDirections(CollisionResult);
         this.OnPress(Directions);
         return true;

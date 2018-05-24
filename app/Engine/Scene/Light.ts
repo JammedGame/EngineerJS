@@ -13,10 +13,13 @@ enum LightType
 }
 class Light extends DrawObject
 {
+    private _Radius:number;
     private _Intensity:number;
     private _LightType:LightType;
     private _Direction:Math.Vertex;
     private _Attenuation:LightAttenuation;
+    public get Radius():number { return this._Radius; }
+    public set Radius(value:number) { this._Radius = value; }
     public get Intensity():number { return this._Intensity; }
     public set Intensity(value:number) { this._Intensity = value; }
     public get LightType():LightType { return this._LightType; }
@@ -32,12 +35,14 @@ class Light extends DrawObject
         this.DrawType = DrawObjectType.Light;
         if(Old != null)
         {
+            this._Radius = Old._Radius;
             this._Intensity = Old._Intensity;
             this._LightType = Old._LightType;
             this._Attenuation = Old._Attenuation.Copy();
         }
         else
         {
+            this._Radius = 100;
             this._Intensity = 100;
             this._LightType = LightType.Point;
             this._Direction = new Math.Vertex(0,0,0);
@@ -52,6 +57,7 @@ class Light extends DrawObject
     {
         // Override
         let L = super.Serialize();
+        L.Radius = this._Radius;
         L.Intensity = this._Intensity;
         L.LightType = <string> this._LightType;
         L.Direction = this._Direction.Serialize();
@@ -62,6 +68,7 @@ class Light extends DrawObject
     {
         // Override
         super.Deserialize(Data);
+        this._Radius = Data.Radius;
         this._Intensity = Data.Intensity;
         this._LightType = <LightType> Data.LightType;
         this._Direction.Deserialize(Data.Direction);

@@ -5,10 +5,10 @@ import { Serialization} from "./Data/Serialization";
 import { MaterialNodeValue, MaterialNodeValueType } from "./Engine/Material/MaterialNodeValue";
 import { MaterialNodePool } from "./Engine/Material/MaterialNodePool";
 import { MaterialNode } from "./Engine/Material/MaterialNode";
-import { Material } from "./Engine/Material/Material";
+import { MaterialType, Material, TextureSamplingType } from "./Engine/Material/Material";
 import { DrawEngineType, DrawEngine } from "./Draw/DrawEngine";
 import { DrawObjectType, DrawObject } from "./Engine/Scene/DrawObject";
-import { ImageObjectMaterialType, ImageObjectSamplingType, ImageObject } from "./Engine/Scene/ImageObject";
+import { ImageObject } from "./Engine/Scene/ImageObject";
 import { Light, LightAttenuation } from "./Engine/Scene/Light";
 import { SpriteSet } from "./Engine/Scene/SpriteSet";
 import { SpriteSetCollection } from "./Engine/Scene/SpriteSetCollection";
@@ -30,7 +30,10 @@ import { Axis, Vertex } from "./Mathematics/Vertex";
 import { Transformation } from "./Mathematics/Transformation"
 import { MatrixMode, Matrix, MatrixTransformer } from "./Mathematics/MatrixTransformer"
 import { Color } from "./Mathematics/Color"
-import { Collision, CollisionType, CollisionValue, ColliderObject } from "./Mathematics/Collision"
+import { Random } from "./Mathematics/Functions"
+import { CollisionResult } from "./Mathematics/CollisionResult";
+import { CollisionType, CollisionValue } from "./Mathematics/CollisionValue";
+import { Collision,  ColliderObject } from "./Mathematics/Collision"
 import { Convert } from "./Util/Converter";
 import { CollisionUtil } from "./Util/Collision";
 import { SceneObjectUtil } from "./Util/SceneObject";
@@ -50,13 +53,13 @@ export
 {
     Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
-    ImageObjectMaterialType, ImageObjectSamplingType, ImageObject,
+    MaterialType, TextureSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,
     EventPackage, SceneEventPackage, ImageObjectEventPackage, SpriteEventPackage,
     Light, LightAttenuation, MaterialNodePool, MaterialNodeValue, MaterialNodeValueType, MaterialNode, Material,
     Game, SceneType, Scene, Scene2D, SceneObjectType, SceneObject, SoundObject, Settings, Quality,
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
-    CollisionValue, ColliderObject,
+    CollisionValue, CollisionResult, ColliderObject, Random,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
     DPad, Analog,
     Border, ControlEventPackage, Control, Label, TextAlign, Button, Panel,

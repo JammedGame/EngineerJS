@@ -13,10 +13,21 @@ class ThreeShaderGenerator
         ThreeShaderGenerator._Passed = [];
         let Code = ThreeNodeShaders.Single.Pool;
         let Shader:string = "";
+        Shader += ThreeShaderGenerator.Inputs(Material);
         Shader += Code["FragmentHeader"];
         Shader = ThreeShaderGenerator.NodePass(Shader, Material.FindNodeByFunction("Output"), Material);
         Shader += Code["FragmentFooter"];
         return Shader;
+    }
+    private static Inputs(Material:Engine.Material) : string
+    {
+        let InputsText:string = "";
+        for(let i in Material.Inputs)
+        {
+            let Input:Engine.MaterialInput = Material.Inputs[i];
+            InputsText += "uniform " + ThreeShaderGenerator.TypeConvert(Input.Type) + " " + Input.ID + ";\n";
+        }
+        return InputsText;
     }
     private static NodePass(Shader:string, Node:Engine.MaterialNode, Material:Engine.Material) : string
     {
@@ -75,6 +86,15 @@ class ThreeShaderGenerator
             let CVal:Math.Color = <Math.Color>NodeValue.Value;
             return "vec4(" + this.RToV(CVal.R) + "," + this.RToV(CVal.G) + "," + this.RToV(CVal.B) + "," + this.RToV(CVal.A) + ")";
         }
+    }
+    private static TypeConvert(Type:Engine.MaterialInputType) : string
+    {
+        if(Type == Engine.MaterialInputType.Integer) return "int";
+        if(Type == Engine.MaterialInputType.Float) return "float";
+        if(Type == Engine.MaterialInputType.Vector2) return "vec2";
+        if(Type == Engine.MaterialInputType.Vector3) return "vec3";
+        if(Type == Engine.MaterialInputType.Vector4) return "vec4";
+        if(Type == Engine.MaterialInputType.Texture) return "sampler2D";
     }
     private static RToV(Value:number) : number
     {

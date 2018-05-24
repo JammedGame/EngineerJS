@@ -45,6 +45,7 @@ class ThreeBasicShaders
         uniform vec4 color;
         uniform sampler2D texture;
         uniform sampler2D normalMap;
+        uniform float radii[8];
         uniform float intensities[8];
         uniform vec3 locations[8];
         uniform vec3 attenuations[8];
@@ -80,45 +81,69 @@ class ThreeBasicShaders
             {
                 if(intensities[i] > 0.0)
                 {
-                    vec3 lightLocation = locations[i];
-                    vec3 distance = lightLocation - SurfacePosition;
-                    distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                    float distanceToLight = length(distance);
-                    float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
-                    currentAttenuation = intensities[i] * currentAttenuation;
+                    vec3 lightLocation = vec3(locations[i].xy, 0.0);
+                    vec3 distance = lightLocation - vec3(SurfacePosition.xy, 0.0);
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = (length(distance) * 10.0) / radii[i];
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                    currentAttenuation = intensities[i] * 10.0 * currentAttenuation;
+                    if(distanceToLight > radii[i]) currentAttenuation = 0.0;
                     finalLight = vec3(finalLight + currentAttenuation * lightColors[i].rgb);
                 }
             }
             finalColor = vec4(finalLight * finalColor.rgb, finalColor.a);
         `;
-    public static LightNormalCalculation : string = `
+    public static LightPhongCalculation : string = `
             vec3 SurfacePosition = vPosition;
             vec3 finalLight = ambient.rgb;
             for(int i = 0; i < MAX_LIGHTS; i++)
             {
                 if(intensities[i] > 0.0)
                 {
-                    vec3 lightLocation = locations[i];
-                    vec3 distance = lightLocation - SurfacePosition;
+                    vec3 lightLocation = vec3(locations[i].xy, 0.0);
+                    vec3 distance = lightLocation - vec3(SurfacePosition.xy, 0.0);
                     vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
-                    distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                    float distanceToLight = length(distance);
-                    float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
+                    vec3 lightDir = normalize(lightLocation - vec3(SurfacePosition.xy, 0.0));
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = (length(distance) * 10.0) / radii[i];
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                    currentAttenuation = currentAttenuation * 5.0;
+                    if(distanceToLight > radii[i]) currentAttenuation = 0.0;
                     vec4 normalCoded = texture2D(normalMap, vUv);
                     vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
-                    float shot = length(surfaceToCamera - normal);
+                    float shot = max(min(dot(normal, lightDir) + 0.5, 1.0), 0.0);
                     currentAttenuation = intensities[i] * currentAttenuation * shot;
                     finalLight = vec3(finalLight + currentAttenuation * lightColors[i].rgb);
                 }
             }
             finalColor = vec4(finalLight * finalColor.rgb, finalColor.a);
         `;
-    public static PostprocessMignola : string = `
-            vec4 finalResult = vec4(finalLight * finalColor.rgb, finalColor.a);
-            if(finalResult.r < 0.35 && finalResult.g < 0.75 && finalResult.b < 0.75) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
-            if(finalResult.r < 0.75 && finalResult.g < 0.35 && finalResult.b < 0.75) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
-            if(finalResult.r < 0.75 && finalResult.g < 0.75 && finalResult.b < 0.35) finalColor = vec4(0.0, 0.0, 0.0, finalColor.a);
+    public static LightToon : string = `
+            vec3 SurfacePosition = vPosition;
+            float finalLight = 0.0;
+            for(int i = 0; i < MAX_LIGHTS; i++)
+            {
+                if(intensities[i] > 0.0)
+                {
+                    vec3 lightLocation = vec3(locations[i].xy, 0.0);
+                    vec3 distance = lightLocation - vec3(SurfacePosition.xy, 0.0);
+                    vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
+                    vec3 lightDir = normalize(lightLocation - vec3(SurfacePosition.xy, 0.0));
+                    distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                    float distanceToLight = (length(distance) * 10.0) / radii[i];
+                    float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                    currentAttenuation = currentAttenuation * 5.0;
+                    if(distanceToLight > radii[i]) currentAttenuation = 0.0;
+                    vec4 normalCoded = texture2D(normalMap, vUv);
+                    vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
+                    float shot = max(min(dot(normal, lightDir) + 0.5, 1.0), 0.0);
+                    finalLight = intensities[i] * currentAttenuation * shot * shot * shot;
+                }
+            }
+            if(finalLight > 0.8) finalColor = vec4(2.0 * finalColor.rgb, finalColor.a);
+            else finalColor = vec4(max(1.0, 2.0 * (finalLight) / 0.8) * finalColor.rgb, finalColor.a);
         `;
     public static get LitFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightCalculation + this.DefaultFooter; }
-    public static get LitNormalFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightNormalCalculation + this.DefaultFooter; }
+    public static get PhongFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightPhongCalculation + this.DefaultFooter; }
+    public static get ToonFragment2D() : string { return this.DefaultHeader + this.ColorCalculation + this.LightToon + this.DefaultFooter; }
 }

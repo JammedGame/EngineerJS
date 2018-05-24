@@ -18,7 +18,7 @@ class Control extends Engine.SceneObject
     protected _Offset:Math.Vertex;
     protected _Scale:Math.Vertex;
     public get Active():boolean { return this._Active; }
-    public set Active(value:boolean) { this._Active = value; }
+    public set Active(value:boolean) { this._Active = value; this.OnToggle(value); }
     public get Position():Math.Vertex { return this._Position; }
     public set Position(value:Math.Vertex) { this._Position = value; }
     public get Size():Math.Vertex { return this._Size; }
@@ -53,7 +53,7 @@ class Control extends Engine.SceneObject
             this._Position = new Math.Vertex();
             this._Size = new Math.Vertex();
             this._Offset = new Math.Vertex();
-            this._Scale = new Math.Vertex(1,1,1);
+            this._Scale = new Math.Vertex(100,100,1);
             this._ForeColor = Math.Color.Black;
             this._BackColor = Math.Color.White;
             this._Border = new Border();
@@ -62,6 +62,10 @@ class Control extends Engine.SceneObject
     public Copy() : Control
     {
         return new Control(this);
+    }
+    public OnToggle(Value:boolean) : void
+    {
+        // Virtual
     }
     public Update() : void
     {

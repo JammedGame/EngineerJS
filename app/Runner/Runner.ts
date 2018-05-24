@@ -259,6 +259,7 @@ class Runner
             STrans = new Math.Vertex(STrans.X * Current2DScene.Trans.Scale.X / this._DrawEngine.GlobalScale.X, STrans.Y * Current2DScene.Trans.Scale.Y / this._DrawEngine.GlobalScale.Y, 0);
             for (let i = this._Current.Objects.length - 1; i >= 0; i--)
             {
+                if(!this._Current.Objects[i]) continue;
                 if (this._Current.Objects[i].Type == Engine.SceneObjectType.Drawn)
                 {
                     let Current:Engine.DrawObject = <Engine.DrawObject>this._Current.Objects[i];

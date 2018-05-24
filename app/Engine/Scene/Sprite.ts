@@ -14,24 +14,27 @@ class Sprite extends ImageObject
     private _CurrentIndex:number;
     private _CurrentSpriteSet:number;
     private _BackUpSpriteSet:number;
-    private _SpriteSets:SpriteSetCollection;
-    private _NormalSets:SpriteSetCollection;
     private _SubSprites:Sprite[];
     public get Index() : number { /* Override */ return this.GetIndex(); }
-    public get Images() : string[] { /* Override */ return this.GetSprites(this._CurrentSpriteSet); }
-    public get NormalMaps() : string[] { /* Override */ return this.GetNormalSprites(this._CurrentSpriteSet); }
+    public get Images() : string[] { /* Override */ return this.Collection.Images }
+    public get NormalMaps() : string[] { /* Override */ return this.NormalCollection.Images }
+    public get SpecularMaps() : string[] { /* Override */ return this.SpecularCollection.Images }
     public get BackUpSpriteSet():number { return this._BackUpSpriteSet; }
     public set BackUpSpriteSet(value:number) { this._BackUpSpriteSet = value; }
     public get CurrentIndex():number { return this._CurrentIndex; }
     public get CurrentSpriteSet():number { return this._CurrentSpriteSet; }
-    public get Collection():SpriteSetCollection { return this._SpriteSets; }
-    public set Collection(value:SpriteSetCollection) { this._SpriteSets = value; }
-    public get NormalCollection():SpriteSetCollection { return this._NormalSets; }
-    public set NormalCollection(value:SpriteSetCollection) { this._NormalSets = value; }
-    public get SpriteSets():SpriteSet[] { return this._SpriteSets.SpriteSets; }
-    public set SpriteSets(value:SpriteSet[]) { this._SpriteSets.SpriteSets = value; }
-    public get NormalSets():SpriteSet[] { return this._NormalSets.SpriteSets; }
-    public set NormalSets(value:SpriteSet[]) { this._NormalSets.SpriteSets = value; }
+    public get Collection():SpriteSetCollection { return <SpriteSetCollection>this._Collection; }
+    public set Collection(value:SpriteSetCollection) { this._Collection = value; }
+    public get NormalCollection():SpriteSetCollection { return <SpriteSetCollection>this._NormalCollection; }
+    public set NormalCollection(value:SpriteSetCollection) { this._NormalCollection = value; }
+    public get SpecularCollection():SpriteSetCollection { return <SpriteSetCollection>this._SpecularCollection; }
+    public set SpecularCollection(value:SpriteSetCollection) { this._SpecularCollection = value; }
+    public get SpriteSets():SpriteSet[] { return (<SpriteSetCollection>this._Collection).SpriteSets; }
+    public set SpriteSets(value:SpriteSet[]) { (<SpriteSetCollection>this._Collection).SpriteSets = value; }
+    public get NormalSets():SpriteSet[] { return (<SpriteSetCollection>this._NormalCollection).SpriteSets; }
+    public set NormalSets(value:SpriteSet[]) { (<SpriteSetCollection>this._NormalCollection).SpriteSets = value; }
+    public get SpecularSets():SpriteSet[] { return (<SpriteSetCollection>this._SpecularCollection).SpriteSets; }
+    public set SpecularSets(value:SpriteSet[]) { (<SpriteSetCollection>this._SpecularCollection).SpriteSets = value; }
     public get SubSprites():Sprite[] { return this._SubSprites; }
     public set SubSprites(value:Sprite[]) { this._SubSprites = value; }
     public get Events():SpriteEventPackage { return <SpriteEventPackage>this._Events; }
@@ -44,20 +47,18 @@ class Sprite extends ImageObject
         this._BackUpSpriteSet = -1;
         if(Old != null)
         {
-            this._SpriteSets = Old._SpriteSets;
-            this._NormalSets = Old._NormalSets;
             this._SubSprites = [];
-            this._SpriteSets = Old._SpriteSets.Copy();
             for(let i = 0; i < Old._SubSprites.length; i++) this._SubSprites.push(Old._SubSprites[i].Copy());
             this.Trans.Scale = Old.Trans.Scale.Copy();
         }
         else
         {
             this._Events = new SpriteEventPackage();
-            this._SpriteSets = new SpriteSetCollection();
-            this._NormalSets = new SpriteSetCollection();
             this._SubSprites = [];
             this.Trans.Scale = new Math.Vertex(100, 100, 1);
+            this._Collection = new SpriteSetCollection();
+            this._NormalCollection = new SpriteSetCollection();
+            this._SpecularCollection = new SpriteSetCollection();
         }
     }
     public Copy() : Sprite
@@ -71,7 +72,7 @@ class Sprite extends ImageObject
         let Index:number = 0;
         for(let i = 0; i < this._CurrentSpriteSet; i++)
         {
-            Index += this._SpriteSets.SpriteSets[i].Images.length;
+            Index += this.SpriteSets[i].Images.length;
         }
         Index += this._CurrentIndex;
         return Index;
@@ -79,11 +80,11 @@ class Sprite extends ImageObject
     public CollectiveList() : string[]
     {
         let List:string[] = [];
-        for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
+        for(let i = 0; i < this.SpriteSets.length; i++)
         {
-            for(let j = 0; j < this._SpriteSets.SpriteSets[i].Images.length; j++)
+            for(let j = 0; j < this.SpriteSets[i].Images.length; j++)
             {
-                List.push(this._SpriteSets.SpriteSets[i].Images[j]);
+                List.push(this.SpriteSets[i].Images[j]);
             }
         }
         return List;
@@ -91,8 +92,8 @@ class Sprite extends ImageObject
     public RaiseIndex() : void
     {
         this._CurrentIndex++;
-        if (this._SpriteSets.SpriteSets.length <= 0) this._CurrentIndex = -1;
-        else if (this._CurrentIndex >= this._SpriteSets.SpriteSets[this._CurrentSpriteSet].Images.length)
+        if (this.SpriteSets.length <= 0) this._CurrentIndex = -1;
+        else if (this._CurrentIndex >= this.SpriteSets[this._CurrentSpriteSet].Images.length)
         {
             this.Events.Invoke("SetComplete", null, {CurrentSpriteSet:this._CurrentSpriteSet, NextSpriteSet:((this._BackUpSpriteSet!=-1)?this._BackUpSpriteSet:this._CurrentSpriteSet)});
             if (this._BackUpSpriteSet != -1)
@@ -105,7 +106,7 @@ class Sprite extends ImageObject
     }
     public SetSpriteSet(Index:number) : void
     {
-        if (Index >= this._SpriteSets.SpriteSets.length) return;
+        if (Index >= this.SpriteSets.length) return;
         this._CurrentSpriteSet = Index;
         this._CurrentIndex = 0;
     }
@@ -115,35 +116,33 @@ class Sprite extends ImageObject
     }
     public SetSpriteSetByName(Name:string) : void
     {
-        for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
+        for(let i = 0; i < this.SpriteSets.length; i++)
         {
-            if(this._SpriteSets.SpriteSets[i].Name == Name) this.SetSpriteSet(i);
+            if(this.SpriteSets[i].Name == Name) this.SetSpriteSet(i);
         }
     }
     public UpdateSpriteSetByName(Name:string) : void
     {
-        for(let i = 0; i < this._SpriteSets.SpriteSets.length; i++)
+        for(let i = 0; i < this.SpriteSets.length; i++)
         {
-            if(this._SpriteSets.SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
+            if(this.SpriteSets[i].Name == Name) this.UpdateSpriteSet(i);
         }
     }
     public GetSprites(Set:number) : string[]
     {
-        if(this._SpriteSets.SpriteSets.length == 0) return [];
-        return this._SpriteSets.SpriteSets[Set].Images;
+        if(this.SpriteSets.length == 0) return [];
+        return this.SpriteSets[Set].Images;
     }
     public GetNormalSprites(Set:number) : string[]
     {
-        if(this._NormalSets.SpriteSets.length == 0) return [];
-        return this._NormalSets.SpriteSets[Set].Images;
+        if(this.NormalSets.length == 0) return [];
+        return this.NormalSets[Set].Images;
     }
     public Serialize() : any
     {
         // Override
         let S = super.Serialize();
         S.Index = this._CurrentSpriteSet;
-        S.SpriteSets = this._SpriteSets.Serialize();
-        S.NormalSets = this._NormalSets.Serialize();
         S.SubSprites = [];
         for(let i in this._SubSprites)
         {
@@ -156,8 +155,6 @@ class Sprite extends ImageObject
         // Override
         super.Deserialize(Data);
         this._CurrentSpriteSet = Data.Index;
-        this._SpriteSets.Deserialize(Data.SpriteSets);
-        this._NormalSets.Deserialize(Data.NormalSets);
         for(let i in Data.SubSprites)
         {
             let SS:Sprite = new Sprite();

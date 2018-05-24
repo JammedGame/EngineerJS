@@ -3,29 +3,24 @@ export { SpriteSetCollection }
 import * as Data from "./../../Data/Data";
 
 import { SpriteSet } from "./SpriteSet";
+import { ImageCollection } from "./ImageCollection";
 
-class SpriteSetCollection
+class SpriteSetCollection extends ImageCollection
 {
-    private _ID:string;
-    private _Origin:string;
     private _SpriteSets:SpriteSet[];
-    public get ID():string { return this._ID; }
-    public get Origin():string { return this._Origin; }
     public get SpriteSets():SpriteSet[] { return this._SpriteSets; }
     public set SpriteSets(value:SpriteSet[]) { this._SpriteSets = value; }
+    public get Images():string[] { return this.PackImages(); }
     public constructor(Old?:SpriteSetCollection, SpriteSets?:SpriteSet[])
     {
+        super(Old);
         this._SpriteSets = [];
         if(Old != null)
         {
-            this._ID = Data.Uuid.Create();
-            this._Origin = Old._Origin;
             for(let i in Old._SpriteSets) this._SpriteSets.push(Old._SpriteSets[i].Copy());
         }
         else
         {
-            this._ID = Data.Uuid.Create();
-            this._Origin = this._ID;
             if(SpriteSets) this._SpriteSets = SpriteSets;
         }
     }
@@ -33,14 +28,22 @@ class SpriteSetCollection
     {
         return new SpriteSetCollection(this);
     }
+    public PackImages() : string[]
+    {
+        let Images:string[] = [];
+        for(let i in this._SpriteSets)
+        {
+            for(let j in this._SpriteSets[i].Images)
+            {
+                Images.push(this._SpriteSets[i].Images[j]);
+            }
+        }
+        return Images;
+    }
     public Serialize() : any
     {
-        let SSC =
-        {
-            ID: this._ID,
-            Origin: this._Origin,
-            SpriteSets: []
-        };
+        let SSC = super.Serialize();
+        SSC.SpriteSets = [];
         for(let i in this._SpriteSets)
         {
             SSC.SpriteSets.push(this._SpriteSets[i].Serialize());
@@ -49,7 +52,7 @@ class SpriteSetCollection
     }
     public Deserialize(Data:any) : void
     {
-        this._Origin = Data.Origin;
+        super.Deserialize(Data);
         for(let i in Data.SpriteSets)
         {
             let SS:SpriteSet = new SpriteSet();
