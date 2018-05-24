@@ -211,6 +211,7 @@ export class DrawObject extends SceneObject
     Trans:Math.Transformation;
     Position:Math.Vertex;
     Size:Math.Vertex;
+    Collision:Math.CollisionValue;
     constructor(Old?:DrawObject)
     Copy() : DrawObject
 }
@@ -346,6 +347,7 @@ export class Scene
     FindByData(Key:string, Data?:any) : SceneObject[]
     FindByType(Type:SceneObjectType) : SceneObject[]
     FindByDrawType(Type:DrawObjectType) : DrawObject[]
+    FindColliders(Tags:string[]) : DrawObject[]
     FindActiveByDrawType(Type:DrawObjectType) : DrawObject[]
     Serialize() : any
     Deserialize(Data:any) : void

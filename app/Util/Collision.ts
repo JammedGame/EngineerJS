@@ -6,7 +6,7 @@ import * as Math from "./../Mathematics/Mathematics";
 
 class CollisionUtil
 {
-    public static Check(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
+    public static CheckCollision(Object1:Engine.DrawObject, Object2:Engine.DrawObject)
     {
         let Collider1:Math.ColliderObject = CollisionUtil.CreateColliderObject(Object1);
         let Collider2:Math.ColliderObject = CollisionUtil.CreateColliderObject(Object2);
@@ -14,36 +14,34 @@ class CollisionUtil
     }
     public static CreateColliderObject(Object:Engine.DrawObject) : Math.ColliderObject
     {
-        let Collider = new Math.ColliderObject();
+        let Collider:Math.ColliderObject = new Math.ColliderObject();
         Collider.Position = Object.Trans.Translation;
         Collider.Scale= Object.Trans.Scale;
-        if(Object.Data["Collision_Scale"]) Collider.Scale = Object.Data["Collision_Scale"];
-        Collider.Type = Object.Data["Collision"];
+        if(Object.Collision.Scale) Collider.Scale = Object.Collision.Scale;
+        Collider.Type = Object.Collision.Type;
         return Collider;
     }
-    public static CalculateObjectCollisions(Type:string, Object:Engine.DrawObject, Colliders:Engine.DrawObject[])
+    public static CalculateCollisions(Object:Engine.DrawObject, Colliders:Engine.DrawObject[]) : Math.CollisionResult
     {
-        Object.Data["Collision_"+Type] = new Math.CollisionValue();
-        Object.Data["Colliders_"+Type] = [];
-        Object.Data["Colliders_"+Type+"_Left"] = [];
-        Object.Data["Colliders_"+Type+"_Right"] = [];
-        Object.Data["Colliders_"+Type+"_Top"] = [];
-        Object.Data["Colliders_"+Type+"_Bottom"] = [];
+        let Result:Math.CollisionResult = new Math.CollisionResult();
+        let Collider:Math.ColliderObject = CollisionUtil.CreateColliderObject(Object);
         for(let i = 0; i < Colliders.length; i++)
         {
             if(Object.ID == Colliders[i].ID) continue;
-            let Collider1 = CollisionUtil.CreateColliderObject(Object);
-            let Collider2 = CollisionUtil.CreateColliderObject(Colliders[i]);
-            let CollisionValue = Math.Collision.Check(Collider1, Collider2);
-            if(CollisionValue.Collision)
-            {
-                Object.Data["Collision_"+Type] = Math.CollisionValue.Combine(Object.Data["Collision_"+Type], CollisionValue);
-                Object.Data["Colliders_"+Type].push(Colliders[i]);
-                if(CollisionValue.Left) Object.Data["Colliders_"+Type+"_Left"].push(Colliders[i]);
-                if(CollisionValue.Right) Object.Data["Colliders_"+Type+"_Right"].push(Colliders[i]);
-                if(CollisionValue.Top) Object.Data["Colliders_"+Type+"_Top"].push(Colliders[i]);
-                if(CollisionValue.Bottom) Object.Data["Colliders_"+Type+"_Bottom"].push(Colliders[i]);
-            }
+            let Collider2:Math.ColliderObject = CollisionUtil.CreateColliderObject(Colliders[i]);
+            let CollisionValue:Math.CollisionResult = Math.Collision.Check(Collider, Collider2);
+            if(CollisionValue.Collision) Result.Combine(CollisionValue);
         }
+        return Result;
+    }
+    public static CalculateTypeCollisions(Type:string, Object:Engine.DrawObject, Colliders:Engine.DrawObject[]) : void
+    {
+        let Result:Math.CollisionResult = CollisionUtil.CalculateCollisions(Object, Colliders);
+        Object.Collision.Specific[Type] = Result;
+    }
+    public static Check(Object:Engine.DrawObject, Scene:Engine.Scene2D) : void
+    {
+        let Colliders:Engine.DrawObject[] = Scene.FindColliders(Object.Collision.Tags);
+        Object.Collision.Result = CollisionUtil.CalculateCollisions(Object, Colliders);
     }
 }

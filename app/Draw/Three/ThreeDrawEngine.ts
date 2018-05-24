@@ -11,6 +11,7 @@ import { DrawEngine } from "./../DrawEngine";
 
 class ThreeDrawEngine extends DrawEngine
 {
+    private _Loaded:boolean;
     private _Checked:string[];
     private _Scene:Three.Scene;
     private _ToyBoxScene:Engine.Scene2D;
@@ -19,6 +20,7 @@ class ThreeDrawEngine extends DrawEngine
     public constructor(Old?:ThreeDrawEngine, Resolution?:Mathematics.Vertex)
     {
         super(Old);
+        this._Loaded = false;
         this._Scene = new Three.Scene();
         this._GlobalScale = new Mathematics.Vertex(1,1,1);
         this._GlobalOffset = new Mathematics.Vertex(0,0,0);
@@ -61,12 +63,19 @@ class ThreeDrawEngine extends DrawEngine
         // Override
         this._Checked = [];
         this._Generator = new ThreeMaterialGenerator(null, this.Data, Scene);
-        if(this._ToyBoxScene)
+        if(this._ToyBoxScene != Scene)
         {
-            this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
+            if(this._ToyBoxScene)
+            {
+                this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
+            }
+            this._ToyBoxScene = Scene;
         }
-        this._ToyBoxScene = Scene;
-        this.Resize();
+        if(!this._Loaded)
+        {
+            this.Resize();
+            this._Loaded = true;
+        }
         this._ToyBoxScene.Events.Resize.push(this.Resize.bind(this));
         this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
         ThreeGridManager.CheckGrid(this._Scene, this._ToyBoxScene, this.Data, this._GlobalScale);

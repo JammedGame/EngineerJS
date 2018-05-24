@@ -136,6 +136,30 @@ class Scene
         }  
         return Objects;  
     }  
+    public FindColliders(Tags:string[]) : DrawObject[]  
+    {  
+        let Objects:DrawObject[] = [];  
+        for(let i = 0; i < this.Objects.length; i++)  
+        {  
+            if(this.Objects[i].Type == SceneObjectType.Drawn)  
+            {  
+                let Drawn:DrawObject = <DrawObject>this.Objects[i];
+                if(Drawn.Collision.Active)  
+                {  
+                    if(Tags.length == 0) Objects.push(Drawn);
+                    else for(let i in Tags)
+                    {
+                        if(Drawn.Data[Tags[i]])
+                        {
+                            Objects.push(Drawn);
+                            break;
+                        }
+                    }
+                }  
+            }  
+        }  
+        return Objects;  
+    }  
     public FindActiveByDrawType(Type:DrawObjectType) : DrawObject[]  
     {  
         let Objects:DrawObject[] = [];  

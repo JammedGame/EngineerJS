@@ -128,13 +128,13 @@ export class Color
 
 export enum CollisionType
 {
-    Radius2D,
-    Rectangular2D,
-    Horizontal2D,
-    Vertical2D
+    Radius,
+    Rectangular,
+    Horizontal,
+    Vertical
 }
 
-export class CollisionValue
+export class CollisionResult
 {
     Collision:boolean;
     Top:boolean;
@@ -143,8 +143,30 @@ export class CollisionValue
     Right:boolean;
     Front:boolean;
     Back:boolean;
+    Colliders:any[];
+    TopColliders:any[];
+    BottomColliders:any[];
+    LeftColliders:any[];
+    RightColliders:any[];
+    FrontColliders:any[];
+    BackColliders:any[];
+    Copy():CollisionResult;
     Revert():void
-    static Combine(CollisionValue1:CollisionValue, CollisionValue2:CollisionValue) : CollisionValue
+    Combine(Other:CollisionResult) : void
+}
+
+export class CollisionValue
+{
+    Active:boolean;
+    Tags:string[];
+    Scale:Vertex;
+    Type:CollisionType;
+    Result:CollisionResult;
+    Specific:any;
+    public constructor(Old?:CollisionValue)
+    public Copy() : CollisionValue
+    public Serialize() : any
+    public Deserialize(Data) : void
 }
 
 export class ColliderObject

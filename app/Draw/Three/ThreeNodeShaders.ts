@@ -86,32 +86,36 @@ class ThreeNodeShaders
         {
             if(intensities[i] > 0.0)
             {
-                vec3 lightLocation = locations[i];
-                vec3 distance = lightLocation - vPosition;
-                distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                float distanceToLight = length(distance);
-                float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
-                currentAttenuation = intensities[i] * currentAttenuation;
+                vec3 lightLocation = vec3(locations[i].xy, 0.0);
+                vec3 distance = lightLocation - vec3(SurfacePosition.xy, 0.0);
+                distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                float distanceToLight = (length(distance) * 10.0) / radii[i];
+                float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                currentAttenuation = intensities[i] * 10.0 * currentAttenuation;
+                if(distanceToLight > radii[i]) currentAttenuation = 0.0;
                 <OUTPUT> = vec3(<OUTPUT> + currentAttenuation * lightColors[i].rgb);
             }
         }
         `;
 
-        this._Pool["BumpLight"] = `
+        this._Pool["PhongLight"] = `
         vec3 <OUTPUT> = ambient.rgb;
         for(int i = 0; i < MAX_LIGHTS; i++)
         {
             if(intensities[i] > 0.0)
             {
-                vec3 lightLocation = locations[i];
-                vec3 distance = lightLocation - vPosition;
-                vec3 surfaceToCamera = normalize(vPosition - lightLocation);
-                distance = vec3(distance.x * 16.0 / 9.0, distance.yz);
-                float distanceToLight = length(distance);
-                float currentAttenuation = 1.0 / (attenuations[i].y * distanceToLight);
+                vec3 lightLocation = vec3(locations[i].xy, 0.0);
+                vec3 distance = lightLocation - vec3(SurfacePosition.xy, 0.0);
+                vec3 surfaceToCamera = normalize(SurfacePosition - lightLocation);
+                vec3 lightDir = normalize(lightLocation - vec3(SurfacePosition.xy, 0.0));
+                distance = vec3(distance.x * 16.0 / 9.0, distance.y, 0);
+                float distanceToLight = (length(distance) * 10.0) / radii[i];
+                float currentAttenuation = 1.0 / (attenuations[i].x + attenuations[i].y * distanceToLight + attenuations[i].z * distanceToLight * distanceToLight);
+                currentAttenuation = currentAttenuation * 5.0;
+                if(distanceToLight > radii[i]) currentAttenuation = 0.0;
                 vec4 normalCoded = texture2D(normalMap, vUv);
                 vec3 normal = normalize(vec3(normalCoded.x * 2.0 - 1.0, normalCoded.y * 2.0 - 1.0, normalCoded.z * 2.0 - 1.0));
-                float shot = length(surfaceToCamera - normal);
+                float shot = max(min(dot(normal, lightDir) + 0.5, 1.0), 0.0);
                 currentAttenuation = intensities[i] * currentAttenuation * shot;
                 <OUTPUT> = vec3(<OUTPUT> + currentAttenuation * lightColors[i].rgb);
             }
