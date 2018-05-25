@@ -181,13 +181,12 @@ class ThreeDrawEngine extends DrawEngine
         if(this.Data["TOYBOX_" + Drawn.ID] == null)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
-            this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
+            this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.Index;
             let SpriteMaterial = this._Generator.LoadObjectMaterial(Drawn);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
             this._Scene.add(Sprite);
-            //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
             this._Checked.push(Sprite.uuid);
         }
         else
@@ -198,16 +197,15 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.material = this._Generator.LoadObjectMaterial(Drawn);
                 Drawn.Modified = false;
             }
-            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
+            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.Index)
             {
-                this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
-                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
-                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
-                Sprite.material["uniforms"].texture.value = Textures[Drawn.CurrentIndex];
+                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.Index;
+                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
+                Sprite.material["uniforms"].texture.value = Textures[Drawn.Index];
                 if(Drawn.Material.Type == Engine.MaterialType.Phong || Drawn.Material.Type == Engine.MaterialType.Custom || Drawn.Material.Type == Engine.MaterialType.Shader)
                 {
-                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + Drawn.NormalSets[Drawn.CurrentSpriteSet].ID + "_Normal"];
-                    Sprite.material["uniforms"].normalMap.value = Normals[Drawn.CurrentIndex];
+                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + Drawn.NormalCollection.ID + "_Normal"];
+                    Sprite.material["uniforms"].normalMap.value = Normals[Drawn.Index];
                 }
                 Sprite.material["uniforms"].color.value = Drawn.Paint.ToArray();
             }
