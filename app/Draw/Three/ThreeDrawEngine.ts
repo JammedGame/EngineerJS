@@ -12,6 +12,7 @@ import { DrawEngine } from "./../DrawEngine";
 class ThreeDrawEngine extends DrawEngine
 {
     private _Loaded:boolean;
+    private _SceneLoad:boolean;
     private _Checked:string[];
     private _Scene:Three.Scene;
     private _ToyBoxScene:Engine.Scene2D;
@@ -21,6 +22,7 @@ class ThreeDrawEngine extends DrawEngine
     {
         super(Old);
         this._Loaded = false;
+        this._SceneLoad = false;
         this._Scene = new Three.Scene();
         this._GlobalScale = new Mathematics.Vertex(1,1,1);
         this._GlobalOffset = new Mathematics.Vertex(0,0,0);
@@ -65,11 +67,14 @@ class ThreeDrawEngine extends DrawEngine
         this._Generator = new ThreeMaterialGenerator(null, this.Data, Scene);
         if(this._ToyBoxScene != Scene)
         {
+            this._SceneLoad = true;
             if(this._ToyBoxScene)
             {
                 this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
             }
             this._ToyBoxScene = Scene;
+            this._Scene = new Three.Scene();
+            this.Resize();
         }
         if(!this._Loaded)
         {
@@ -118,6 +123,7 @@ class ThreeDrawEngine extends DrawEngine
                 //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
             }
         }
+        if(this._SceneLoad) this._SceneLoad = false;
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
@@ -178,16 +184,15 @@ class ThreeDrawEngine extends DrawEngine
                 return;
             }
         }
-        if(this.Data["TOYBOX_" + Drawn.ID] == null)
+        if(this.Data["TOYBOX_" + Drawn.ID] == null || this._SceneLoad)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
-            this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
+            this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.Index;
             let SpriteMaterial = this._Generator.LoadObjectMaterial(Drawn);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
             this._Scene.add(Sprite);
-            //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " added to scene.");
             this._Checked.push(Sprite.uuid);
         }
         else
@@ -198,16 +203,15 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.material = this._Generator.LoadObjectMaterial(Drawn);
                 Drawn.Modified = false;
             }
-            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] != Drawn.CurrentSpriteSet || this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.CurrentIndex)
+            if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.Index)
             {
-                this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
-                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.CurrentIndex;
-                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.SpriteSets[Drawn.CurrentSpriteSet].ID + "_Tex"];
-                Sprite.material["uniforms"].texture.value = Textures[Drawn.CurrentIndex];
+                this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.Index;
+                let Textures : Three.Texture[] = this.Data["TOYBOX_" + Drawn.Collection.ID + "_Tex"];
+                Sprite.material["uniforms"].texture.value = Textures[Drawn.Index];
                 if(Drawn.Material.Type == Engine.MaterialType.Phong || Drawn.Material.Type == Engine.MaterialType.Custom || Drawn.Material.Type == Engine.MaterialType.Shader)
                 {
-                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + Drawn.NormalSets[Drawn.CurrentSpriteSet].ID + "_Normal"];
-                    Sprite.material["uniforms"].normalMap.value = Normals[Drawn.CurrentIndex];
+                    let Normals : Three.Texture[] = this.Data["TOYBOX_" + Drawn.NormalCollection.ID + "_Normal"];
+                    Sprite.material["uniforms"].normalMap.value = Normals[Drawn.Index];
                 }
                 Sprite.material["uniforms"].color.value = Drawn.Paint.ToArray();
             }
@@ -235,7 +239,7 @@ class ThreeDrawEngine extends DrawEngine
                 return;
             }
         }
-        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
+        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified || this._SceneLoad)
         {
             Drawn.Modified = false;
             let TileMaterial = this._Generator.LoadObjectMaterial(Drawn);
