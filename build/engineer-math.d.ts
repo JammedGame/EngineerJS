@@ -179,26 +179,26 @@ export class ColliderObject
 export class Collision
 {
     static FocusOffset:number;
-    static Check(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRadius2DToRadius2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRadius2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRadius2DToHorizontal2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRadius2DToVertical2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRectangular2DToRadius2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRectangular2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRectangular2DToHorizontal2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
-    static CheckRectangular2DToVertical2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionValue
+    static Check(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRadius2DToRadius2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRadius2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRadius2DToHorizontal2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRadius2DToVertical2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRectangular2DToRadius2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRectangular2DToRectangular2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRectangular2DToHorizontal2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
+    static CheckRectangular2DToVertical2D(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
     static CheckRadius(Collider1:ColliderObject, Collider2:ColliderObject) : boolean
     static CheckRadiusToPoint(Collider:ColliderObject, Position:Vertex) : boolean
     static CheckRectangleToPoint(Collider:ColliderObject, Position:Vertex) : boolean
     static CheckRadiusToLineX(Collider:ColliderObject, X:number) : boolean
     static CheckRadiusToLineY(Collider:ColliderObject, Y:number) : boolean
     static CheckRectangleToLineX(Collider:ColliderObject, Position:Vertex) : boolean
-    static GetCollisionCubic(Collider:ColliderObject, Position:Vertex) : CollisionValue
-    static GetCollision4Way(Position1:Vertex, Position2:Vertex) : CollisionValue
-    static GetCollision8Way(Position1:Vertex, Position2:Vertex) : CollisionValue
-    static GetCollisionRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
-    static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionValue
+    static GetCollisionCubic(Collider:ColliderObject, Position:Vertex) : CollisionResult
+    static GetCollision4Way(Position1:Vertex, Position2:Vertex) : CollisionResult
+    static GetCollision8Way(Position1:Vertex, Position2:Vertex) : CollisionResult
+    static GetCollisionRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionResult
+    static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionResult
 }
 
 export class Random
