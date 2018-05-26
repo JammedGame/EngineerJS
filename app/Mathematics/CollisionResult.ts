@@ -85,6 +85,13 @@ class CollisionResult
         this._LeftColliders = this._RightColliders;
         this._RightColliders = StoreArray;
     }
+    public SideCheck(Other:CollisionResult) : void
+    {
+        this._Top = this._Top && Other._Top;
+        this._Bottom = this._Bottom && Other._Bottom;
+        this._Left = this._Left && Other._Left;
+        this._Right = this._Right && Other._Right;
+    }
     public Combine(Other:CollisionResult) : void
     {
         this._Collision = this._Collision || Other._Collision;

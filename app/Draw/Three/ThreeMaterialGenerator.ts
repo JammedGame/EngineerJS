@@ -196,7 +196,8 @@ class ThreeMaterialGenerator
             NewTexture.repeat.set(RepeatX, RepeatY);
             NewTexture.needsUpdate = true;
         }
-        if(Drawn.Material.Sampling == Engine.TextureSamplingType.Nearest) NewTexture.magFilter = Three.NearestFilter;
+        NewTexture.magFilter = Three.NearestFilter;
+        NewTexture.minFilter = Three.NearestMipMapNearestFilter;
         return NewTexture;
     }
     public Update2DLights() : void
