@@ -65,6 +65,7 @@ class Collision
             Result.Revert();
             Result.Collision = true;
         }
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRadiusToHorizontal(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
@@ -89,6 +90,7 @@ class Collision
             Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRadiusToVertical(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
@@ -113,12 +115,15 @@ class Collision
             Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.Collision = true;
         }
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRectangularToRadius(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
     {
         let Result:CollisionResult = Collision.CheckRadiusToRectangular(Collider2, Collider1);
         Result.Revert();
+        Result.SideCheck(Collision.GetCollision4Way(Collider1.Position, Collider2.Position));
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRectangularToRectangular(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
@@ -143,9 +148,9 @@ class Collision
         {
             Result = Collision.GetDefaultRectangularWay(Collider1, Collider2.Position);
             Result.SideCheck(Collision.GetCollision4Way(Collider1.Position, Collider2.Position));
-            console.log(Result);
             Result.Collision = true;
         }
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRectangularToHorizontal(Collider1:ColliderObject, Collider2:ColliderObject) : CollisionResult
@@ -168,6 +173,7 @@ class Collision
         }
         Result.Top = false;
         Result.Bottom = false;
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckAxisDistance(V:Vertex, HalfScale:number) : boolean
@@ -194,6 +200,7 @@ class Collision
         }
         Result.Left = false;
         Result.Right = false;
+        this.UpdateCollidersList(Collider2, Result);
         return Result;
     }
     private static CheckRadius(Collider1:ColliderObject, Collider2:ColliderObject) : boolean
@@ -318,5 +325,14 @@ class Collision
     private static GetDefaultRectangularWay(Collider:ColliderObject, Position:Vertex) : CollisionResult
     {
         return Collision.GetCollisionRectangularWay(Collider, Position);
+    }
+    private static UpdateCollidersList(Collider:ColliderObject, Result:CollisionResult) : void
+    {
+        if(!Result.Collision) return;
+        Result.Colliders.push(Collider);
+        if(Result.Top) Result.TopColliders.push(Collider);
+        if(Result.Bottom) Result.BottomColliders.push(Collider);
+        if(Result.Left) Result.LeftColliders.push(Collider);
+        if(Result.Right) Result.RightColliders.push(Collider);
     }
 }
