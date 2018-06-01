@@ -4,11 +4,19 @@ class ThreeBasicShaders
 {
     public static Vertex2D : string = `
         varying vec2 vUv;
+        uniform int flipx;
+        uniform int flipy;
         uniform float repeatx;
         uniform float repeaty;
         void main()
         {
-            vUv  = vec2((1.0 - uv.x)*repeatx, uv.y*repeaty);
+            float xval;
+            float yval;
+            if(flipx == 1) xval = (uv.x)*repeatx;
+            else xval = (1.0 - uv.x)*repeatx;
+            if(flipy == 1) yval = (1.0 - uv.y)*repeatx;
+            else yval = (uv.y)*repeatx;
+            vUv  = vec2(xval, yval);
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
         }
         `;
