@@ -19,6 +19,7 @@ class CollisionUtil
         Collider.Scale= Object.Trans.Scale;
         if(Object.Collision.Scale) Collider.Scale = Object.Collision.Scale;
         Collider.Type = Object.Collision.Type;
+        Collider.Reference = Object;
         return Collider;
     }
     public static CalculateCollisions(Object:Engine.DrawObject, Colliders:Engine.DrawObject[]) : Math.CollisionResult
