@@ -174,6 +174,7 @@ export class ColliderObject
     Position:Vertex;
     Scale:Vertex;
     Type:CollisionType;
+    Reference:any;
 }
 
 export class Collision
