@@ -40,6 +40,7 @@ import { SceneObjectUtil } from "./Util/SceneObject";
 import { BufferUtil } from "./Util/Buffer";
 import { DPad } from "./Util/DPad";
 import { Analog } from "./Util/Analog";
+import { ProgressBar } from "./Util/ProgressBar";
 import { Log } from "./Util/Log";
 import { Border } from "./UI/Border";
 import { ControlEventPackage } from "./UI/ControlEventPackage";
@@ -61,7 +62,7 @@ export
     Axis, Vertex, Transformation, MatrixMode, Matrix, MatrixTransformer, Color, Collision, CollisionType,
     CollisionValue, CollisionResult, ColliderObject, Random,
     Convert, CollisionUtil, SceneObjectUtil, BufferUtil, Log,
-    DPad, Analog,
+    DPad, Analog, ProgressBar,
     Border, ControlEventPackage, Control, Label, TextAlign, Button, Panel,
     Runner,
 };

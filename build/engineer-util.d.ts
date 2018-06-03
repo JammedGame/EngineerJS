@@ -61,3 +61,10 @@ export class Analog extends Engine.Tile
     Update(Position:Math.Vertex, Size:Math.Vertex) : void
     SetColors(Stick:Math.Color, Pointer:Math.Color) : void
 }
+
+export class ProgressBar extends Engine.Tile
+{
+    Value:number;
+    Indicator:Engine.Tile;
+    public constructor(Old?:ProgressBar, TargetScene?:Engine.Scene);
+}

@@ -50,6 +50,10 @@ class DrawEngine
     {
         // Virtual
     }
+    public Preload2DScene(Scene:Engine.Scene2D, ReportProgress:Function) : void
+    {
+        // Virtual
+    }
     public Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void
     {
         // Virtual
@@ -58,7 +62,7 @@ class DrawEngine
     {
         // Virtual
     }
-    protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite) : void
+    protected LoadSprite(Scene:Engine.Scene, Drawn:Engine.Sprite, LoadData:any) : void
     {
         // Virtual
     }
@@ -66,11 +70,15 @@ class DrawEngine
     {
         // Virtual
     }
-    protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile) : void
+    protected LoadImage(Scene:Engine.Scene, Drawn:Engine.Tile, LoadData:any) : void
     {
         // Virtual
     }
-    protected LoadLight(Scene:Engine.Scene, Drawn:Engine.Light) : void
+    protected LoadTile(Scene:Engine.Scene, Drawn:Engine.Tile, LoadData:any) : void
+    {
+        // Virtual
+    }
+    protected LoadLight(Scene:Engine.Scene, Drawn:Engine.Light, LoadData:any) : void
     {
         // Virtual
     }

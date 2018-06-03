@@ -16,6 +16,7 @@ class Runner
     private _LoopHandle:number;
     private _FrameUpdateRate:number;
     private _Current:Engine.Scene;
+    private _Preload:Engine.Scene;
     private _Next:Engine.Scene;
     private _Game:Engine.Game;
     private _DrawEngine:Draw.DrawEngine;
@@ -38,7 +39,26 @@ class Runner
         this.AttachEvents();
         Runner._Current = this;
     }
-    public SwitchScene(SceneName:string, Preload:boolean) : void
+    public PreloadScene(SceneName:string) : void
+    {
+        for(let i = 0; i < this._Game.Scenes.length; i++)
+        {
+            if(this._Game.Scenes[i].Name == SceneName)
+            {
+                setTimeout(function()
+                {
+                    this._Preload = this._Game.Scenes[i];
+                    this._DrawEngine.Preload2DScene(<Engine.Scene2D>this._Game.Scenes[i], this.OnLoadProgress.bind(this));
+                    this.OnLoadComplete();
+                    this._Preload = null;
+
+                }.bind(this), 1);
+                return;
+            }
+        }
+        Util.Log.Warning("Scene " + SceneName + " does not exist in " + this._Game.Name + ".", this._Game.Scenes);
+    }
+    public SwitchScene(SceneName:string) : void
     {
         for(let i = 0; i < this._Game.Scenes.length; i++)
         {
@@ -248,6 +268,14 @@ class Runner
     {
         Util.Log.Event("Resize");
         this._Current.Events.Invoke("Resize", this._Game, this.PackEventArgs(Event));
+    }
+    private OnLoadProgress(Progress:number) : void
+    {
+        if(this._Preload) this._Preload.Events.Invoke("LoadProgress", this._Game, {Progress:Progress});
+    }
+    private OnLoadComplete() : void
+    {
+        if(this._Preload) this._Preload.Events.Invoke("LoadComplete", this._Game, {});
     }
     private CheckObjectMouseEvents(EventNames:string[], Event) : boolean
     {
