@@ -23,6 +23,8 @@ class SceneEventPackage extends EventPackage
     public get TouchStart() : Function[] { return this._Data["TouchStart"]; }
     public get TouchEnd() : Function[] { return this._Data["TouchEnd"]; }
     public get TouchMove() : Function[] { return this._Data["TouchMove"]; }
+    public get LoadProgress() : Function[] { return this._Data["LoadProgress"]; }
+    public get LoadComplete() : Function[] { return this._Data["LoadComplete"]; }
     public constructor(Old?:SceneEventPackage)
     {
         super(Old);
@@ -48,6 +50,8 @@ class SceneEventPackage extends EventPackage
             this._Data["TouchStart"] = [];
             this._Data["TouchEnd"] = [];
             this._Data["TouchMove"] = [];
+            this._Data["LoadProgress"] = [];
+            this._Data["LoadComplete"] = [];
         }
     }
     public Copy() : SceneEventPackage

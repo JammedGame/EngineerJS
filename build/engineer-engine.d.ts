@@ -27,6 +27,8 @@ export class SceneEventPackage extends EventPackage
     TouchStart:Function[];
     TouchEnd:Function[];
     TouchMove:Function[];
+    LoadProgress:Function[];
+    LoadComplete:Function[];
     constructor(Old?:SceneEventPackage)
     Copy() : SceneEventPackage
 }

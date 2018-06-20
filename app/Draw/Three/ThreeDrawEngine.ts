@@ -12,17 +12,18 @@ import { DrawEngine } from "./../DrawEngine";
 class ThreeDrawEngine extends DrawEngine
 {
     private _Loaded:boolean;
-    private _SceneLoad:boolean;
+    private _Preload:boolean;
     private _Checked:string[];
-    private _Scene:Three.Scene;
-    private _ToyBoxScene:Engine.Scene2D;
     private _Camera:Three.Camera;
+    private _Scene:Three.Scene;
+    private _PreloadScene:Three.Scene;
+    private _ToyBoxScene:Engine.Scene2D;
+    private _ToyBoxPreloadScene:Engine.Scene2D;
     private _Generator:ThreeMaterialGenerator;
     public constructor(Old?:ThreeDrawEngine, Resolution?:Mathematics.Vertex)
     {
         super(Old);
-        this._Loaded = false;
-        this._SceneLoad = false;
+        this._Preload = false;
         this._Scene = new Three.Scene();
         this._GlobalScale = new Mathematics.Vertex(1,1,1);
         this._GlobalOffset = new Mathematics.Vertex(0,0,0);
@@ -67,63 +68,83 @@ class ThreeDrawEngine extends DrawEngine
         this._Generator = new ThreeMaterialGenerator(null, this.Data, Scene);
         if(this._ToyBoxScene != Scene)
         {
-            this._SceneLoad = true;
             if(this._ToyBoxScene)
             {
                 this._ToyBoxScene.Events.Resize.splice(this._ToyBoxScene.Events.Resize.indexOf(this.Resize), 1);
             }
             this._ToyBoxScene = Scene;
-            this._Scene = new Three.Scene();
+            this._ToyBoxScene.Events.Resize.push(this.Resize.bind(this));
+            if(this._Preload && this._ToyBoxPreloadScene == Scene)
+            {
+                this._Scene = this._PreloadScene;
+                this._Preload = false;
+            }
+            else
+            {
+                this._Scene = new Three.Scene();
+            }
             this.Resize();
         }
-        if(!this._Loaded)
+        let LoadData:any = { Scene:this._Scene, Checked:this._Checked, Generator:this._Generator };
+        this.Load2DSceneData(Scene, LoadData);
+    }
+    public Preload2DScene(Scene:Engine.Scene2D, ReportProgress:Function) : void
+    {
+        this._Preload = true;
+        this._PreloadScene = new Three.Scene();
+        this._ToyBoxPreloadScene = Scene;
+        let LoadData:any =
         {
-            this.Resize();
-            this._Loaded = true;
-        }
-        this._ToyBoxScene.Events.Resize.push(this.Resize.bind(this));
-        this._Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
-        ThreeGridManager.CheckGrid(this._Scene, this._ToyBoxScene, this.Data, this._GlobalScale);
+            Preload: true,
+            Scene:this._PreloadScene,
+            Checked:[],
+            Report:ReportProgress,
+            Generator:new ThreeMaterialGenerator(null, this.Data, Scene)
+        };
+        this.Load2DSceneData(Scene, LoadData);
+    }
+    public Load2DSceneData(Scene:Engine.Scene2D, LoadData:any) : void
+    {
+        LoadData.Scene.background = new Three.Color(Scene.BackColor.R, Scene.BackColor.G, Scene.BackColor.B);
+        ThreeGridManager.CheckGrid(LoadData.Scene, this._ToyBoxScene, this.Data, this._GlobalScale);
         for(let i = 0; i < Scene.Objects.length; i++)
         {
+            if(LoadData.Report)
+            {
+                LoadData.Report(Math.ceil(i * 100.0 / Scene.Objects.length));
+            }
             if(Scene.Objects[i].Type != Engine.SceneObjectType.Drawn) continue;
             let Drawn:Engine.DrawObject = <Engine.DrawObject>Scene.Objects[i];
-            if(Drawn.DrawType == Engine.DrawObjectType.Sprite)
+            if(Drawn.DrawType == Engine.DrawObjectType.Sprite || Drawn.DrawType == Engine.DrawObjectType.Tile)
             {
-                this.LoadSprite(Scene, <Engine.Sprite>Drawn);
-            }
-            else if(Drawn.DrawType == Engine.DrawObjectType.Tile)
-            {
-                this.LoadTile(Scene, <Engine.Tile>Drawn);
+                this.LoadImage(Scene, <Engine.ImageObject>Drawn, LoadData);
             }
             else if(Drawn.DrawType == Engine.DrawObjectType.Light)
             {
-                this.LoadLight(Scene, <Engine.Light>Drawn);
+                this.LoadLight(Scene, <Engine.Light>Drawn, LoadData);
             }
         }
         this._Generator.Update2DLights();
-        for(let i = 0; i < this._Scene.children.length; i++)
+        for(let i = 0; i < LoadData.Scene.children.length; i++)
         {
             let Found = false;
-            let Sprite:any = this._Scene.children[i];
-            for(let i = 0; i < this._Checked.length; i++)
+            let Drawn:any = LoadData.Scene.children[i];
+            for(let i = 0; i < LoadData.Checked.length; i++)
             {
-                if(this._Checked[i] == Sprite.uuid) Found = true;
+                if(LoadData.Checked[i] == Drawn.uuid) Found = true;
             }
             if(this.Data["TOYBOX_GRID"] != null)
             {
                 for(let i = 0; i < this.Data["TOYBOX_GRID_LINES"].length; i++)
                 {
-                    if(this.Data["TOYBOX_GRID_LINES"][i].uuid == Sprite.uuid) Found = true;
+                    if(this.Data["TOYBOX_GRID_LINES"][i].uuid == Drawn.uuid) Found = true;
                 }
             }
             if(!Found)
             {
-                this._Scene.remove(Sprite);
-                //Util.Log.Info("ThreeJS Object " + Sprite.uuid + " removed from scene.");
+                LoadData.Scene.remove(Drawn);
             }
         }
-        if(this._SceneLoad) this._SceneLoad = false;
     }
     public Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     {
@@ -164,43 +185,56 @@ class ThreeDrawEngine extends DrawEngine
         ThreeObject.scale.set(Drawn.Trans.Scale.X * this._GlobalScale.X, Drawn.Trans.Scale.Y * this._GlobalScale.Y, 1);
         ThreeObject.rotation.set((Drawn.Trans.Rotation.X / 180) * 3.14, (Drawn.Trans.Rotation.Y / 180) * 3.14, (Drawn.Trans.Rotation.Z / 180) * 3.14);
     }
-    protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite) : void
-    {  
+    protected LoadImage(Scene:Engine.Scene2D, Drawn:Engine.ImageObject, LoadData:any) : void
+    {
         // Override
-        if(!Drawn.Fixed)
+        if(!Drawn.Fixed && !LoadData.Preload)
         {
             if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0 ||
                 Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0 ||
                 Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920 ||
                 Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
             {
-                if(this.Data["TOYBOX_" + Drawn.ID])
+                if(this.Data["TOYBOX_" + Drawn.ID] && LoadData.Scene.children.indexOf(this.Data["TOYBOX_" + Drawn.ID]) != -1)
                 {
-                    this._Scene.remove(this.Data["TOYBOX_" + Drawn.ID]);
-                    this.Data["TOYBOX_" + Drawn.ID].geometry.dispose();
-                    this.Data["TOYBOX_" + Drawn.ID].material.dispose();
-                    this.Data["TOYBOX_" + Drawn.ID] = null;
+                    LoadData.Scene.remove(this.Data["TOYBOX_" + Drawn.ID]);
+                    //this.Data["TOYBOX_" + Drawn.ID].geometry.dispose();
+                    //this.Data["TOYBOX_" + Drawn.ID].material.dispose();
+                    //this.Data["TOYBOX_" + Drawn.ID] = null;
                 }
                 return;
             }
         }
-        if(this.Data["TOYBOX_" + Drawn.ID] == null || this._SceneLoad)
+        if(Drawn.DrawType == Engine.DrawObjectType.Sprite)
+        {
+            this.LoadSprite(Scene, <Engine.Sprite>Drawn, LoadData);
+        }
+        else if(Drawn.DrawType == Engine.DrawObjectType.Tile)
+        {
+            this.LoadTile(Scene, <Engine.Tile>Drawn, LoadData);
+        }
+    }
+    protected LoadSprite(Scene:Engine.Scene2D, Drawn:Engine.Sprite, LoadData:any) : void
+    {  
+        // Override
+        if(this.Data["TOYBOX_" + Drawn.ID] == null)
         {
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentSet"] = Drawn.CurrentSpriteSet;
             this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] = Drawn.Index;
-            let SpriteMaterial = this._Generator.LoadObjectMaterial(Drawn);
+            let SpriteMaterial = LoadData.Generator.LoadObjectMaterial(Drawn);
             let Sprite:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), SpriteMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Sprite;
             this.DrawObjectValueCheck(Sprite, Drawn);
-            this._Scene.add(Sprite);
-            this._Checked.push(Sprite.uuid);
+            LoadData.Scene.add(Sprite);
+            LoadData.Checked.push(Sprite.uuid);
         }
         else
         {
             let Sprite:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
+            if(LoadData.Scene.children.indexOf(Sprite) == -1) LoadData.Scene.add(Sprite);
             if(Drawn.Modified)
             {
-                Sprite.material = this._Generator.LoadObjectMaterial(Drawn);
+                Sprite.material = LoadData.Generator.LoadObjectMaterial(Drawn);
                 Drawn.Modified = false;
             }
             if(this.Data["TOYBOX_" + Drawn.ID + "_CurrentIndex"] != Drawn.Index)
@@ -216,50 +250,33 @@ class ThreeDrawEngine extends DrawEngine
                 Sprite.material["uniforms"].color.value = Drawn.Paint.ToArray();
             }
             this.DrawObjectValueCheck(Sprite, Drawn);
-            this._Checked.push(Sprite.uuid);
+            LoadData.Checked.push(Sprite.uuid);
         }
     }
-    protected LoadTile(Scene:Engine.Scene2D, Drawn:Engine.Tile) : void
+    protected LoadTile(Scene:Engine.Scene2D, Drawn:Engine.Tile, LoadData:any) : void
     {  
         // Override
-        if(!Drawn.Fixed)
-        {
-            if(Drawn.Trans.Translation.X + Scene.Trans.Translation.X + Drawn.Trans.Scale.X / 2 < 0 ||
-                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y + Drawn.Trans.Scale.Y / 2 < 0 ||
-                Drawn.Trans.Translation.X + Scene.Trans.Translation.X - Drawn.Trans.Scale.X / 2 > 1920 ||
-                Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y - Drawn.Trans.Scale.Y / 2 > 1920)
-            {
-                if(this.Data["TOYBOX_" + Drawn.ID])
-                {
-                    this._Scene.remove(this.Data["TOYBOX_" + Drawn.ID]);
-                    this.Data["TOYBOX_" + Drawn.ID].geometry.dispose();
-                    this.Data["TOYBOX_" + Drawn.ID].material.dispose();
-                    this.Data["TOYBOX_" + Drawn.ID] = null;
-                }
-                return;
-            }
-        }
-        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified || this._SceneLoad)
+        if(this.Data["TOYBOX_" + Drawn.ID] == null || Drawn.Modified)
         {
             Drawn.Modified = false;
-            let TileMaterial = this._Generator.LoadObjectMaterial(Drawn);
+            let TileMaterial = LoadData.Generator.LoadObjectMaterial(Drawn);
             let Tile:Three.Mesh = new Three.Mesh( new Three.CubeGeometry(1,1,1), TileMaterial );
             this.Data["TOYBOX_" + Drawn.ID] = Tile;
             this.DrawObjectValueCheck(Tile, Drawn);
-            this._Scene.add(Tile);
-            //Util.Log.Info("ThreeJS Object " + Tile.uuid + " added to scene.");
-            this._Checked.push(Tile.uuid);
+            LoadData.Scene.add(Tile);
+            LoadData.Checked.push(Tile.uuid);
         }
         else
         {
             let Tile:Three.Mesh = this.Data["TOYBOX_" + Drawn.ID];
+            if(LoadData.Scene.children.indexOf(Tile) == -1) LoadData.Scene.add(Tile);
             this.DrawObjectValueCheck(Tile, Drawn);
-            this._Checked.push(Tile.uuid);
+            LoadData.Checked.push(Tile.uuid);
         }
     }
-    protected LoadLight(Scene:Engine.Scene2D, Drawn:Engine.Light) : void
+    protected LoadLight(Scene:Engine.Scene2D, Drawn:Engine.Light, LoadData:any) : void
     {
         let TransLoc = new Mathematics.Vertex(Drawn.Trans.Translation.X + Scene.Trans.Translation.X, Drawn.Trans.Translation.Y + Scene.Trans.Translation.Y, Drawn.Trans.Translation.Z + Scene.Trans.Translation.Z);
-        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = this._Generator.PrepLightLoc(TransLoc, this.Resolution);
+        this.Data["TOYBOX_"+Drawn.ID+"_Light"] = LoadData.Generator.PrepLightLoc(TransLoc, this.Resolution);
     }
 }
