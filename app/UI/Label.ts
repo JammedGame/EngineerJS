@@ -1,5 +1,7 @@
 export { Label, TextAlign }
 
+import * as Mathematics from "./../Mathematics/Mathematics";
+
 import { Settings } from "./../Engine/Settings";
 import { Control } from "./Control";
 
@@ -45,8 +47,12 @@ class Label extends Control
             else this._Text = "";
             this._Font = Settings.GlobalFontFamily;
             this._Padding = 5;
-            this._TextSize = 16;
+            this._TextSize = 40;
             this._TextAlign = TextAlign.Center;
+            this.Size = new Mathematics.Vertex(300,60);
+            this.Position = new Mathematics.Vertex(960,540,0.1);
+            this.ForeColor = Mathematics.Color.White;
+            this.BackColor = Mathematics.Color.Empty;
         }
     }
     public Copy() : Label

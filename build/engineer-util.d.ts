@@ -66,5 +66,6 @@ export class ProgressBar extends Engine.Tile
 {
     Value:number;
     Indicator:Engine.Tile;
-    public constructor(Old?:ProgressBar, TargetScene?:Engine.Scene);
+    constructor(Old?:ProgressBar, TargetScene?:Engine.Scene);
+    ChangeTargetScene(Scene:Engine.Scene) : void
 }

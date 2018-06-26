@@ -19,6 +19,7 @@ class Button extends Label
         }
         else
         {
+            this.BackColor = Math.Color.FromRGBA(127,127,127,255);
             this._Events = new ControlEventPackage();
         }
     }
@@ -38,7 +39,7 @@ class Button extends Label
     {
         super.Create();
         this.Element.className += " button";
-        this.Events.Connect(this.Element);
+        this.Events.Connect(this, this.Element);
         this.Events.MouseEnter.push(this.OnMouseEnter.bind(this));
         this.Events.MouseLeave.push(this.OnMouseLeave.bind(this));
     }

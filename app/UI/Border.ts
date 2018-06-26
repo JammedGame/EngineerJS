@@ -24,7 +24,7 @@ class Border
         else
         {
             if(Width) this._Width = Width;
-            else this._Width = 1;
+            else this._Width = 0;
             if(Color) this._Color = Color;
             else this._Color = Math.Color.White;
             this._Radius = 0;

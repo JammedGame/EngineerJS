@@ -5,6 +5,7 @@ import * as Engine from "./../Engine/Engine";
 
 class ControlEventPackage extends Engine.EventPackage
 {
+    private _Sender:Engine.SceneObject;
     public get Click() : Function[] { return this._Data["Click"]; }
     public get MouseEnter() : Function[] { return this._Data["MouseEnter"]; }
     public get MouseLeave() : Function[] { return this._Data["MouseLeave"]; }
@@ -26,8 +27,9 @@ class ControlEventPackage extends Engine.EventPackage
     {
         return new ControlEventPackage(this);
     }
-    public Connect(Element:HTMLElement) : void
+    public Connect(Sender:Engine.SceneObject, Element:HTMLElement) : void
     {
+        this._Sender = Sender;
         Element.addEventListener("mousedown", this.OnClick.bind(this));
         Element.addEventListener("mouseenter", this.OnMouseEnter.bind(this));
         Element.addEventListener("mouseleave", this.OnMouseLeave.bind(this));
@@ -46,7 +48,8 @@ class ControlEventPackage extends Engine.EventPackage
             Delta:Event.wheelDelta,
             KeyCode:Event.keyCode,
             Width:window.innerWidth,
-            Height:window.innerHeight
+            Height:window.innerHeight,
+            Sender:this._Sender
         }
         if(Event.identifier) Args.ID = Event.identifier;
         return Args;

@@ -62,4 +62,9 @@ class ProgressBar extends Engine.Tile
         Scene.Attach(this._Indicator);
         this._Scene.Events.LoadProgress.push(this.OnProgress.bind(this));
     }
+    public ChangeTargetScene(Scene:Engine.Scene) : void
+    {
+        this._Scene = Scene;
+        this._Scene.Events.LoadProgress.push(this.OnProgress.bind(this));
+    }
 }
