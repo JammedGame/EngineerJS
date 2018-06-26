@@ -83,7 +83,8 @@ class Control extends Engine.SceneObject
         if(Settings.IgnoreUICSS)
         {
             this._Element.style.color = this._ForeColor.ToString();
-            this._Element.style.backgroundColor = this._BackColor.ToString();
+            if(this._BackColor.A == 0) this._Element.style.backgroundColor = "rgba(0,0,0,0)";
+            else this._Element.style.backgroundColor = this._BackColor.ToString();
         }
         this._Border.Apply(this._Element);
     }

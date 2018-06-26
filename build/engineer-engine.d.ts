@@ -353,6 +353,8 @@ export class Scene
     FindActiveByDrawType(Type:DrawObjectType) : DrawObject[]
     Serialize() : any
     Deserialize(Data:any) : void
+    OnSwitch() : void
+    OnResize(Args:any) : void
 }
 
 export class Scene2D extends Scene
