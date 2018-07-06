@@ -35,10 +35,10 @@ class DrawEngine
         let New:DrawEngine = new DrawEngine(this);
         return New;
     }
-    public UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean) : void
+    public UpdateResolution(Resolution?:Math.Vertex, FixedSize?:boolean) : void
     {
         // Virtual
-        this._Resolution = Resolution;
+        if(Resolution) this._Resolution = Resolution;
         if(FixedSize != null) this._FixedSize = FixedSize;
     }
     public TransformToCanvas(X:number, Y:number) : Math.Vertex

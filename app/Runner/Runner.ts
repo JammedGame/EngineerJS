@@ -24,6 +24,7 @@ class Runner
     public get Game():any { return this._Game; }
     public get DrawEngine():any { return this._DrawEngine; }
     public Data: { [key: string]:any; } = {};
+    public get Engine():Draw.DrawEngine { return this._DrawEngine; }
     public static get Current():Runner { return Runner._Current; }
     public static get Resolution():Math.Vertex { return Runner._Current._DrawEngine.Resolution; }
     public constructor(Game:Engine.Game, EngineType:Draw.DrawEngineType)
@@ -64,7 +65,11 @@ class Runner
         {
             if(this._Game.Scenes[i].Name == SceneName)
             {
-                if(this._Current) this._Current.Events.Invoke("Leave", this._Game, {Next:this._Game.Scenes[i]});
+                if(this._Current)
+                {
+                    this._Current.OnLeave();
+                    this._Current.Events.Invoke("Leave", this._Game, {Next:this._Game.Scenes[i]});
+                }
                 this._Current = this._Game.Scenes[i];
                 this._Current.OnSwitch();
                 this._Current.Events.Invoke("Switch", this._Game, {});

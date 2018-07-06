@@ -342,6 +342,7 @@ export class Scene
     DrawObjects:DrawObject[];
     SoundObjects:SoundObject[];
     Data:any;
+    Current:boolean;
     constructor(Old?:Scene)
     Copy() : Scene
     Attach(Object:SceneObject) : void
@@ -354,6 +355,7 @@ export class Scene
     Serialize() : any
     Deserialize(Data:any) : void
     OnSwitch() : void
+    OnLeave() : void
     OnResize(Args:any) : void
 }
 

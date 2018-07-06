@@ -24,6 +24,7 @@ class Scene
     private _BackColor:Math.Color;
     private _Events:SceneEventPackage;
     private _Objects:SceneObject[];
+    protected _Current:boolean;
     public get ID():string { return this._ID; }
     public get Name():string { return this._Name; }
     public set Name(value:string) { this._Name = value; }
@@ -34,6 +35,7 @@ class Scene
     public get Events():SceneEventPackage { return this._Events; }
     public get Objects():SceneObject[] { return this._Objects; }
     public set Objects(value:SceneObject[]) { this._Objects = value; }
+    public get Current():boolean { return this._Current; }
     public get DrawnObjects() : DrawObject[]
     {
         return <DrawObject[]>this.FindByType(SceneObjectType.Drawn);
@@ -180,9 +182,15 @@ class Scene
         // Virtual
         return false;
     }
+    public OnLeave() : void
+    {
+        // Virtual
+        this._Current = false;
+    }
     public OnSwitch() : void
     {
         // Virtual
+        this._Current = true;
         let UIParent:HTMLElement = document.getElementById("ui-parent");
         if(UIParent) UIParent.innerHTML = "";
         for(let i in this._Objects) this._Objects[i].OnSwitch();
