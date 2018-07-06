@@ -30,6 +30,7 @@ class Panel extends Control
     public Update() : void
     {
         super.Update();
+        if(!this.Element) return;
         for(let i in this._Children)
         {
             this._Children[i].Offset = this.Position;

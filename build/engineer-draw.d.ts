@@ -14,7 +14,7 @@ export class DrawEngine
     Data: any;
     constructor(Old?:DrawEngine)
     Copy() : DrawEngine
-    UpdateResolution(Resolution:Math.Vertex, FixedSize?:boolean) : void
+    UpdateResolution(Resolution?:Math.Vertex, FixedSize?:boolean) : void
     TransformToCanvas(X:number, Y:number) : Math.Vertex
     Draw2DScene(Scene:Engine.Scene2D, Width:number, Height:number) : void
     Draw3DScene(Scene:Engine.Scene, Width:number, Height:number) : void

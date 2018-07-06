@@ -30,6 +30,7 @@ class Button extends Label
     public Update() : void
     {
         super.Update();
+        if(!this.Element) return;
         if(Settings.IgnoreUICSS)
         {
             this.Element.style.cursor = "pointer";
@@ -43,14 +44,14 @@ class Button extends Label
         this.Events.MouseEnter.push(this.OnMouseEnter.bind(this));
         this.Events.MouseLeave.push(this.OnMouseLeave.bind(this));
     }
-    private OnMouseEnter(Event) : void
+    protected OnMouseEnter(Event:any) : void
     {
         if(Settings.IgnoreUICSS)
         {
             this.Element.style.backgroundColor = this.BackColor.Copy().Lighten().ToString();
         }
     }
-    private OnMouseLeave(Event) : void
+    protected OnMouseLeave(Event:any) : void
     {
         if(Settings.IgnoreUICSS)
         {

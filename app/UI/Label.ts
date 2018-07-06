@@ -21,15 +21,15 @@ class Label extends Control
     private _TextAlign:TextAlign;
     private _TextElement:HTMLElement;
     public get Text():string { return this._Text; }
-    public set Text(value:string) { this._Text = value; }
+    public set Text(value:string) { this._Text = value; this.Update(); }
     public get Font():string { return this._Font; }
-    public set Font(value:string) { this._Font = value; }
+    public set Font(value:string) { this._Font = value; this.Update(); }
     public get TextSize():number { return this._TextSize; }
-    public set TextSize(value:number) { this._TextSize = value; }
+    public set TextSize(value:number) { this._TextSize = value; this.Update(); }
     public get Padding():number { return this._Padding; }
-    public set Padding(value:number) { this._Padding = value; }
+    public set Padding(value:number) { this._Padding = value; this.Update(); }
     public get TextAlign():TextAlign { return this._TextAlign; }
-    public set TextAlign(value:TextAlign) { this._TextAlign = value; }
+    public set TextAlign(value:TextAlign) { this._TextAlign = value; this.Update(); }
     public constructor(Old?:Label, Text?:string)
     {
         super(Old);
@@ -62,6 +62,7 @@ class Label extends Control
     public Update() : void
     {
         super.Update();
+        if(!this.Element) return;
         if(Settings.IgnoreUICSS)
         {
             this.Element.style.fontFamily = this._Font;

@@ -55,7 +55,7 @@ class ThreeDrawEngine extends DrawEngine
         }
         if(this._ToyBoxScene) this._ToyBoxScene.OnResize({GlobalScale:this._GlobalScale, Scale:this._ToyBoxScene.Trans.Scale});
     }
-    public UpdateResolution(Resolution:Mathematics.Vertex, FixedSize?:boolean)
+    public UpdateResolution(Resolution?:Mathematics.Vertex, FixedSize?:boolean)
     {
         // Override
         super.UpdateResolution(Resolution, FixedSize);

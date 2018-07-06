@@ -57,6 +57,8 @@ export class Button extends Label
 {
     Events:ControlEventPackage;
     constructor(Old?:Button, Text?:string)
+    OnMouseEnter(Event:any) : void
+    OnMouseLeave(Event:any) : void
     Copy() : Button
 }
 

@@ -18,19 +18,19 @@ class Control extends Engine.SceneObject
     protected _Offset:Math.Vertex;
     protected _Scale:Math.Vertex;
     public get Active():boolean { return this._Active; }
-    public set Active(value:boolean) { this._Active = value; this.OnToggle(value); }
+    public set Active(value:boolean) { this._Active = value; this.OnToggle(value); this.Update(); }
     public get Position():Math.Vertex { return this._Position; }
-    public set Position(value:Math.Vertex) { this._Position = value; }
+    public set Position(value:Math.Vertex) { this._Position = value; this.Update(); }
     public get Size():Math.Vertex { return this._Size; }
-    public set Size(value:Math.Vertex) { this._Size = value; }
+    public set Size(value:Math.Vertex) { this._Size = value; this.Update(); }
     public get Offset():Math.Vertex { return this._Offset; }
-    public set Offset(value:Math.Vertex) { this._Offset = value; }
+    public set Offset(value:Math.Vertex) { this._Offset = value; this.Update(); }
     public get ForeColor():Math.Color { return this._ForeColor; }
-    public set ForeColor(value:Math.Color) { this._ForeColor = value; }
+    public set ForeColor(value:Math.Color) { this._ForeColor = value; this.Update(); }
     public get BackColor():Math.Color { return this._BackColor; }
-    public set BackColor(value:Math.Color) { this._BackColor = value; }
+    public set BackColor(value:Math.Color) { this._BackColor = value; this.Update(); }
     public get Border():Border { return this._Border; }
-    public set Border(value:Border) { this._Border = value; }
+    public set Border(value:Border) { this._Border = value; this.Update(); }
     public get Element():HTMLElement { return this._Element; }
     public constructor(Old?:Control)
     {
@@ -69,7 +69,7 @@ class Control extends Engine.SceneObject
     }
     public Update() : void
     {
-        if(!this._Element) this.Create();
+        if(!this._Element) return;
         if(this._Active) this._Element.style.display = "block";
         else this._Element.style.display = "none";
         this._Element.style.margin = "0px";
@@ -88,6 +88,12 @@ class Control extends Engine.SceneObject
         }
         this._Border.Apply(this._Element);
     }
+    private AddElement() : void
+    {
+        this.Update();
+        let UIParent:HTMLElement = document.getElementById("ui-parent");
+        UIParent.appendChild(this._Element);
+    }
     protected Create() : void
     {
         this._Element = <HTMLDivElement>(document.createElement('div'));
@@ -96,14 +102,22 @@ class Control extends Engine.SceneObject
     public OnSwitch() : void
     {
         // Override
-        this.Update();
-        let UIParent:HTMLElement = document.getElementById("ui-parent");
-        UIParent.appendChild(this._Element);
+        this.AddElement();
     }
     public OnResize(Args:any) : void
     {
         // Override
         this._Scale = new Math.Vertex(Args.Scale.X / Args.GlobalScale.X, Args.Scale.Y / Args.GlobalScale.Y, 1);
         this.Update();
+    }
+    public OnRemove(Args:any) : void
+    {
+        this._Element.remove();
+    }
+    public OnAttach(Args:any) : void
+    {
+        super.OnAttach(Args);
+        this.Create();
+        if(Args.Scene.Current) this.AddElement();
     }
 }
