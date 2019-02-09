@@ -96,8 +96,8 @@ class Matrix
     private static CreateScale(X:number, Y:number, Z:number) : number[] { return [X,0,0,0, 0,Y,0,0, 0,0,Z,0, 0,0,0,1]; }
     private static CreateRotation(RotationAxis:Axis, Angle:number) : number[]
     {
-        let SinTheta = Math.sin((Angle / 180) * Math.PI);
-        let CosTheta = Math.cos((Angle / 180) * Math.PI);
+        let SinTheta:number = Math.sin((Angle / 180) * Math.PI);
+        let CosTheta:number = Math.cos((Angle / 180) * Math.PI);
         if(RotationAxis == Axis.X)
         {
             return [1,0,0,0, 0,CosTheta,SinTheta,0, 0,-SinTheta,CosTheta,0, 0,0,0,1];

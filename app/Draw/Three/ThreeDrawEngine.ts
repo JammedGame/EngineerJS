@@ -3,7 +3,6 @@ export  { ThreeDrawEngine };
 import * as Three from 'three';
 import * as Mathematics from "./../../Mathematics/Mathematics";
 import * as Engine from "./../../Engine/Engine";
-import * as Util from "./../../Util/Util";
 
 import { ThreeMaterialGenerator } from "./ThreeMaterialGenerator";
 import { ThreeGridManager } from "./ThreeGridManager";

@@ -5,7 +5,7 @@ class Uuid
     public static Create():string
     {
         var DT = new Date().getTime();
-        var Uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(C)
+        var Uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (C) =>
         {
             var R = (DT + Math.random()*16)%16 | 0;
             DT = Math.floor(DT/16);

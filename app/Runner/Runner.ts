@@ -154,7 +154,7 @@ class Runner
     }
     private PackEventArgs(Event) : any
     {
-        let Args = 
+        let Args:any = 
         {
             ID: 0,
             Ctrl:Event.ctrlKey,

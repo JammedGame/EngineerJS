@@ -141,7 +141,7 @@ class Vertex
     }
     public Serialize() : any
     {
-        let V = 
+        let V:any = 
         {
             X: this.X,
             Y: this.Y,

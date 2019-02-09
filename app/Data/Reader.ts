@@ -1,22 +1,11 @@
 export { Reader }
 
+import { HTTP } from "./Http";
+
 class Reader
 {
-    public static ReadFile(FilePath:string, Callback:Function) : void
+    public static Read(Path:string) : Promise<any>
     {
-        let RawFile:any = new XMLHttpRequest();
-        RawFile.open("GET", FilePath, false);
-        RawFile.onreadystatechange = function ()
-        {
-            if(RawFile.readyState === 4)
-            {
-                if(RawFile.status === 200 || RawFile.status == 0)
-                {
-                    var AllText = RawFile.responseText;
-                    Callback(AllText);
-                }
-            }
-        }.bind(this);
-        RawFile.send(null);
+        return HTTP.Get(Path);
     }
 }
