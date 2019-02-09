@@ -1,5 +1,6 @@
 import { Uuid } from "./Data/Uuid";
 import { Image } from "./Data/Image";
+import { HTTP } from "./Data/Http";
 import { Reader } from "./Data/Reader";
 import { Serialization} from "./Data/Serialization";
 import { MaterialNodeValue, MaterialNodeValueType } from "./Engine/Material/MaterialNodeValue";
@@ -52,7 +53,7 @@ import { Runner } from "./Runner/Runner";
 
 export
 {
-    Reader, Uuid, Serialization,
+    HTTP, Reader, Uuid, Serialization,
     DrawEngineType, DrawEngine,
     MaterialType, TextureSamplingType, ImageObject,
     DrawObjectType, DrawObject, Sprite, SpriteSet, SpriteSetCollection, Tile, ImageCollection, MouseButton,

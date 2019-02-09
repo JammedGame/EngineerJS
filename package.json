@@ -1,7 +1,7 @@
 {
   "name": "engineer-js",
-  "version": "0.0.69",
-  "description": "Web renderer for engineer game engine.",
+  "version": "0.0.70",
+  "description": "ToyBox Game Engine.",
   "main": "build/engineer.js",
   "types": "build/engineer-js.d.ts",
   "scripts": {
@@ -15,8 +15,10 @@
     "url": "git+https://github.com/ShadySolutions/EngineerJS.git"
   },
   "keywords": [
-    "engineer",
-    "engineerjs"
+    "tbx",
+    "toybox",
+    "game",
+    "engine"
   ],
   "author": "Miloš Manojlović",
   "license": "MIT",

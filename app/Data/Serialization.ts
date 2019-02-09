@@ -6,18 +6,18 @@ class Serialization
 {
     public static CleanData(Data:any) : any
     {
-        let NewData = {};
-        for(let key in Data)
+        let NewData:any = {};
+        for(let Key in Data)
         {
-            if(key.startsWith("EDITOR_")) continue;
-            if(key.startsWith("TOYBOX_")) continue;
-            NewData[key] = Data;
+            if(Key.startsWith("EDITOR_")) continue;
+            if(Key.startsWith("TOYBOX_")) continue;
+            NewData[Key] = Data;
         }
         return NewData;
     }
     public static DeserializeSceneObject(Data) : Engine.SceneObject
     {
-        let SO;
+        let SO:Engine.SceneObject;
         if(Data.Type == Engine.SceneObjectType.Drawn)
         {
             if(Data.DrawType == Engine.DrawObjectType.Sprite)
